@@ -1,6 +1,13 @@
 import math
+from typing import List
 
 from primitives import *
+
+def getPageCanvas() -> svgwrite.Drawing:
+    return svgwrite.Drawing(
+        size=(f"{inchToMilimeter(11)}mm", f"{inchToMilimeter(8.5)}mm"),
+        viewBox=(f"0 0 {inchToMilimeter(11)} {inchToMilimeter(8.5)}")
+    )
 
 def inchToMilimeter(i: int) -> int:
     return i * 25
@@ -46,3 +53,13 @@ def getDimensionalArc(
 
     dimArc = DimensionalArc(outerArc, innerArc, stroke=stroke, fill=fill)
     return dimArc
+
+def drawMonthParts(dwg: svgwrite.Drawing, monthParts: List[any]):
+    for part in monthParts:
+        drawing = part.drawnPath()
+        # some drawn parts return a list of multiple things to draw. Unify both interfaces here. 
+        if not isinstance(drawing, list):
+            drawing = [drawing]
+            
+        for component in drawing:
+            dwg.add(component)

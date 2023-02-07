@@ -1,8 +1,9 @@
 from calendar_data import *
 from arc_drawing import *
+from typing import List
 
 DATE_FILL_COLOR = "yellow"
-def getMonth(month: MonthInstance, days_in_year: int, origin: Point):
+def getMonth(month: MonthInstance, days_in_year: int, origin: Point) -> List[any]:
     month_width_degrees = 360 * month.num_days / days_in_year
     # center start and stop angles around -90 degrees
     angle_offset = month_width_degrees / 2
