@@ -9,6 +9,7 @@ __pycache__/
 
 # Test output files
 *.svg
+*.pdf
 
 # C extensions
 *.so
