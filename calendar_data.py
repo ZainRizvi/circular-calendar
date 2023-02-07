@@ -30,10 +30,10 @@ class Year(NamedTuple):
 
 solar_year = Year(
     months=[
-        Month("January", [31], "blue"),
-        Month("February", [29], "green"),
-        Month("March", [31], "red"),
-        Month("April", [30], "white"),
+        Month("January", [31], "#68C3C4"), #"blue"),
+        Month("February", [29], "#67E168"),
+        Month("March", [31], "#C5F567"),
+        Month("April", [30], "#FFFF68"),
         Month("May", [31], "pink"),
         Month("June", [30], "green"),
         Month("July", [31], "orange"),
@@ -47,10 +47,10 @@ solar_year = Year(
 
 islamic_year = Year(
     months=[
-        Month("Muharram", [29], "blue"),
-        Month("Safar", [29], "green"),
-        Month("Rabi al-Awwal", [30], "red"),
-        Month("Rabi at-Thani", [30], "white"),
+        Month("Muharram", [29], "#9BD6D7"),
+        Month("Safar", [29], "#9AEB99"),
+        Month("Rabi al-Awwal", [30], "#DAFA9B"),
+        Month("Rabi at-Thani", [30], "#FFFF99"),
         Month("Jawad al-Awwal", [29], "pink"),
         Month("Jawad at-Thani", [30], "green"),
         Month("Rajab", [30], "orange"),
