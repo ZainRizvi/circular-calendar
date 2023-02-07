@@ -65,7 +65,7 @@ def getMonth(month: MonthInstance, days_in_year: int, origin: Point) -> List[any
         # Add date inside box
         date_center = Point(
                         (date_background.innerArc.start.x + date_background.outerArc.start.x)/2,
-                        (date_background.innerArc.start.y + date_background.outerArc.start.y)/2)
+                        (date_background.innerArc.start.y + date_background.outerArc.start.y)/2 + (date_background.innerArc.start.y - date_background.outerArc.start.y) * 0.075)
         date_size = (date_outer_radius - date_inner_radius) * 0.75
         highlight_circle = Circle(radius=date_size/2, center=date_center)
         # drawing_elements.append(highlight_circle)

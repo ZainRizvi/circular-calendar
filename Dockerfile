@@ -13,7 +13,9 @@ USER root
 # keeps the resulting image smaller
 # bash git gcc linux-headers py3-psutil
 
+# pdf converstion libraries: http://notesofaprogrammer.blogspot.com/2017/03/converting-svg-to-pdf-on-linux-command.html
 RUN apt-get update && apt-get install bash imagemagick -y
+RUN apt-get install inkscape -y
 RUN pip install ipython svgwrite ipykernel jupyterlab 
 
 # setup imagemagick as per https://stackoverflow.com/a/53180170/21539
