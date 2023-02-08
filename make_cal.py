@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 def is_notebook() -> bool:
@@ -36,13 +36,15 @@ from calendar_data import *
 from calendar_drawings import *
 
 
-# In[2]:
+# In[ ]:
 
 
 # Get months to draw
 
-canvas_width = 11
-width = inchToMilimeter(8)
+scale_factor = SCALE_FACTOR
+
+canvas_width = 11 * scale_factor
+width = inchToMilimeter(8 * scale_factor)
 outermost_radius = width / ( 2 * 3.14 / 12)
 # outermost_radius = inchToMilimeter(35)
 inner_radius = outermost_radius * 9.2 / 10
@@ -51,7 +53,7 @@ date_box_height = month_thickness * 0.18
 
 # width = outermost_radius * 2 * 3.14 / 12 / 2
 width_center = inchToMilimeter(canvas_width) / 2
-vertical_offset = 30
+vertical_offset = 30 * scale_factor
 
 solarMonths = []
 
@@ -69,11 +71,11 @@ for index, month in enumerate(solar_year.months):
                 inner_radius=inner_radius,
                 outer_radius=outermost_radius,
             )
-        ) 
+        )
 
 
 islamicMonths = []
-month_offset = 5
+month_offset = 5 * scale_factor
 for index, month in enumerate(islamic_year.months):
     name_upside_down = (index >= 3 and index < 9)
     for day in month.num_days:
@@ -85,13 +87,13 @@ for index, month in enumerate(islamic_year.months):
                 name_upside_down=name_upside_down,
                 date_on_top=True, # the outer month
                 date_box_height=date_box_height,
-                inner_radius=inner_radius - month_thickness - month_offset,
-                outer_radius=outermost_radius - month_thickness - month_offset,
+                inner_radius=inner_radius - month_thickness,
+                outer_radius=outermost_radius - month_thickness,
             )
         ) 
 
 
-# In[4]:
+# In[ ]:
 
 
 origin_first = Point(width_center, outermost_radius + vertical_offset)
@@ -99,23 +101,65 @@ origin = origin_first
 
 days_in_year = 366
 
-for i in range(int(len(solarMonths)/2)):
-    dwg = getPageCanvas()
+def offsetPointBy(point: Point, x_offset: int, y_offset: int):
+    return Point(point.x + x_offset, point.y + y_offset)
 
-    origin = origin_first
-    drawMonthParts(dwg, getMonth(solarMonths[2 * i], days_in_year, origin))
-    drawMonthParts(dwg, getMonth(islamicMonths[2 * i], days_in_year, origin))
-    
-    origin = Point(origin.x, origin.y + (month_thickness * 2.4))
-    drawMonthParts(dwg, getMonth(solarMonths[2 * i + 1], days_in_year, origin))
-    drawMonthParts(dwg, getMonth(islamicMonths[2 * i + 1], days_in_year, origin))
+if scale_factor == 1:
+    for i in range(int(len(solarMonths)/2)):
+        dwg = getPageCanvas()
 
-    svg_file = f"out/test_output_{i}.svg"
-    pdf_file = f"out/calendar_page_{i}.pdf"
+        origin = origin_first
+        drawMonthParts(dwg, getMonth(solarMonths[2 * i], days_in_year, origin))
+        
+        origin = offsetPointBy(origin, 0, month_offset)
+        drawMonthParts(dwg, getMonth(islamicMonths[2 * i], days_in_year, origin))
+        
+        origin = offsetPointBy(origin, 0, month_thickness*2.5)
+        drawMonthParts(dwg, getMonth(solarMonths[2 * i + 1], days_in_year, origin))
+        origin = offsetPointBy(origin, 0, month_offset)
+        drawMonthParts(dwg, getMonth(islamicMonths[2 * i + 1], days_in_year, origin))
 
-    dwg.saveas(svg_file, pretty=True)
-    # os.system(f"convert {svg_file} {pdf_file}")
-    os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
+        svg_file = f"out/test_output_{i}.svg"
+        pdf_file = f"out/calendar_page_{i}.pdf"
+
+        dwg.saveas(svg_file, pretty=True)
+        # os.system(f"convert {svg_file} {pdf_file}")
+        os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
+
+if scale_factor == 0.5:
+    for k in range(2):
+        dwg = getPageCanvas()
+        origin = origin_first
+        for j in range(2):
+            for i in range(4):
+                month_idx = i + 4*j + 8*k
+
+                if month_idx < len(solarMonths):
+                    drawMonthParts(dwg, getMonth(solarMonths[month_idx], days_in_year, origin))
+                    origin = offsetPointBy(origin, 0, month_offset)
+                
+                if month_idx < len(islamicMonths):
+                    drawMonthParts(dwg, getMonth(islamicMonths[month_idx], days_in_year, origin))
+                    origin = offsetPointBy(origin, 0, month_thickness*2.5)
+            
+            # move to next column 
+            origin = offsetPointBy(origin_first, width * 1.05, 0)
+
+        svg_file = f"out/test_output_{scale_factor}_{k}.svg"
+        pdf_file = f"out/calendar_page_{scale_factor}_{k}.pdf"
+
+        dwg.saveas(svg_file, pretty=True)
+        # os.system(f"convert {svg_file} {pdf_file}")
+        os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
+
+
+
 
 SVG(dwg.tostring())
+
+
+# In[ ]:
+
+
+
 

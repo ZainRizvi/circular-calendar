@@ -19,7 +19,9 @@ class ArcDrawMode(Enum):
     NEW = 1
     LINE_TO = 2 # Draw a line from wherever the path last ended to the start of this Arc
 
-STROKE_WIDTH = 0.5
+SCALE_FACTOR = 0.5
+STROKE_WIDTH = 0.5 * SCALE_FACTOR
+
 """
 A linear arc
 """
