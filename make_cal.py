@@ -75,7 +75,6 @@ for index, month in enumerate(solar_year.months):
 
 
 islamicMonths = []
-month_offset = 5 * scale_factor
 for index, month in enumerate(islamic_year.months):
     name_upside_down = (index >= 3 and index < 9)
     for day in month.num_days:
@@ -96,6 +95,8 @@ for index, month in enumerate(islamic_year.months):
 # In[ ]:
 
 
+month_offset = 4 * scale_factor
+
 origin_first = Point(width_center, outermost_radius + vertical_offset)
 origin = origin_first
 
@@ -110,7 +111,6 @@ if scale_factor == 1:
 
         origin = origin_first
         drawMonthParts(dwg, getMonth(solarMonths[2 * i], days_in_year, origin))
-        
         origin = offsetPointBy(origin, 0, month_offset)
         drawMonthParts(dwg, getMonth(islamicMonths[2 * i], days_in_year, origin))
         
@@ -127,12 +127,14 @@ if scale_factor == 1:
         os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
 
 if scale_factor == 0.5:
-    for k in range(2):
+    for page_num in range(2):
         dwg = getPageCanvas()
         origin = origin_first
-        for j in range(2):
-            for i in range(4):
-                month_idx = i + 4*j + 8*k
+        COL_SIZE = 5
+        ROW_COUNT = 2
+        for col_num in range(ROW_COUNT):
+            for row_num in range(COL_SIZE):
+                month_idx = row_num + COL_SIZE*col_num + COL_SIZE * ROW_COUNT * page_num
 
                 if month_idx < len(solarMonths):
                     drawMonthParts(dwg, getMonth(solarMonths[month_idx], days_in_year, origin))
@@ -140,13 +142,13 @@ if scale_factor == 0.5:
                 
                 if month_idx < len(islamicMonths):
                     drawMonthParts(dwg, getMonth(islamicMonths[month_idx], days_in_year, origin))
-                    origin = offsetPointBy(origin, 0, month_thickness*2.5)
+                    origin = offsetPointBy(origin, 0, month_thickness*2.3)
             
             # move to next column 
             origin = offsetPointBy(origin_first, width * 1.05, 0)
 
-        svg_file = f"out/test_output_{scale_factor}_{k}.svg"
-        pdf_file = f"out/calendar_page_{scale_factor}_{k}.pdf"
+        svg_file = f"out/test_output_{scale_factor}_{page_num}.svg"
+        pdf_file = f"out/calendar_page_{scale_factor}_{page_num}.pdf"
 
         dwg.saveas(svg_file, pretty=True)
         # os.system(f"convert {svg_file} {pdf_file}")
