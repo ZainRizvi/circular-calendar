@@ -8,6 +8,12 @@ def getPageCanvas() -> svgwrite.Drawing:
         size=(f"{inchToMilimeter(11)}mm", f"{inchToMilimeter(8.5)}mm"),
         viewBox=(f"0 0 {inchToMilimeter(11)} {inchToMilimeter(8.5)}")
     )
+    
+def getVerticalPageCanvas() -> svgwrite.Drawing:
+    return svgwrite.Drawing(
+        size=(f"{inchToMilimeter(8.5)}mm", f"{inchToMilimeter(11)}mm"),
+        viewBox=(f"0 0 {inchToMilimeter(8.5)} {inchToMilimeter(11)}")
+    )
 
 def inchToMilimeter(i: int) -> int:
     return i * 25

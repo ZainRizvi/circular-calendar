@@ -2,7 +2,7 @@ from calendar_data import *
 from arc_drawing import *
 from typing import List
 
-DATE_FILL_COLOR = "yellow"
+DATE_FILL_COLOR = "#fbebb3"
 def getMonth(month: MonthInstance, days_in_year: int, origin: Point) -> List[any]:
     month_width_degrees = 360 * month.num_days / days_in_year
     # center start and stop angles around -90 degrees
@@ -65,14 +65,17 @@ def getMonth(month: MonthInstance, days_in_year: int, origin: Point) -> List[any
         # Add date inside box
         date_center = Point(
                         (date_background.innerArc.start.x + date_background.outerArc.start.x)/2,
-                        (date_background.innerArc.start.y + date_background.outerArc.start.y)/2 + (date_background.innerArc.start.y - date_background.outerArc.start.y) * 0.075)
-        date_size = (date_outer_radius - date_inner_radius) * 0.75
-        highlight_circle = Circle(radius=date_size/2, center=date_center)
-        # drawing_elements.append(highlight_circle)
+                        (date_background.innerArc.start.y + date_background.outerArc.start.y)/2 + (date_background.innerArc.start.y - date_background.outerArc.start.y) * 0.0)
+        date_size = (date_outer_radius - date_inner_radius) * 0.6
+        
+        highlight_circle = Circle(radius=date_size * 0.7, center=date_center)
+        #drawing_elements.append(highlight_circle)
+        
         date_text = TextCenteredAroundPoint(
             point=date_center, 
             text=f"{i + 1}", # date
             font_size=date_size,
+            rotation=month.date_angle_offset
         )
         drawing_elements.append(date_text)
     

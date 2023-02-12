@@ -1,7 +1,5 @@
 from typing import NamedTuple, List
 
-
-
 # Settings to build a specific month.
 class MonthInstance(NamedTuple):
     name: str
@@ -12,6 +10,7 @@ class MonthInstance(NamedTuple):
     date_box_height: float # height of the date box
     inner_radius: float
     outer_radius: float
+    date_angle_offset: int
 
 class CalendarSettings(NamedTuple):
     date_on_top: bool # should dates be placed up top or down below?
@@ -21,12 +20,43 @@ class CalendarSettings(NamedTuple):
     days_in_year: int # number of days in the full year
 
 class Month(NamedTuple):
+    number: int
     name: str
     num_days: List[str] # each item results in a different month printed with [item] number of days
     color: str # fill color
 
 class Year(NamedTuple):
     months: List[Month]
+    
+color_wheel_classic = [
+    "#b4bcf9",
+    "#b7e2fc",
+    "#c2fbc9",
+    "#d9fc98",
+    "#fcfd9f",
+    "#f8ef94",
+    "#f3db97",
+    "#edc294",
+    "#edc294",
+    "#e597be",
+    "#eab0ed",
+    "#c3acf9",
+]
+
+color_wheel_classic_mod = [
+    "#b7e2fc",
+    "#b7e2fc",
+    "#c2fbc9",
+    "#d9fc98",
+    "#fcfd9f",
+    "#f8ef94",
+    "#f3db97",
+    "#edc294",
+    "#edc294",
+    "#ff0000",
+    "#eab0ed",
+    "#c3acf9",
+]
 
 color_wheel_ring2 = [
     "#70c3ed", #light blue
@@ -74,21 +104,21 @@ pallet1 = [
     "#a864db",
 ]
 
-solar_colors = color_wheel_ring2
+solar_colors = color_wheel_classic_mod
 solar_year = Year(
     months=[
-        Month("January", [31], solar_colors[0]),
-        Month("February", [29], solar_colors[1]),
-        Month("March", [31], solar_colors[2]),
-        Month("April", [30], solar_colors[3]),
-        Month("May", [31], solar_colors[4]),
-        Month("June", [30], solar_colors[5]),
-        Month("July", [31], solar_colors[6]),
-        Month("August", [31], solar_colors[7]),
-        Month("September", [30], solar_colors[8]),
-        Month("October", [31], solar_colors[9]),
-        Month("November", [30], solar_colors[10]),
-        Month("December", [31], solar_colors[11]),
+        Month(1, "January", [31], solar_colors[0]),
+        Month(2, "February", [29], solar_colors[1]),
+        Month(3, "March", [31], solar_colors[2]),
+        Month(4, "April", [30], solar_colors[3]),
+        Month(5, "May", [31], solar_colors[4]),
+        Month(6, "June", [30], solar_colors[5]),
+        Month(7, "July", [31], solar_colors[6]),
+        Month(8, "August", [31], solar_colors[7]),
+        Month(9, "September", [30], solar_colors[8]),
+        Month(10, "October", [31], solar_colors[9]),
+        Month(11, "November", [30], solar_colors[10]),
+        Month(12, "December", [31], solar_colors[11]),
     ]
 )
 
@@ -96,17 +126,17 @@ solar_year = Year(
 islamic_colors = color_wheel_ring3
 islamic_year = Year(
     months=[
-        Month("Muharram", [29], islamic_colors[0]),
-        Month("Safar", [29], islamic_colors[1]),
-        Month("Rabi al-Awwal", [30], islamic_colors[2]),
-        Month("Rabi at-Thani", [30], islamic_colors[3]),
-        Month("Jawad al-Awwal", [29], islamic_colors[4]),
-        Month("Jawad at-Thani", [30], islamic_colors[5]),
-        Month("Rajab", [30], islamic_colors[6]),
-        Month("Shabaan", [29], islamic_colors[7]),
-        Month("Ramadan", [30], islamic_colors[8]),
-        Month("Shawal", [29], islamic_colors[9]),
-        Month("Dhu al-Qadah", [30], islamic_colors[10]),
-        Month("Dhu al-Hijja", [29], islamic_colors[11]),
+        Month(1, "Jamad at-Thani", [30], islamic_colors[5]),
+        Month(2, "Rajab", [30], islamic_colors[6]),
+        Month(3, "Shabaan", [30], islamic_colors[7]),
+        Month(4, "Ramadan", [30], islamic_colors[8]),
+        Month(5, "Shawal", [30], islamic_colors[9]),
+        Month(6, "Dhu al-Qadah", [30], islamic_colors[10]),
+        Month(7, "Dhu al-Hijja", [30], islamic_colors[11]),
+        Month(8 ,"Muharram", [30], islamic_colors[0]),
+        Month(9, "Safar", [30], islamic_colors[1]),
+        Month(10, "Rabi al-Awwal", [30], islamic_colors[2]),
+        Month(11, "Rabi at-Thani", [30], islamic_colors[3]),
+        Month(12, "Jamad al-Awwal", [30], islamic_colors[4]),
     ]
 )

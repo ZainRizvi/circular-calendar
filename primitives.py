@@ -19,8 +19,8 @@ class ArcDrawMode(Enum):
     NEW = 1
     LINE_TO = 2 # Draw a line from wherever the path last ended to the start of this Arc
 
-SCALE_FACTOR = 0.5
-STROKE_WIDTH = 0.5 * SCALE_FACTOR
+SCALE_FACTOR = 0.7
+STROKE_WIDTH = 0.1 * SCALE_FACTOR
 
 """
 A linear arc
@@ -80,16 +80,21 @@ class TextCenteredAroundPoint(NamedTuple):
     point: Point
     text: str
     font_size: float
+    rotation: int
 
     def drawnPath(self):
+        pcRotate = f"rotate(270)",
         t = svgwrite.text.Text(
             self.text,
-            insert=(self.point.x, self.point.y),
+            insert=(self.point.x, self.point.y+self.font_size*0.1), # The extra offset for the y will correctly center the text vertically
             font_size=self.font_size,
             text_anchor="middle",
             #alignment_baseline="middle",
-            dominant_baseline="central",
+            dominant_baseline="middle",
+            transform=f"rotate({self.rotation}, {self.point.x}, {self.point.y})"
         )
+        # g = svgwrite.container.Group()
+        # g.add(t, transform=pcRotate)
         return t
 
 
@@ -130,6 +135,6 @@ class Circle(NamedTuple):
             svgwrite.shapes.Circle(
                 center=(self.center.x, self.center.y),
                 r = self.radius,
-                fill="yellow"
+                fill="red"
             )
         ]
