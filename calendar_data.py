@@ -123,7 +123,7 @@ solar_year = Year(
 )
 
 
-islamic_colors = color_wheel_ring3
+islamic_colors = color_wheel_ring2
 islamic_year = Year(
     months=[
         Month(1, "Jamad at-Thani", [30], islamic_colors[5]),

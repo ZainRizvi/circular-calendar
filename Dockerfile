@@ -24,5 +24,8 @@ RUN head -n -1 /etc/ImageMagick-6/policy.xml > tmp.xml && cat tmp.xml > /etc/Ima
     echo '  <policy domain="coder" rights="read | write" pattern="PDF" />' >> /etc/ImageMagick-6/policy.xml && \
     echo '</policymap>' >> /etc/ImageMagick-6/policy.xml
 
+
+RUN pip install pypdf
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
