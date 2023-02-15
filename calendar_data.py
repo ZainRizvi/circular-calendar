@@ -105,6 +105,22 @@ color_wheel_ring3 = [
     "#fec679", #orange
 ]
 
+
+color_wheel_classic_islam = [
+    "#FF5959", # oct
+    "#F1948A", # nov
+    "#caa8fe", # dec
+    "#aebbff", # jan
+    "#9ce3ff", # feb
+    "#a1fec5", # mar
+    "#caff8b", # apr
+    "#fdff92", # may
+    "#fef087", # jun
+    "#ffdb8d", # jul
+    "#ffc08d", # aug
+    "#ffa290", # sep
+]
+
 pallet1 = [
     "#db64d3",
     "#db6498",
@@ -139,7 +155,7 @@ solar_year = Year(
 )
 
 
-islamic_colors = color_wheel_ring2
+islamic_colors = color_wheel_classic_islam #color_wheel_ring2
 islamic_year = Year(
     months=[
         Month(8 ,"Muharram", [30], islamic_colors[0]),
