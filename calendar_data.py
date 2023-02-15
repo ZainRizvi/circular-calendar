@@ -142,17 +142,17 @@ solar_year = Year(
 islamic_colors = color_wheel_ring2
 islamic_year = Year(
     months=[
-        Month(1, "Jamad at-Thani", [30], islamic_colors[5]),
-        Month(2, "Rajab", [30], islamic_colors[6]),
-        Month(3, "Shabaan", [30], islamic_colors[7]),
-        Month(4, "Ramadan", [30], islamic_colors[8]),
-        Month(5, "Shawal", [30], islamic_colors[9]),
-        Month(6, "Dhu al-Qadah", [30], islamic_colors[10]),
-        Month(7, "Dhu al-Hijja", [30], islamic_colors[11]),
         Month(8 ,"Muharram", [30], islamic_colors[0]),
         Month(9, "Safar", [30], islamic_colors[1]),
         Month(10, "Rabi al-Awwal", [30], islamic_colors[2]),
-        Month(11, "Rabi at-Thani", [30], islamic_colors[3]),
-        Month(12, "Jamad al-Awwal", [30], islamic_colors[4]),
+        Month(11, "Rabi ath-Thani", [30], islamic_colors[3]),
+        Month(12, "Jumada al-Awwal", [30], islamic_colors[4]),
+        Month(1, "Jumada ath-Thani", [30], islamic_colors[5]),
+        Month(2, "Rajab", [30], islamic_colors[6]),
+        Month(3, "Sha'baan", [30], islamic_colors[7]),
+        Month(4, "Ramadan", [30], islamic_colors[8]),
+        Month(5, "Shawwal", [30], islamic_colors[9]),
+        Month(6, "Dhu al-Qa'dah", [30], islamic_colors[10]),
+        Month(7, "Dhu al-Hijja", [30], islamic_colors[11]),
     ]
 )
