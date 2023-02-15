@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[ ]:
 
 
 def is_notebook() -> bool:
@@ -22,21 +22,17 @@ if is_notebook():
 
 import math
 import os
-import svgwrite
-from svgwrite import Drawing
 from IPython.display import SVG
-from typing import NamedTuple
-from enum import Enum
-from typing import List
 
 # custom libs
 from primitives import *
 from arc_drawing import *
 from calendar_data import *
 from calendar_drawings import *
+import pdfizer
 
 
-# In[4]:
+# In[3]:
 
 
 # Get months to draw
@@ -101,7 +97,7 @@ for month in islamic_year.months:
         ) 
 
 
-# In[5]:
+# In[ ]:
 
 
 month_offset = 4 * scale_factor
@@ -148,6 +144,7 @@ else:
 
 month_idx = 0
 page_num = 0
+pdfs = []
 while month_idx < len(solarMonths) - 1:
     dwg = getVerticalPageCanvas() # getPageCanvas()
     origin = origin_first
@@ -171,9 +168,19 @@ while month_idx < len(solarMonths) - 1:
 
     dwg.saveas(svg_file, pretty=True)
     # os.system(f"convert {svg_file} {pdf_file}")
-    os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
+    os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
+    os.remove(svg_file)
+    pdfs.append(pdf_file)
     
     page_num += 1
+    
+
+pdfizer.concat_pdfs(pdfs, f"out/calendar_pages_{scale_factor}.pdf")
+print("Wrote the concatenated file!")
+for pdf in pdfs:
+    print(f"removing {pdf}...") 
+    os.remove(pdf)
+print("and removed old pdfs")
 
 print(scale_factor)
 SVG(dwg.tostring())

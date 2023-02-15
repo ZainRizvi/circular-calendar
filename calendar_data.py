@@ -29,34 +29,50 @@ class Year(NamedTuple):
     months: List[Month]
     
 color_wheel_classic = [
-    "#b4bcf9",
-    "#b7e2fc",
-    "#c2fbc9",
-    "#d9fc98",
-    "#fcfd9f",
-    "#f8ef94",
-    "#f3db97",
-    "#edc294",
-    "#edc294",
-    "#e597be",
-    "#eab0ed",
-    "#c3acf9",
+    "#aebbff", # jan
+    "#9ce3ff", # feb
+    "#a1fec5", # mar
+    "#caff8b", # apr
+    "#fdff92", # may
+    "#fef087", # jun
+    "#ffdb8d", # jul
+    "#ffc08d", # aug
+    "#ffa290", # sep
+    "#ff90c0", # oct
+    "#feabf1", # nov
+    "#caa8fe", # dec
 ]
 
 color_wheel_classic_mod = [
-    "#b7e2fc",
-    "#b7e2fc",
-    "#c2fbc9",
-    "#d9fc98",
-    "#fcfd9f",
-    "#f8ef94",
-    "#f3db97",
-    "#edc294",
-    "#edc294",
-    "#ff0000",
-    "#eab0ed",
-    "#c3acf9",
+    "#87cdff", # jan
+    "#9ce3ff", # feb
+    "#a1fec5", # mar
+    "#caff8b", # apr
+    "#fdff87", # may
+    "#fef097", # jun
+    "#ffcb8d", # jul
+    "#ffb09d", # aug
+    "#ff92a0", # sep
+    "#ff7080", # oct
+    "#feabf1", # nov
+    "#caa8fe", # dec
 ]
+
+color_harmony = [
+    "#9CB2FF", # feb
+    "#B89CFF", # mar
+    "#EA9CFF", # apr
+    "#FF9CE3", # may
+    "#FF9CB1", # jun
+    "#FFB99C", # jul
+    "#FFEA9C", # aug
+    "#E3FF9C", # sep
+    "#B1FF9C", # oct
+    "#9CFFB8", # nov
+    "#9CFFEA", # dec
+    "#9CE3FF", # jan
+]
+color_harmony.reverse()
 
 color_wheel_ring2 = [
     "#70c3ed", #light blue
@@ -104,7 +120,7 @@ pallet1 = [
     "#a864db",
 ]
 
-solar_colors = color_wheel_classic_mod
+solar_colors = color_harmony# color_wheel_classic_mod
 solar_year = Year(
     months=[
         Month(1, "January", [31], solar_colors[0]),
