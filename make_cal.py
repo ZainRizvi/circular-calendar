@@ -103,34 +103,11 @@ for month in islamic_year.months:
 month_offset = 4 * scale_factor
 
 origin_first = Point(width_center, outermost_radius + vertical_offset)
-origin = origin_first
 
 days_in_year = 366
 
 def offsetPointBy(point: Point, x_offset: int, y_offset: int):
     return Point(point.x + x_offset, point.y + y_offset)
-
-
-if scale_factor == 1:
-    for i in range(int(len(solarMonths)/2)):
-        dwg = getVerticalPageCanvas() # getPageCanvas()
-
-        origin = origin_first
-        drawMonthParts(dwg, getMonth(solarMonths[2 * i], days_in_year, origin))
-        origin = offsetPointBy(origin, 0, month_offset)
-        drawMonthParts(dwg, getMonth(islamicMonths[2 * i], days_in_year, origin))
-        
-        origin = offsetPointBy(origin, 0, month_thickness*2.5)
-        drawMonthParts(dwg, getMonth(solarMonths[2 * i + 1], days_in_year, origin))
-        origin = offsetPointBy(origin, 0, month_offset)
-        drawMonthParts(dwg, getMonth(islamicMonths[2 * i + 1], days_in_year, origin))
-
-        svg_file = f"out/test_output_{i}.svg"
-        pdf_file = f"out/calendar_page_{i}.pdf"
-
-        dwg.saveas(svg_file, pretty=True)
-        # os.system(f"convert {svg_file} {pdf_file}")
-        os.system(f"inkscape {svg_file} --export-pdf={pdf_file}")
 
 if scale_factor <= 0.5:
     NUM_ROWS = 5
@@ -145,6 +122,8 @@ else:
 month_idx = 0
 page_num = 0
 pdfs = []
+
+# Draw full scale pages
 while month_idx < len(solarMonths) - 1:
     dwg = getVerticalPageCanvas() # getPageCanvas()
     origin = origin_first
@@ -173,6 +152,61 @@ while month_idx < len(solarMonths) - 1:
     pdfs.append(pdf_file)
     
     page_num += 1
+
+
+
+# Draw summary page
+def circle_form_factor(g, month, days_elapsed, days_in_year, origin):
+    g.translate(75, 50)
+    g.scale(0.3)
+    rot = 360.0 * (days_elapsed + month.num_days / 2)/days_in_year
+    g.rotate(rot, center=origin)
+    g.translate(0, origin_first.y - origin.y)
+
+month_idx = 0
+page_num = 0
+days_elapsed = 0 - solarMonths[0].num_days/2
+days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
+dwg = getVerticalPageCanvas() # getPageCanvas()
+origin_first = Point(width_center, outermost_radius + vertical_offset)
+
+while month_idx < len(solarMonths) - 1:
+    origin = Point(origin_first.x, origin_first.y)
+    for col_num in range(NUM_COLUMNS):
+        for row_num in range(NUM_ROWS):
+            month_idx = row_num + NUM_ROWS*col_num + NUM_ROWS * NUM_COLUMNS * page_num
+
+            if month_idx < len(solarMonths):
+                month = solarMonths[month_idx]
+                g = groupWithMonthParts(getMonth(month, days_in_year, origin))
+                circle_form_factor(g, month, days_elapsed, days_in_year, origin)
+                days_elapsed += month.num_days
+                dwg.add(g)
+                #origin = offsetPointBy(origin, 0, month_offset)
+                
+
+            if month_idx < len(islamicMonths):
+                month = islamicMonths[month_idx]
+                g = groupWithMonthParts(getMonth(month, days_in_year, origin))
+                circle_form_factor(g, month, days_elapsed_islamic, days_in_year, origin)
+                days_elapsed_islamic += month.num_days
+                dwg.add(g)
+                #origin = offsetPointBy(origin, 0, month_thickness*2.3)
+        
+        # move to next column 
+        #origin = offsetPointBy(origin_first, width * 1.05, 0)
+
+    page_num += 1
+
+print("saving pdf")
+svg_file = f"out/svg_{scale_factor}_{page_num}_cover.svg"
+pdf_file = f"out/calendar_page_{scale_factor}_{page_num}_cover.pdf"
+
+dwg.saveas(svg_file, pretty=True)
+# os.system(f"convert {svg_file} {pdf_file}")
+os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
+os.remove(svg_file)
+pdfs.insert(0, pdf_file)
     
 
 pdfizer.concat_pdfs(pdfs, f"out/calendar_pages_{scale_factor}.pdf")

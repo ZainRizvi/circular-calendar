@@ -69,3 +69,16 @@ def drawMonthParts(dwg: svgwrite.Drawing, monthParts: List[any]):
             
         for component in drawing:
             dwg.add(component)
+
+def groupWithMonthParts(monthParts: List[any]) -> svgwrite.container.Group:
+    g = svgwrite.container.Group()
+    for part in monthParts:
+        drawing = part.drawnPath()
+        # some drawn parts return a list of multiple things to draw. Unify both interfaces here. 
+        if not isinstance(drawing, list):
+            drawing = [drawing]
+            
+        for component in drawing:
+            g.add(component)
+    
+    return g
