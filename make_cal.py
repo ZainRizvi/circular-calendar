@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[13]:
 
 
 def is_notebook() -> bool:
@@ -32,7 +32,7 @@ from calendar_drawings import *
 import pdfizer
 
 
-# In[3]:
+# In[14]:
 
 
 # Get months to draw
@@ -50,7 +50,8 @@ month_thickness = (outermost_radius - inner_radius)
 date_box_height = month_thickness * 0.2
 
 # width = outermost_radius * 2 * 3.14 / 12 / 2
-width_center = inchToMilimeter(canvas_width) / 2
+extra_width_offset = 10
+width_center = inchToMilimeter(canvas_width) / 2 + extra_width_offset
 vertical_offset = 30 * scale_factor
 
 def date_rotation(month: Month) -> int:
@@ -77,6 +78,10 @@ for index, month in enumerate(solar_year.months):
             )
         )
 
+# The number of days between Jan 1st and the month of the islamic calendar with the month#1
+# Controls the exact rotation of the dates on the Islamic calendar
+# Exact value would be num_days * 360/365, but that's close enough to just num_days for this purpose
+islamic_date_rotation_offset = -15 # offset by an extra 15 days.
     
 islamicMonths = []
 for month in islamic_year.months:
@@ -92,15 +97,15 @@ for month in islamic_year.months:
                 date_box_height=date_box_height,
                 inner_radius=inner_radius - month_thickness,
                 outer_radius=outermost_radius - month_thickness,
-                date_angle_offset=date_rotation(month) + 10, # offset by an extra 10 days. Exact value would be 15 * 360/365, but that's close enough to 15 for this purpose
+                date_angle_offset=date_rotation(month) + islamic_date_rotation_offset,
             )
         ) 
 
 
-# In[ ]:
+# In[15]:
 
 
-month_offset = 4 * scale_factor
+month_offset = 4 * scale_factor # Use 0 to have solar/Islamic months touching in the print out
 
 origin_first = Point(width_center, outermost_radius + vertical_offset)
 
@@ -137,7 +142,7 @@ while month_idx < len(solarMonths) - 1:
             
             if month_idx < len(islamicMonths):
                 drawMonthParts(dwg, getMonth(islamicMonths[month_idx], days_in_year, origin))
-                origin = offsetPointBy(origin, 0, month_thickness*2.3)
+                origin = offsetPointBy(origin, 0, (month_thickness + month_offset)*2.3)
         
         # move to next column 
         origin = offsetPointBy(origin_first, width * 1.05, 0)
@@ -166,7 +171,13 @@ def circle_form_factor(g, month, days_elapsed, days_in_year, origin):
 month_idx = 0
 page_num = 0
 days_elapsed = 0 - solarMonths[0].num_days/2
-days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
+
+# For starting with Rajab 2022
+# days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
+
+# For starting with Sha'ban 2022
+days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2 
+
 dwg = getVerticalPageCanvas() # getPageCanvas()
 origin_first = Point(width_center, outermost_radius + vertical_offset)
 
@@ -207,9 +218,9 @@ dwg.saveas(svg_file, pretty=True)
 os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
 os.remove(svg_file)
 pdfs.insert(0, pdf_file)
-    
 
-pdfizer.concat_pdfs(pdfs, f"out/calendar_pages_{scale_factor}.pdf")
+instructions_pdf = "v3 Instructions.pdf"
+pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}.pdf")
 print("Wrote the concatenated file!")
 for pdf in pdfs:
     print(f"removing {pdf}...") 

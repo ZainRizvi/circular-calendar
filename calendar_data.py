@@ -168,7 +168,8 @@ pallet1 = [
     "#a864db",
 ]
 
-solar_colors = color_wheel_classic_mod2 #color_harmony# color_wheel_classic_mod
+# Maryam's colors: color_wheel_classic_mod2
+solar_colors = color_wheel_classic #color_wheel_classic color_harmony# color_wheel_classic_mod
 solar_year = Year(
     months=[
         Month(1, "January", [31], solar_colors[0]),
@@ -190,17 +191,17 @@ solar_year = Year(
 islamic_colors = color_harmony # color_wheel_ring3 # color_wheel_classic_islam #color_wheel_ring2
 islamic_year = Year(
     months=[
-        Month(2, "Rajab", [30], islamic_colors[6]),
-        Month(3, "Sha'baan", [30], islamic_colors[7]),
-        Month(4, "Ramadan", [30], islamic_colors[8]),
-        Month(5, "Shawwal", [30], islamic_colors[9]),
-        Month(6, "Dhu al-Qa'dah", [30], islamic_colors[10]),
-        Month(7, "Dhu al-Hijja", [30], islamic_colors[11]),
-        Month(8 ,"Muharram", [30], islamic_colors[0]),
-        Month(9, "Safar", [30], islamic_colors[1]),
-        Month(10, "Rabi al-Awwal", [30], islamic_colors[2]),
-        Month(11, "Rabi ath-Thani", [30], islamic_colors[3]),
-        Month(12, "Jumada al-Awwal", [30], islamic_colors[4]),
-        Month(1, "Jumada ath-Thani", [30], islamic_colors[5]),
+        Month(2, "Sha'baan", [30], islamic_colors[7]),
+        Month(3, "Ramadan", [30], islamic_colors[8]),
+        Month(4, "Shawwal", [30], islamic_colors[9]),
+        Month(5, "Dhu al-Qa'dah", [30], islamic_colors[10]),
+        Month(6, "Dhu al-Hijja", [30], islamic_colors[11]),
+        Month(7 ,"Muharram", [30], islamic_colors[0]),
+        Month(8, "Safar", [30], islamic_colors[1]),
+        Month(9, "Rabi al-Awwal", [30], islamic_colors[2]),
+        Month(10, "Rabi ath-Thani", [30], islamic_colors[3]),
+        Month(11, "Jumada al-Awwal", [30], islamic_colors[4]),
+        Month(12, "Jumada ath-Thani", [30], islamic_colors[5]),
+        Month(1, "Rajab", [30], islamic_colors[6]),
     ]
 )
