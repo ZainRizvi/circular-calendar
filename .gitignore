@@ -8,8 +8,7 @@ __pycache__/
 *$py.class
 
 # Test output files
-*.svg
-*.pdf
+out/
 
 # C extensions
 *.so

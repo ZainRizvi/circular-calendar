@@ -190,18 +190,21 @@ solar_year = Year(
 
 islamic_colors = color_harmony # color_wheel_ring3 # color_wheel_classic_islam #color_wheel_ring2
 islamic_year = Year(
+    # When regenerating the calendar, the following should be kept true:
+    # - Top month should be the current month (or whatever month the calendar should "start" from)
+    # - Months #4-9 will be the months that are upside down. 
     months=[
-        Month(2, "Sha'baan", [30], islamic_colors[7]),
-        Month(3, "Ramadan", [30], islamic_colors[8]),
-        Month(4, "Shawwal", [30], islamic_colors[9]),
-        Month(5, "Dhu al-Qa'dah", [30], islamic_colors[10]),
-        Month(6, "Dhu al-Hijja", [30], islamic_colors[11]),
-        Month(7 ,"Muharram", [30], islamic_colors[0]),
-        Month(8, "Safar", [30], islamic_colors[1]),
-        Month(9, "Rabi al-Awwal", [30], islamic_colors[2]),
-        Month(10, "Rabi ath-Thani", [30], islamic_colors[3]),
-        Month(11, "Jumada al-Awwal", [30], islamic_colors[4]),
-        Month(12, "Jumada ath-Thani", [30], islamic_colors[5]),
-        Month(1, "Rajab", [30], islamic_colors[6]),
+        Month(10, "Jumada al-Awwal", [30], islamic_colors[4]),
+        Month(11, "Jumada ath-Thani", [30], islamic_colors[5]),
+        Month(12, "Rajab", [30], islamic_colors[6]),
+        Month(1, "Sha'baan", [30], islamic_colors[7]),
+        Month(2, "Ramadan", [30], islamic_colors[8]),
+        Month(3, "Shawwal", [30], islamic_colors[9]),
+        Month(4, "Dhu al-Qa'dah", [30], islamic_colors[10]),
+        Month(5, "Dhu al-Hijja", [30], islamic_colors[11]),
+        Month(6 ,"Muharram", [30], islamic_colors[0]),
+        Month(7, "Safar", [30], islamic_colors[1]),
+        Month(8, "Rabi al-Awwal", [30], islamic_colors[2]),
+        Month(9, "Rabi ath-Thani", [30], islamic_colors[3]),
     ]
 )

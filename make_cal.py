@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[1]:
 
 
 def is_notebook() -> bool:
@@ -32,7 +32,14 @@ from calendar_drawings import *
 import pdfizer
 
 
-# In[14]:
+# In[2]:
+
+
+# make the out dir
+os.makedirs("out", exist_ok=True)
+
+
+# In[3]:
 
 
 # Get months to draw
@@ -102,7 +109,7 @@ for month in islamic_year.months:
         ) 
 
 
-# In[15]:
+# In[4]:
 
 
 month_offset = 4 * scale_factor # Use 0 to have solar/Islamic months touching in the print out
@@ -176,7 +183,15 @@ days_elapsed = 0 - solarMonths[0].num_days/2
 # days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
 
 # For starting with Sha'ban 2022
-days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2 
+# days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2 
+
+# For starting with Jamadi ul-Awwal 2024
+days_elapsed_islamic = 6.5 # Will need to be tweaked every year to fine tune the calendar alignment
+num_months_to_skip = 10 # up till the current calendar month
+for i in range(num_months_to_skip):
+  days_elapsed_islamic += islamicMonths[i].num_days
+
+days_elapsed_islamic -= islamicMonths[num_months_to_skip].num_days/2 
 
 dwg = getVerticalPageCanvas() # getPageCanvas()
 origin_first = Point(width_center, outermost_radius + vertical_offset)
@@ -220,7 +235,7 @@ os.remove(svg_file)
 pdfs.insert(0, pdf_file)
 
 instructions_pdf = "v3 Instructions.pdf"
-pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}.pdf")
+pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}_COMPLETE.pdf")
 print("Wrote the concatenated file!")
 for pdf in pdfs:
     print(f"removing {pdf}...") 
