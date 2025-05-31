@@ -5,20 +5,25 @@ This document outlines the plan to migrate the existing Python-based calendar ge
 
 ## High-Level Plan
 
-1. **Repository Restructuring**
+Meta Instructions: 
+- Remember to keep checking this plan for the next steps once you complete any steps
+- Mark steps as complete once you complete them
+- At the end of each step, test your changes to verify that they work. Fix them if they don't work.
+
+1. **Repository Restructuring** ✅ *(Completed: folders created, Python code archived, Next.js app scaffolded)*
    - Create new directory structure
    - Move existing Python code to archive
    - Set up Next.js project structure
 
-2. **Dependencies Analysis & Migration**
+2. **Dependencies Analysis & Migration** ✅ *(Completed: dependencies identified, browser-based PDF/SVG tested, package.json updated)*
    - Identify core dependencies
-   - Find Node.js equivalents
+   - Find Node.js/browser equivalents
    - Set up package.json
 
 3. **Core Logic Migration**
-   - Implement core logic as node package
+   - Implement core logic as node/browser package *(in progress: browser PDF/SVG tested)*
    - Convert Python SVG generation to JavaScript
-   - Implement PDF generation in Node.js
+   - Implement PDF generation in Node.js (if needed for server-side)
    - Create API endpoints
 
 4. **Frontend Development**
@@ -33,7 +38,7 @@ This document outlines the plan to migrate the existing Python-based calendar ge
 
 ## Detailed Implementation Steps
 
-### Phase 1: Repository Restructuring
+### Phase 1: Repository Restructuring ✅ *(Completed)*
 
 1. Create new directory structure:
 ```bash
@@ -53,20 +58,19 @@ cd app
 npx create-next-app@latest . --typescript --tailwind --eslint
 ```
 
-### Phase 2: Dependencies Analysis & Migration
+### Phase 2: Dependencies Analysis & Migration ✅ *(Completed)*
 
 1. Core dependencies to migrate:
    - `svgwrite` → Use `svg.js` or `@svgdotjs/svg.js`
-   - PDF generation → Use `pdfkit` or `puppeteer`
-   - ImageMagick/Inkscape → Use `sharp` for image processing
+   - PDF generation → Use `pdf-lib` (browser) or `pdfkit`/`puppeteer` (Node, if needed)
+   - ImageMagick/Inkscape → Use `sharp` for image processing (Node, if needed)
 
 2. Create package.json with required dependencies:
 ```json
 {
   "dependencies": {
     "@svgdotjs/svg.js": "^3.1.2",
-    "pdfkit": "^0.14.0",
-    "sharp": "^0.33.2",
+    "pdf-lib": "^1.17.1",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
@@ -74,7 +78,9 @@ npx create-next-app@latest . --typescript --tailwind --eslint
 }
 ```
 
-### Phase 3: Core Logic Migration
+3. **Tested browser-based SVG and PDF generation with pdf-lib.**
+
+### Phase 3: Core Logic Migration *(In Progress)*
 
 1. Create API route structure:
 ```
@@ -94,7 +100,7 @@ app/
    - Create SVG generation utilities
 
 3. Implement PDF generation:
-   - Create PDF generation service
+   - Create PDF generation service (browser: done, server: optional)
    - Handle SVG to PDF conversion
    - Implement file download
 
