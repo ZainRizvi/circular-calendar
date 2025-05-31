@@ -82,7 +82,7 @@ npx create-next-app@latest . --typescript --tailwind --eslint
 
 ### Phase 3: Core Logic Migration *(In Progress)*
 
-1. Create API route structure:
+1. Create API route structure: ✅ *(Completed)*
 ```
 app/
   ├── api/
@@ -94,15 +94,23 @@ app/
   │   └── pdf.ts
 ```
 
-2. Convert Python SVG generation:
-   - Port `arc_drawing.py` to TypeScript
-   - Port `calendar_drawings.py` to TypeScript
-   - Create SVG generation utilities
+2. Convert Python SVG generation: *(In Progress)*
+   - Port `arc_drawing.py` to TypeScript ✅
+   - Port `calendar_drawings.py` to TypeScript *(Next Step)*
+   - Create SVG generation utilities ✅
 
-3. Implement PDF generation:
-   - Create PDF generation service (browser: done, server: optional)
-   - Handle SVG to PDF conversion
-   - Implement file download
+3. Implement PDF generation: ✅ *(Completed)*
+   - Create PDF generation service (browser: done, server: optional) ✅
+   - Handle SVG to PDF conversion ✅
+   - Implement file download ✅
+
+4. Next Steps:
+   - Port calendar_drawings.py to TypeScript
+   - Implement calendar data structure and calculations
+   - Create calendar layout generation logic
+   - Add support for different calendar types (yearly, monthly)
+   - Implement color scheme and styling options
+   - Add text and label generation for dates and months
 
 ### Phase 4: Frontend Development
 
