@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { SVG, Svg } from '@svgdotjs/svg.js';
-import { getMonth } from '@/lib/calendar';
+import { getMonth } from '@/lib/month';
 import { drawMonthParts } from '@/lib/svg';
-import type { MonthInstance } from '@/lib/calendar';
+import type { MonthInstance } from '@/lib/month';
 import { Point } from '@/lib/primitives';
 import SvgViewbox from '@/components/SvgViewbox';
 
