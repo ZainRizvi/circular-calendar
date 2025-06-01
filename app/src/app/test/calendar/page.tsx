@@ -41,7 +41,7 @@ export default function CalendarTest() {
             color: '#FF0000',
             name_upside_down: false,
             date_on_top: true,
-            date_box_height: 3,
+            date_box_height: 5,
             inner_radius: 300,
             outer_radius: 330,
             date_angle_offset: 0
