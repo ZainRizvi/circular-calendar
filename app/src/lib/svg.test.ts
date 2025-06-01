@@ -1,4 +1,5 @@
-import { SVG, Svg, Point, Path } from '@svgdotjs/svg.js';
+import { SVG, Svg, Point as SvgPoint, Path } from '@svgdotjs/svg.js';
+import { Point } from './primitives';
 import { inchToMillimeter, toRadian, getCoordinatePoint, getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts } from './svg';
 
 // Mock SVG.js
@@ -35,24 +36,21 @@ describe('SVG Utilities', () => {
 
   describe('getCoordinatePoint', () => {
     it('calculates a point on a circle correctly', () => {
-      const origin = { x: 0, y: 0 } as unknown as Point;
+      const origin = new Point(0, 0);
       const radius = 10;
       const angle = 0;
       const point = getCoordinatePoint(origin, radius, angle);
       expect(point).toEqual({
         x: 10,
         y: 0,
-        clone: expect.any(Function),
-        transform: expect.any(Function),
-        transformO: expect.any(Function),
-        toArray: expect.any(Function),
+        pathText: expect.any(Function)
       });
     });
   });
 
   describe('getArc', () => {
     it('generates an arc path correctly', () => {
-      const origin = { x: 0, y: 0 } as unknown as Point;
+      const origin = new Point(0, 0);
       const radius = 10;
       const startAngle = 0;
       const stopAngle = 90;
@@ -63,7 +61,7 @@ describe('SVG Utilities', () => {
 
   describe('getDimensionalArc', () => {
     it('generates a dimensional arc correctly', () => {
-      const origin = { x: 0, y: 0 } as unknown as Point;
+      const origin = new Point(0, 0);
       const innerRadius = 5;
       const outerRadius = 10;
       const startAngle = 0;
