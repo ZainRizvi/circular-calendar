@@ -96,7 +96,8 @@ app/
 
 2. Convert Python SVG generation: *(In Progress)*
    - Port `arc_drawing.py` to TypeScript ✅
-   - Port `calendar_drawings.py` to TypeScript *(Next Step)*
+   - Port `calendar_drawings.py` to TypeScript ✅
+   - Port the full calendar generation portion of `make_cal.py` *(Next Step)*
    - Create SVG generation utilities ✅
 
 3. Implement PDF generation: ✅ *(Completed)*
@@ -108,7 +109,6 @@ app/
    - Port calendar_drawings.py to TypeScript
    - Implement calendar data structure and calculations
    - Create calendar layout generation logic
-   - Add support for different calendar types (yearly, monthly)
    - Implement color scheme and styling options
    - Add text and label generation for dates and months
 
