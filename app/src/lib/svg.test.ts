@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { SVG, Svg } from '@svgdotjs/svg.js';
+=======
+import { Svg } from '@svgdotjs/svg.js';
+>>>>>>> master
 import { Point } from './primitives';
 import { inchToMillimeter, toRadian, getCoordinatePoint, getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts, PathElement } from './svg';
 
@@ -13,6 +17,7 @@ jest.mock('@svgdotjs/svg.js', () => ({
       transformO: jest.fn(),
       toArray: jest.fn(),
     }),
+<<<<<<< HEAD
     path: jest.fn().mockReturnValue({
       fill: jest.fn().mockReturnThis(),
       stroke: jest.fn().mockReturnThis()
@@ -20,6 +25,10 @@ jest.mock('@svgdotjs/svg.js', () => ({
     group: jest.fn().mockReturnValue({
       add: jest.fn()
     }),
+=======
+    path: () => ({ fill: jest.fn().mockReturnThis(), stroke: jest.fn().mockReturnThis() }),
+    group: () => ({ add: jest.fn() }),
+>>>>>>> master
   })),
 }));
 

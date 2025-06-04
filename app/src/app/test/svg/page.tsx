@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { SVG } from "@svgdotjs/svg.js";
-import { getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts } from "@/lib/svg";
+import { SVG, Svg } from "@svgdotjs/svg.js";
+import { getArc, getDimensionalArc } from "@/lib/svg";
 import { Point } from "@/lib/primitives";
 
 // Common SVG setup configuration
@@ -71,6 +71,7 @@ const SvgPreview = ({ svgCode, error }: { svgCode: string; error: string | null 
         <path d="${svgCode}" fill="none" stroke="black" stroke-width="2"/>
       </svg>`;
     } catch (err) {
+      console.error('Failed to generate SVG preview:', err);
       return '<svg></svg>';
     }
   };
@@ -116,7 +117,7 @@ const [svgTexts, setSvgTexts] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     // Setup common reference circle
-    const drawReferenceCircle = (draw: any) => {
+    const drawReferenceCircle = (draw: Svg) => {
       draw.circle(100)
         .center(0, 0)
         .fill('none')
@@ -239,7 +240,7 @@ const [svgTexts, setSvgTexts] = useState<{ [key: string]: string }>({});
       <div className="mt-12 border-t pt-8">
         <h2 className="text-2xl font-bold mb-4">SVG Test Editor</h2>
         <p className="text-gray-600 mb-4">
-          Enter SVG path commands (e.g., "m 50,0 A 50,50 0 0 1 -25,-43.3"). The editor will automatically wrap your path in an SVG container.
+          Enter SVG path commands (e.g., &quot;m 50,0 A 50,50 0 0 1 -25,-43.3&quot;). The editor will automatically wrap your path in an SVG container.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

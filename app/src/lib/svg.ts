@@ -1,5 +1,5 @@
-import { SVG, Svg } from '@svgdotjs/svg.js';
-import { Point, Arc, DimensionalArc, Length, Angle, ArcDrawMode } from './primitives';
+import { SVG, Svg, Path } from '@svgdotjs/svg.js';
+import { Point, Arc, DimensionalArc } from './primitives';
 
 // Convert inches to millimeters
 export function inchToMillimeter(i: number): number {
@@ -31,16 +31,6 @@ export function getArc(origin: Point, radius: number, startAngle: number, stopAn
   return new Arc(start, stop, radius, params);
 }
 
-// Helper to generate arc path with custom prefix ("M" for move, "L" for line)
-function getArcPath(origin: Point, radius: number, startAngle: number, stopAngle: number, prefix: 'M' | 'L'): string {
-  const start = getCoordinatePoint(origin, radius, startAngle);
-  const stop = getCoordinatePoint(origin, radius, stopAngle);
-  const largeArcFlag = Math.abs(stopAngle - startAngle) <= 180 ? 0 : 1;
-  // Calculate sweep flag based on angle order, just like in Python
-  const sweepFlag = startAngle < stopAngle ? 1 : 0;
-  return `${prefix} ${start.pathText()} A ${radius},${radius} 0 ${largeArcFlag} ${sweepFlag} ${stop.pathText()} `;
-}
-
 // Class to wrap SVG path strings
 export class PathElement {
     private path: string;
@@ -53,7 +43,7 @@ export class PathElement {
         this.fill = fill;
     }
 
-    drawnPath(): any {
+    drawnPath(): Path {
         return SVG().path(this.path)
             .stroke(this.stroke)
             .fill(this.fill);
@@ -76,9 +66,9 @@ export function getDimensionalArc(
 }
 
 // Draw a list of month parts (SVG elements) into the provided SVG drawing
-export function drawMonthParts(drawing: Svg, monthParts: any[]): void {
+export function drawMonthParts(drawing: Svg, monthParts: unknown[]): void {
   for (const part of monthParts) {
-    const drawnPath = part.drawnPath();
+    const drawnPath = (part as { drawnPath: () => unknown | unknown[] }).drawnPath();
     const components = Array.isArray(drawnPath) ? drawnPath : [drawnPath];
     for (const component of components) {
       if (typeof component === 'string') {
@@ -91,10 +81,10 @@ export function drawMonthParts(drawing: Svg, monthParts: any[]): void {
 }
 
 // Group a list of month parts into a single SVG group
-export function groupWithMonthParts(monthParts: any[]): any {
+export function groupWithMonthParts(monthParts: unknown[]): unknown {
   const group = SVG().group();
   for (const part of monthParts) {
-    const drawnPath = part.drawnPath();
+    const drawnPath = (part as { drawnPath: () => unknown | unknown[] }).drawnPath();
     const components = Array.isArray(drawnPath) ? drawnPath : [drawnPath];
     for (const component of components) {
       if (typeof component === 'string') {

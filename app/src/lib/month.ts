@@ -1,6 +1,5 @@
-import { Circle, SVG } from '@svgdotjs/svg.js';
 import { getArc, getDimensionalArc, getCoordinatePoint } from './svg';
-import { Point, CurvedText, TextCenteredAroundPoint } from './primitives';
+import { Point, CurvedText, TextCenteredAroundPoint, DimensionalArc } from './primitives';
 
 // Constants
 export const DATE_FILL_COLOR = "#fbebb3";
@@ -69,14 +68,14 @@ export const solarYear: Year = {
 };
 
 // Drawing functions
-export function getMonth(month: MonthInstance, days_in_year: number, origin: Point): any[] {
+export function getMonth(month: MonthInstance, days_in_year: number, origin: Point): (CurvedText | DimensionalArc | TextCenteredAroundPoint)[] {
     const month_width_degrees = 360 * month.num_days / days_in_year;
     const angle_offset = month_width_degrees / 2;
     const center_angle = -90;
     const start_angle = center_angle - angle_offset;
     const stop_angle = center_angle + angle_offset;
 
-    const drawing_elements = [];
+    const drawing_elements: (CurvedText | DimensionalArc | TextCenteredAroundPoint)[] = [];
     const background = getDimensionalArc(
         origin,
         month.inner_radius,

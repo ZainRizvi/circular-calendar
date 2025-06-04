@@ -1,4 +1,4 @@
-import { SVG, Point as SvgPoint } from '@svgdotjs/svg.js';
+import { SVG, Path as SvgPath, Text as SvgText, Circle as SvgCircle } from '@svgdotjs/svg.js';
 
 // Types
 export class Point {
@@ -54,7 +54,7 @@ export class Arc {
         return `${startingMode} ${this.start.pathText()} A ${this.radius},${this.radius} ${this.params} ${this.stop.pathText()}`;
     }
 
-    drawnPath(stroke: string = 'black', fill: string = 'none'): any {
+    drawnPath(stroke: string = 'black', fill: string = 'none'): SvgPath {
         return SVG()
             .path(this.path(ArcDrawMode.NEW))
             .stroke({ color: stroke, width: STROKE_WIDTH })
@@ -79,7 +79,7 @@ export class DimensionalArc {
                `L ${this.outerArc.start.pathText()}`; // close off the shape
     }
 
-    drawnPath(): any {
+    drawnPath(): SvgPath {
         return SVG()
             .path(this.path())
             .stroke({ color: this.stroke, width: STROKE_WIDTH })
@@ -98,7 +98,7 @@ export class TextCenteredAroundPoint {
         public rotation: number /* in degrees */
     ) {}
 
-    drawnPath(): any {
+    drawnPath(): SvgText {
         return SVG().text(this.text)
             .attr({
                 'font-size': this.font_size,
@@ -118,7 +118,7 @@ export class CurvedText {
         public font_size: number = 30
     ) {}
 
-    drawnPath(): any {
+    drawnPath(): [SvgPath, SvgText] {
         // Create the path with an ID
         const path = this.arc.drawnPath("none");
         const pathId = `curve-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -158,7 +158,7 @@ export class Circle {
         public center: Point
     ) {}
 
-    drawnPath(): any {
+    drawnPath(): SvgCircle {
         return SVG().circle(this.radius * 2)
             .center(this.center.x, this.center.y)
             .fill('red');
