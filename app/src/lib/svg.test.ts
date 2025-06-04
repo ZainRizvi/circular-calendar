@@ -1,6 +1,6 @@
 import { SVG, Svg, Point as SvgPoint, Path } from '@svgdotjs/svg.js';
 import { Point } from './primitives';
-import { inchToMillimeter, toRadian, getCoordinatePoint, getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts } from './svg';
+import { inchToMillimeter, toRadian, getCoordinatePoint, getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts, PathElement } from './svg';
 
 // Mock SVG.js
 jest.mock('@svgdotjs/svg.js', () => ({
@@ -55,7 +55,12 @@ describe('SVG Utilities', () => {
       const startAngle = 0;
       const stopAngle = 90;
       const arcPath = getArc(origin, radius, startAngle, stopAngle);
-      expect(arcPath).toContain('M 10 0 A 10 10 0 0 1 6.123233995736766e-16 10');
+      expect(arcPath.start.x).toBeCloseTo(10);
+      expect(arcPath.start.y).toBeCloseTo(0);
+      expect(arcPath.stop.x).toBeCloseTo(0);
+      expect(arcPath.stop.y).toBeCloseTo(10);
+      expect(arcPath.radius).toBe(radius);
+      expect(arcPath.params).toBe('0 0 1');
     });
   });
 
@@ -85,6 +90,44 @@ describe('SVG Utilities', () => {
       const monthParts = [{ drawnPath: () => ({}) }];
       const group = groupWithMonthParts(monthParts);
       expect(group).toBeDefined();
+    });
+  });
+
+  describe('PathElement', () => {
+    it('creates a path element with default stroke and fill', () => {
+      const path = 'M 0,0 L 10,10';
+      const pathElement = new PathElement(path);
+      
+      // Use Reflection to access private fields
+      const privateProps = Object.getOwnPropertyDescriptors(
+        Object.getPrototypeOf(pathElement)
+      );
+      
+      // Check that the path was set correctly
+      expect(pathElement['path']).toBe(path);
+      expect(pathElement['stroke']).toBe('black');
+      expect(pathElement['fill']).toBe('none');
+    });
+
+    it('creates a path element with custom stroke and fill', () => {
+      const path = 'M 0,0 L 10,10';
+      const stroke = 'red';
+      const fill = 'blue';
+      const pathElement = new PathElement(path, stroke, fill);
+      
+      // Check that the path was set correctly
+      expect(pathElement['path']).toBe(path);
+      expect(pathElement['stroke']).toBe(stroke);
+      expect(pathElement['fill']).toBe(fill);
+    });
+
+    it('generates a drawn path using SVG.js', () => {
+      const path = 'M 0,0 L 10,10';
+      const pathElement = new PathElement(path);
+      
+      const drawnPath = pathElement.drawnPath();
+      expect(drawnPath).toBeDefined();
+      expect(SVG).toHaveBeenCalled();
     });
   });
 }); 
