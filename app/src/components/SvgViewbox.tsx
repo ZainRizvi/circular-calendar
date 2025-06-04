@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { SVG, Svg } from '@svgdotjs/svg.js';
 
 /**
@@ -96,7 +96,7 @@ export default function SvgViewbox({
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-    const handleWheel = (e: WheelEvent) => {
+    const handleWheel = useCallback((e: WheelEvent) => {
         e.preventDefault();
         
         const rect = svgRef.current?.getBoundingClientRect();
@@ -126,14 +126,14 @@ export default function SvgViewbox({
             width: newWidth,
             height: newHeight
         });
-    };
+    }, [viewBox]);
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handleMouseDown = useCallback((e: MouseEvent) => {
         setIsDragging(true);
         setDragStart({ x: e.clientX, y: e.clientY });
-    };
+    }, []);
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = useCallback((e: MouseEvent) => {
         if (!isDragging) return;
 
         const rect = svgRef.current?.getBoundingClientRect();
@@ -152,28 +152,29 @@ export default function SvgViewbox({
 
         // Update drag start position
         setDragStart({ x: e.clientX, y: e.clientY });
-    };
+    }, [isDragging, dragStart, viewBox]);
 
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         setIsDragging(false);
-    };
+    }, []);
 
     useEffect(() => {
-        if (!svgRef.current) return;
+        const currentSvgRef = svgRef.current;
+        if (!currentSvgRef) return;
 
         // Add event listeners
-        svgRef.current.addEventListener('wheel', handleWheel, { passive: false });
-        svgRef.current.addEventListener('mousedown', handleMouseDown);
+        currentSvgRef.addEventListener('wheel', handleWheel, { passive: false });
+        currentSvgRef.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
         
         return () => {
-            svgRef.current?.removeEventListener('wheel', handleWheel);
-            svgRef.current?.removeEventListener('mousedown', handleMouseDown);
+            currentSvgRef?.removeEventListener('wheel', handleWheel);
+            currentSvgRef?.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [viewBox, isDragging]);
+    }, [handleWheel, handleMouseDown, handleMouseMove, handleMouseUp]);
 
     useEffect(() => {
         if (!svgRef.current) return;

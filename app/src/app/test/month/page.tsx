@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { SVG, Svg } from '@svgdotjs/svg.js';
+import { useRef, useState } from 'react';
+import { Svg } from '@svgdotjs/svg.js';
 import { getMonth } from '@/lib/month';
 import { drawMonthParts } from '@/lib/svg';
 import type { MonthInstance } from '@/lib/month';

@@ -1,4 +1,4 @@
-import { SVG, Svg, Point as SvgPoint, Path } from '@svgdotjs/svg.js';
+import { Svg } from '@svgdotjs/svg.js';
 import { Point } from './primitives';
 import { inchToMillimeter, toRadian, getCoordinatePoint, getArc, getDimensionalArc, drawMonthParts, groupWithMonthParts } from './svg';
 
@@ -13,7 +13,7 @@ jest.mock('@svgdotjs/svg.js', () => ({
       transformO: jest.fn(),
       toArray: jest.fn(),
     }),
-    path: (d: string) => ({ fill: jest.fn().mockReturnThis(), stroke: jest.fn().mockReturnThis() }),
+    path: () => ({ fill: jest.fn().mockReturnThis(), stroke: jest.fn().mockReturnThis() }),
     group: () => ({ add: jest.fn() }),
   })),
 }));
