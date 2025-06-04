@@ -8,37 +8,7 @@ import {
   solarYear 
 } from './month';
 
-// Mock SVG.js and the svg.ts functions
-jest.mock('@svgdotjs/svg.js', () => ({
-  SVG: jest.fn(() => ({
-    path: jest.fn().mockReturnValue({
-      stroke: jest.fn().mockReturnThis(),
-      fill: jest.fn().mockReturnThis()
-    }),
-    text: jest.fn().mockReturnValue({
-      attr: jest.fn().mockReturnThis(),
-      center: jest.fn().mockReturnThis()
-    })
-  }))
-}));
-
-// Mock the svg helper functions that getMonth depends on
-jest.mock('./svg', () => ({
-  getArc: jest.fn().mockReturnValue({
-    path: jest.fn().mockReturnValue('mocked path'),
-    drawnPath: jest.fn().mockReturnValue({})
-  }),
-  getDimensionalArc: jest.fn().mockReturnValue({
-    drawnPath: jest.fn().mockReturnValue({})
-  }),
-  getCoordinatePoint: jest.fn().mockImplementation((origin, radius, angle) => {
-    // Simple implementation to return a point at the specified angle
-    return new Point(
-      origin.x + radius * Math.cos(angle * Math.PI / 180),
-      origin.y + radius * Math.sin(angle * Math.PI / 180)
-    );
-  })
-}));
+// No mocks - using real implementations
 
 describe('Month constants', () => {
   it('should define DATE_FILL_COLOR constant', () => {
@@ -93,8 +63,10 @@ describe('getMonth function', () => {
     
     // Verify results
     expect(result).toBeInstanceOf(Array);
-    // The array length seems to be 64 from our test run, so update accordingly
     expect(result.length).toBe(64);
+    
+    // Check that the array contains drawing elements
+    expect(result[0].drawnPath).toBeInstanceOf(Function);
   });
 
   it('should generate drawing elements for a month with dates on bottom', () => {
@@ -119,8 +91,10 @@ describe('getMonth function', () => {
     
     // Verify results
     expect(result).toBeInstanceOf(Array);
-    // The array length seems to be 60 from our test run, so update accordingly
     expect(result.length).toBe(60);
+    
+    // Check that the array contains drawing elements
+    expect(result[0].drawnPath).toBeInstanceOf(Function);
   });
 
   it('should calculate correct angles based on days in year', () => {
@@ -146,7 +120,9 @@ describe('getMonth function', () => {
     
     // Verify results
     expect(result).toBeInstanceOf(Array);
-    // The array length seems to be 64 from our test run, so update accordingly
     expect(result.length).toBe(64);
+    
+    // Check that the array contains drawing elements
+    expect(result[0].drawnPath).toBeInstanceOf(Function);
   });
 });
