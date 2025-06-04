@@ -1,0 +1,9 @@
+{
+  "install": "cd app && npm install",
+  "start": "cd app && npm run dev",
+  "terminals": [],
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  }
+}

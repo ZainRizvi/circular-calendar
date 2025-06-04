@@ -27,7 +27,6 @@
 				"ms-toolsai.jupyter",
 				"ms-python.vscode-pylance",
 				"ms-toolsai.vscode-jupyter-cell-tags",
-				"ms-azuretools.vscode-docker",
 				"ms-toolsai.jupyter-keymap",
 				"analytic-signal.preview-pdf"
 			]
