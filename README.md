@@ -2,6 +2,12 @@
 
 An annual calendar that's easy for little kids (and adults) to understand.
 
+Currently this repo is split into two folders:
+- `python`: This is the original, fully functional version of the code that is a python console app that can generate a pdf with the circular calendar
+- `app`: A port of the python code to a NextJs based webapp.  This is still a work in progress
+
+# Once you have a PDF
+
 ## Instructions
 1. Print out the pdf
 2. Cut out all the months
