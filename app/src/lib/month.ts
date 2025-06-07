@@ -1,5 +1,6 @@
+import { Circle, SVG } from '@svgdotjs/svg.js';
 import { getArc, getDimensionalArc, getCoordinatePoint } from './svg';
-import { Point, CurvedText, TextCenteredAroundPoint, DimensionalArc } from './primitives';
+import { Point, CurvedText, TextCenteredAroundPoint } from './primitives';
 
 // Constants
 export const DATE_FILL_COLOR = "#fbebb3";
@@ -68,14 +69,14 @@ export const solarYear: Year = {
 };
 
 // Drawing functions
-export function getMonth(month: MonthInstance, days_in_year: number, origin: Point): (CurvedText | DimensionalArc | TextCenteredAroundPoint)[] {
+export function getMonth(month: MonthInstance, days_in_year: number, origin: Point): any[] {
     const month_width_degrees = 360 * month.num_days / days_in_year;
     const angle_offset = month_width_degrees / 2;
     const center_angle = -90;
     const start_angle = center_angle - angle_offset;
     const stop_angle = center_angle + angle_offset;
 
-    const drawing_elements: (CurvedText | DimensionalArc | TextCenteredAroundPoint)[] = [];
+    const drawing_elements = [];
     const background = getDimensionalArc(
         origin,
         month.inner_radius,
@@ -110,8 +111,6 @@ export function getMonth(month: MonthInstance, days_in_year: number, origin: Poi
         month.name_upside_down ? stop_angle : start_angle,
         month.name_upside_down ? start_angle : stop_angle
     );
-
-    // drawing_elements.push(month_text_arc);
 
     // Add month name
     const month_name_height = (month.outer_radius - month.inner_radius - month.date_box_height) / 2;
@@ -158,4 +157,4 @@ export function getMonth(month: MonthInstance, days_in_year: number, origin: Poi
     }
     
     return drawing_elements;
-} 
+}
