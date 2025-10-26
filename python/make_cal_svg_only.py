@@ -60,6 +60,7 @@ for index, month in enumerate(solar_year.months):
 # Get automatic calendar alignment based on current date
 alignment = get_current_alignment()
 islamic_date_rotation_offset = alignment.islamic_date_rotation_offset
+current_islamic_month_number = alignment.num_months_to_skip  # 1-12
 
 print(f"\n=== Calendar Alignment Info ===")
 print(f"Solar Date: {alignment.current_solar_date}")
@@ -67,12 +68,33 @@ print(f"Islamic Date: {alignment.current_islamic_date}")
 print(f"Islamic rotation offset: {islamic_date_rotation_offset:.1f} days")
 print(f"="*35 + "\n")
 
+# Map Islamic month numbers (1-12) to month names
+islamic_month_names = {
+    1: "Muharram", 2: "Safar", 3: "Rabi al-Awwal", 4: "Rabi ath-Thani",
+    5: "Jumada al-Awwal", 6: "Jumada ath-Thani", 7: "Rajab", 8: "Sha'baan",
+    9: "Ramadan", 10: "Shawwal", 11: "Dhu al-Qa'dah", 12: "Dhu al-Hijja"
+}
+
+# Find the current month by name
+current_month_name = islamic_month_names[current_islamic_month_number]
+
+# Reorder Islamic months to start with the current month
+reordered_islamic_months = []
+for month in islamic_year.months:
+    if month.name == current_month_name:
+        start_index = islamic_year.months.index(month)
+        reordered_islamic_months = islamic_year.months[start_index:] + islamic_year.months[:start_index]
+        break
+
+print(f"Reordered Islamic months starting with: {reordered_islamic_months[0].name}")
+
+# Create MonthInstances with position-based rotation
 islamicMonths = []
-for index, month in enumerate(islamic_year.months):
-    # Calculate rotation based on position in the circular arrangement
+for index, month in enumerate(reordered_islamic_months):
+    # Position-based rotation: position 0 = 0°, position 1 = -30°, etc.
     position_based_rotation = -1 * index * (360 / 12)
 
-    # Determine if name should be upside down based on position
+    # Positions 3-8 are on the bottom half of the circle
     name_upside_down = (index >= 3 and index < 9)
 
     for day in month.num_days:
@@ -153,42 +175,12 @@ month_idx = 0
 page_num = 0
 days_elapsed = 0 - solarMonths[0].num_days/2
 
-# Automatically calculate Islamic calendar positioning
-num_months_to_skip = alignment.num_months_to_skip
+# For the circular view, use the same reordered months
 days_elapsed_islamic = alignment.days_elapsed_islamic
 
 print(f"\nPositioning Islamic calendar in circular view:")
-print(f"  Months to skip: {num_months_to_skip}")
 print(f"  Days elapsed: {days_elapsed_islamic:.1f}")
-print(f"  This will position the current Islamic month at the top")
-
-# For the circular view, create MonthInstances with rotation offsets that cancel
-# the circle_form_factor rotation to keep numbers upright
-islamicMonthsCircular = []
-days_elapsed_temp = days_elapsed_islamic
-for index, month_data in enumerate(islamic_year.months):
-    # Calculate where this month's center will be in the circle
-    circle_rotation_degrees = 360.0 * (days_elapsed_temp + month_data.num_days[0] / 2) / days_in_year
-
-    # To keep numbers upright, date_angle_offset should cancel the circle rotation
-    date_angle_offset_circular = -circle_rotation_degrees
-
-    name_upside_down = (index >= 3 and index < 9)
-
-    islamicMonthsCircular.append(
-        MonthInstance(
-            name=month_data.name,
-            num_days=month_data.num_days[0],
-            color=month_data.color,
-            name_upside_down=name_upside_down,
-            date_on_top=True,
-            date_box_height=date_box_height,
-            inner_radius=inner_radius - month_thickness,
-            outer_radius=outermost_radius - month_thickness,
-            date_angle_offset=date_angle_offset_circular,
-        )
-    )
-    days_elapsed_temp += month_data.num_days[0]
+print(f"  Current month ({reordered_islamic_months[0].name}) centered at day {days_elapsed_islamic + 15:.0f}")
 
 dwg = getVerticalPageCanvas()
 origin_first = Point(width_center, outermost_radius + vertical_offset)
@@ -206,8 +198,8 @@ while month_idx < len(solarMonths) - 1:
                 days_elapsed += month.num_days
                 dwg.add(g)
 
-            if month_idx < len(islamicMonthsCircular):
-                month = islamicMonthsCircular[month_idx]
+            if month_idx < len(islamicMonths):
+                month = islamicMonths[month_idx]
                 g = groupWithMonthParts(getMonth(month, days_in_year, origin))
                 circle_form_factor(g, month, days_elapsed_islamic, days_in_year, origin)
                 days_elapsed_islamic += month.num_days
