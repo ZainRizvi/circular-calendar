@@ -8,12 +8,13 @@ This directory contains sample SVG output demonstrating the automatic calendar r
 
 ## Files
 
-### calendar_cover_auto_rotated.svg
+### calendar_cover_auto_rotated.svg (and .png)
 This is the most important demonstration file. It shows the complete circular calendar with:
 - **Solar months** (outer ring) positioned with January at the top
 - **Islamic months** (inner ring) automatically rotated to align with the solar calendar
-- **Current Islamic month** (Jumada al-Awwal) positioned at the top, aligned with October
-- **Automatic rotation offset**: 295.0 days to align day 4 of Jumada al-Awwal with day 299 (Oct 26) of the solar year
+- **Current Islamic month** (Jumada al-Awwal) positioned on the LEFT side, aligned with October
+- **Automatic positioning**: days_elapsed = 284 to center Jumada al-Awwal at day 299 (Oct 26)
+- **Gap in Islamic calendar**: Correctly positioned just before Jumada al-Awwal
 
 ### calendar_page_0.svg, calendar_page_1.svg
 Individual month pages showing both solar and Islamic months with proper alignment.
@@ -22,18 +23,21 @@ Individual month pages showing both solar and Islamic months with proper alignme
 
 1. **Automatic Date Alignment**: The Islamic calendar is automatically positioned based on the current date
 2. **Proper Day Rotation**: All day numbers remain vertical/upright regardless of month position
-3. **Dynamic Month Positioning**: The current Islamic month (Jumada al-Awwal in this case) appears at the top
+3. **Visual Alignment**: Jumada al-Awwal (inner ring) aligns with October (outer ring) on the left side of the circle
 
 ## How It Works
 
 When the script runs:
 1. It detects the current solar and Islamic dates (Oct 26, 2025 = Jumada al-Awwal 4, 1447)
-2. Calculates which Islamic month should be at the top (Jumada al-Awwal, based on current month)
-3. Calculates the rotation offset to align the calendars (295.0 days = day 299 - day 4)
-4. Rotates individual day numbers based on their position in the circle (0°, -30°, -60°, etc.)
+2. Calculates which Islamic month should be first in the list (Jumada al-Awwal)
+3. Calculates the circle positioning: `days_elapsed_islamic = day_of_year - 15 = 284`
+   - This centers Jumada al-Awwal at day 299 (where Oct 26 is)
+   - Center position = 284 + 15 = 299 ✓
+4. Rotates individual day numbers: `offset = day_of_year - current_islamic_day = 295`
+   - This ensures day 4 of the month appears at position 299
 
-The key calculation: `days_elapsed_islamic = current_solar_day_of_year - current_islamic_day_of_month`
-This ensures that the current Islamic day aligns precisely with the current solar day on the circle.
+The key insight: The `circle_form_factor` function rotates each month based on its CENTER position,
+so we need `days_elapsed = day_of_year - 15` to center the current Islamic month at the current solar day.
 
 This ensures that no matter when you generate the calendar, it will be properly aligned for the current date!
 

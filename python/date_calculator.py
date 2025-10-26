@@ -67,16 +67,31 @@ def get_current_alignment() -> CalendarAlignment:
     num_months_to_skip = islamic_month_to_list_index[current_islamic_month]
 
     # Calculate days elapsed for the "circle form" - positioning in the summary page
-    # In the circle view, we want the current Islamic day to align with the current solar day
-    # The circle_form_factor rotates each month by: 360 * (days_elapsed + month.num_days/2) / days_in_year
-    # For day N of a month starting at days_elapsed, the position is: 360 * (days_elapsed + N) / days_in_year
-    # We want: days_elapsed + current_islamic_day = day_of_year
-    # Therefore: days_elapsed = day_of_year - current_islamic_day
-    days_elapsed_islamic = day_of_year - current_islamic_day
+    # The circle_form_factor rotates based on the CENTER of each month, not individual days
+    # So we need to position the month such that the current day VISUALLY aligns with the current solar day
+    #
+    # We want the center of Jumada al-Awwal (day 15 of 30) to be positioned such that
+    # day 4 of the month aligns with day 299 of the solar year.
+    #
+    # If day 4 should be at position 299, and day 4 is 11 days before the center (day 15),
+    # then the center should be at position 299 + (15 - current_islamic_day)
+    #
+    # Therefore: center_position = day_of_year + (15 - current_islamic_day)
+    # And: days_elapsed = center_position - 15
+    #     days_elapsed = day_of_year + (15 - current_islamic_day) - 15
+    #     days_elapsed = day_of_year - current_islamic_day
+    #
+    # Wait, that's the same formula! But we need to think about the visual centering...
+    #
+    # Actually, the issue is that circle_form_factor uses: (days_elapsed + month.num_days/2)
+    # So: center_position = days_elapsed + 15
+    # We want the center at: day_of_year (to align visually with current solar position)
+    # Therefore: days_elapsed = day_of_year - 15
+    days_elapsed_islamic = day_of_year - 15  # Center the current month at the current day
 
     # Calculate the rotation offset for the individual month arc drawings
-    # This is the offset in days to align the Islamic calendar's date boxes with solar calendar
-    # Each Islamic month rotates independently based on its position AND this offset
+    # Since we're centering the month at the current day, we need to offset the dates
+    # to account for which day of the month we're on
     islamic_date_rotation_offset = day_of_year - current_islamic_day
 
     # Format dates for reference
@@ -135,7 +150,7 @@ def get_manual_alignment(
     num_months_to_skip = islamic_month_to_list_index[current_islamic_month]
 
     # Use same calculation as get_current_alignment
-    days_elapsed_islamic = day_of_year - current_islamic_day
+    days_elapsed_islamic = day_of_year - 15  # Center the current month at the current day
     islamic_date_rotation_offset = day_of_year - current_islamic_day
 
     current_solar_date = target_date.strftime("%Y-%m-%d")
