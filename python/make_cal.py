@@ -30,6 +30,7 @@ from arc_drawing import *
 from calendar_data import *
 from calendar_drawings import *
 import pdfizer
+from date_calculator import get_current_alignment
 
 
 # In[2]:
@@ -85,10 +86,16 @@ for index, month in enumerate(solar_year.months):
             )
         )
 
-# The number of days between Jan 1st and the month of the islamic calendar with the month#1
-# Controls the exact rotation of the dates on the Islamic calendar
-# Exact value would be num_days * 360/365, but that's close enough to just num_days for this purpose
-islamic_date_rotation_offset = -15 # offset by an extra 15 days.
+# Get automatic calendar alignment based on current date
+# This calculates the proper rotation to align solar and Islamic calendars
+alignment = get_current_alignment()
+islamic_date_rotation_offset = alignment.islamic_date_rotation_offset
+
+print(f"\n=== Calendar Alignment Info ===")
+print(f"Solar Date: {alignment.current_solar_date}")
+print(f"Islamic Date: {alignment.current_islamic_date}")
+print(f"Islamic rotation offset: {islamic_date_rotation_offset:.1f} days")
+print(f"="*35 + "\n")
     
 islamicMonths = []
 for month in islamic_year.months:
@@ -179,19 +186,15 @@ month_idx = 0
 page_num = 0
 days_elapsed = 0 - solarMonths[0].num_days/2
 
-# For starting with Rajab 2022
-# days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
+# Automatically calculate Islamic calendar positioning based on current date
+# This ensures the Islamic calendar aligns properly with the solar calendar
+num_months_to_skip = alignment.num_months_to_skip
+days_elapsed_islamic = alignment.days_elapsed_islamic
 
-# For starting with Sha'ban 2022
-# days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2 
-
-# For starting with Jamadi ul-Awwal 2024
-days_elapsed_islamic = 6.5 # Will need to be tweaked every year to fine tune the calendar alignment
-num_months_to_skip = 10 # up till the current calendar month
-for i in range(num_months_to_skip):
-  days_elapsed_islamic += islamicMonths[i].num_days
-
-days_elapsed_islamic -= islamicMonths[num_months_to_skip].num_days/2 
+print(f"Positioning Islamic calendar:")
+print(f"  Months to skip: {num_months_to_skip}")
+print(f"  Days elapsed: {days_elapsed_islamic:.1f}")
+print(f"  This will position the current Islamic month at the top") 
 
 dwg = getVerticalPageCanvas() # getPageCanvas()
 origin_first = Point(width_center, outermost_radius + vertical_offset)
