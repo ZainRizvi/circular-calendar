@@ -87,9 +87,9 @@ for index, month in enumerate(solar_year.months):
         )
 
 # Get automatic calendar alignment based on current date
-# This calculates the proper rotation to align solar and Islamic calendars
 alignment = get_current_alignment()
 islamic_date_rotation_offset = alignment.islamic_date_rotation_offset
+current_islamic_month_number = alignment.num_months_to_skip  # 1-12
 
 print(f"\n=== Calendar Alignment Info ===")
 print(f"Solar Date: {alignment.current_solar_date}")
@@ -97,15 +97,33 @@ print(f"Islamic Date: {alignment.current_islamic_date}")
 print(f"Islamic rotation offset: {islamic_date_rotation_offset:.1f} days")
 print(f"="*35 + "\n")
 
+# Map Islamic month numbers (1-12) to month names
+islamic_month_names = {
+    1: "Muharram", 2: "Safar", 3: "Rabi al-Awwal", 4: "Rabi ath-Thani",
+    5: "Jumada al-Awwal", 6: "Jumada ath-Thani", 7: "Rajab", 8: "Sha'baan",
+    9: "Ramadan", 10: "Shawwal", 11: "Dhu al-Qa'dah", 12: "Dhu al-Hijja"
+}
+
+# Find the current month by name
+current_month_name = islamic_month_names[current_islamic_month_number]
+
+# Reorder Islamic months to start with the current month
+reordered_islamic_months = []
+for month in islamic_year.months:
+    if month.name == current_month_name:
+        start_index = islamic_year.months.index(month)
+        reordered_islamic_months = islamic_year.months[start_index:] + islamic_year.months[:start_index]
+        break
+
+print(f"Reordered Islamic months starting with: {reordered_islamic_months[0].name}")
+
+# Create MonthInstances with position-based rotation
 islamicMonths = []
-for index, month in enumerate(islamic_year.months):
-    # Calculate the position-based rotation for this month
-    # index represents the month's position in the list (0-11)
-    # We want position 0 to have 0 rotation, position 1 to have -30 degrees, etc.
+for index, month in enumerate(reordered_islamic_months):
+    # Position-based rotation: position 0 = 0°, position 1 = -30°, etc.
     position_based_rotation = -1 * index * (360 / 12)
 
-    # Determine if name should be upside down based on position in circle (not Islamic month number)
-    # Positions 3-8 (inclusive) are on the bottom half of the circle
+    # Positions 3-8 are on the bottom half of the circle
     name_upside_down = (index >= 3 and index < 9)
 
     for day in month.num_days:
@@ -115,7 +133,7 @@ for index, month in enumerate(islamic_year.months):
                 num_days=day,
                 color=month.color,
                 name_upside_down=name_upside_down,
-                date_on_top=True, # the outer month
+                date_on_top=True,
                 date_box_height=date_box_height,
                 inner_radius=inner_radius - month_thickness,
                 outer_radius=outermost_radius - month_thickness,
