@@ -96,10 +96,18 @@ print(f"Solar Date: {alignment.current_solar_date}")
 print(f"Islamic Date: {alignment.current_islamic_date}")
 print(f"Islamic rotation offset: {islamic_date_rotation_offset:.1f} days")
 print(f"="*35 + "\n")
-    
+
 islamicMonths = []
-for month in islamic_year.months:
-    name_upside_down = (month.number > 3 and month.number <= 9)
+for index, month in enumerate(islamic_year.months):
+    # Calculate the position-based rotation for this month
+    # index represents the month's position in the list (0-11)
+    # We want position 0 to have 0 rotation, position 1 to have -30 degrees, etc.
+    position_based_rotation = -1 * index * (360 / 12)
+
+    # Determine if name should be upside down based on position in circle (not Islamic month number)
+    # Positions 3-8 (inclusive) are on the bottom half of the circle
+    name_upside_down = (index >= 3 and index < 9)
+
     for day in month.num_days:
         islamicMonths.append(
             MonthInstance(
@@ -111,7 +119,7 @@ for month in islamic_year.months:
                 date_box_height=date_box_height,
                 inner_radius=inner_radius - month_thickness,
                 outer_radius=outermost_radius - month_thickness,
-                date_angle_offset=date_rotation(month) + islamic_date_rotation_offset,
+                date_angle_offset=position_based_rotation + islamic_date_rotation_offset,
             )
         ) 
 
