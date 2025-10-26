@@ -12,8 +12,8 @@ This directory contains sample SVG output demonstrating the automatic calendar r
 This is the most important demonstration file. It shows the complete circular calendar with:
 - **Solar months** (outer ring) positioned with January at the top
 - **Islamic months** (inner ring) automatically rotated to align with the solar calendar
-- **Current Islamic month** (Jumada al-Awwal) positioned at the top
-- **Automatic rotation offset**: 175.0 days to align the calendars
+- **Current Islamic month** (Jumada al-Awwal) positioned at the top, aligned with October
+- **Automatic rotation offset**: 295.0 days to align day 4 of Jumada al-Awwal with day 299 (Oct 26) of the solar year
 
 ### calendar_page_0.svg, calendar_page_1.svg
 Individual month pages showing both solar and Islamic months with proper alignment.
@@ -27,10 +27,13 @@ Individual month pages showing both solar and Islamic months with proper alignme
 ## How It Works
 
 When the script runs:
-1. It detects the current solar and Islamic dates
-2. Calculates which Islamic month should be at the top (based on current month)
-3. Calculates the rotation offset to align the calendars (175.0 days in this example)
+1. It detects the current solar and Islamic dates (Oct 26, 2025 = Jumada al-Awwal 4, 1447)
+2. Calculates which Islamic month should be at the top (Jumada al-Awwal, based on current month)
+3. Calculates the rotation offset to align the calendars (295.0 days = day 299 - day 4)
 4. Rotates individual day numbers based on their position in the circle (0°, -30°, -60°, etc.)
+
+The key calculation: `days_elapsed_islamic = current_solar_day_of_year - current_islamic_day_of_month`
+This ensures that the current Islamic day aligns precisely with the current solar day on the circle.
 
 This ensures that no matter when you generate the calendar, it will be properly aligned for the current date!
 

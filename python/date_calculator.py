@@ -66,51 +66,28 @@ def get_current_alignment() -> CalendarAlignment:
     # Find which month should be at the top (index 0 position after rotation)
     num_months_to_skip = islamic_month_to_list_index[current_islamic_month]
 
-    # Calculate days elapsed in the Islamic year up to the current month
-    # We assume 30 days per month for this calculation (will be accurate enough for display)
-    days_per_islamic_month = 30
-
-    # Days from the start of the Islamic year to the current month
-    # Counting from Muharram (month 1) to current month
-    if current_islamic_month >= 5:  # Jumada I onwards (5-12)
-        months_since_muharram = current_islamic_month - 1
-    else:  # Muharram to Rabi II (1-4)
-        months_since_muharram = current_islamic_month - 1
-
     # Calculate days elapsed for the "circle form" - positioning in the summary page
-    # This should position the current Islamic month to align with current solar date
-    # Days elapsed = days in completed months + current day - half of current month
-    # (subtracting half month centers the month on the current position)
-    days_elapsed_islamic = months_since_muharram * days_per_islamic_month + current_islamic_day - (days_per_islamic_month / 2)
+    # In the circle view, we want the current Islamic day to align with the current solar day
+    # The circle_form_factor rotates each month by: 360 * (days_elapsed + month.num_days/2) / days_in_year
+    # For day N of a month starting at days_elapsed, the position is: 360 * (days_elapsed + N) / days_in_year
+    # We want: days_elapsed + current_islamic_day = day_of_year
+    # Therefore: days_elapsed = day_of_year - current_islamic_day
+    days_elapsed_islamic = day_of_year - current_islamic_day
 
-    # Now calculate the rotation offset to align Islamic calendar with solar calendar
-    # The Islamic date should align with the solar date on the circle
-    # Since the Islamic year is ~354 days and solar year is ~365 days,
-    # we need to calculate where the Islamic calendar should be positioned
-
-    # Calculate the angular position of current solar date (0-360 degrees)
-    solar_angle = (day_of_year / 365.25) * 360
-
-    # Calculate the angular position of current Islamic date in Islamic year
-    islamic_days_in_year = days_elapsed_islamic + (days_per_islamic_month / 2)
-    islamic_angle = (islamic_days_in_year / 354) * 360
-
-    # The rotation offset is the difference needed to align them
-    # We also need to account for the base rotation from num_months_to_skip
-    base_rotation = num_months_to_skip * (360 / 12)
-
-    # Calculate the difference in days between the two calendars at current date
-    # This tells us how many days "ahead" the solar calendar is
-    islamic_date_rotation_offset = day_of_year - islamic_days_in_year
+    # Calculate the rotation offset for the individual month arc drawings
+    # This is the offset in days to align the Islamic calendar's date boxes with solar calendar
+    # Each Islamic month rotates independently based on its position AND this offset
+    islamic_date_rotation_offset = day_of_year - current_islamic_day
 
     # Format dates for reference
     current_solar_date = today.strftime("%Y-%m-%d")
     current_islamic_date = f"{hijri.year}-{hijri.month:02d}-{hijri.day:02d}"
 
     print(f"Current Solar Date: {current_solar_date} (day {day_of_year} of year)")
-    print(f"Current Islamic Date: {current_islamic_date}")
+    print(f"Current Islamic Date: {current_islamic_date} (day {current_islamic_day} of month)")
     print(f"Islamic month in list: {num_months_to_skip}")
     print(f"Days elapsed (Islamic): {days_elapsed_islamic:.1f}")
+    print(f"  → This positions day {current_islamic_day} of Islamic month at day {day_of_year} of solar year")
     print(f"Islamic date rotation offset: {islamic_date_rotation_offset:.1f} days")
 
     return CalendarAlignment(
@@ -157,23 +134,18 @@ def get_manual_alignment(
     current_islamic_day = hijri.day
     num_months_to_skip = islamic_month_to_list_index[current_islamic_month]
 
-    days_per_islamic_month = 30
-
-    if current_islamic_month >= 5:
-        months_since_muharram = current_islamic_month - 1
-    else:
-        months_since_muharram = current_islamic_month - 1
-
-    days_elapsed_islamic = months_since_muharram * days_per_islamic_month + current_islamic_day - (days_per_islamic_month / 2)
-    islamic_date_rotation_offset = day_of_year - days_elapsed_islamic - (days_per_islamic_month / 2)
+    # Use same calculation as get_current_alignment
+    days_elapsed_islamic = day_of_year - current_islamic_day
+    islamic_date_rotation_offset = day_of_year - current_islamic_day
 
     current_solar_date = target_date.strftime("%Y-%m-%d")
     current_islamic_date = f"{hijri.year}-{hijri.month:02d}-{hijri.day:02d}"
 
     print(f"Target Solar Date: {current_solar_date} (day {day_of_year} of year)")
-    print(f"Target Islamic Date: {current_islamic_date}")
+    print(f"Target Islamic Date: {current_islamic_date} (day {current_islamic_day} of month)")
     print(f"Islamic month in list: {num_months_to_skip}")
     print(f"Days elapsed (Islamic): {days_elapsed_islamic:.1f}")
+    print(f"  → This positions day {current_islamic_day} of Islamic month at day {day_of_year} of solar year")
     print(f"Islamic date rotation offset: {islamic_date_rotation_offset:.1f} days")
 
     return CalendarAlignment(
