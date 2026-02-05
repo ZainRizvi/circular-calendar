@@ -1,0 +1,8 @@
+.DS_Store
+
+# Python
+python/.venv/
+python/out/
+python/v3 Instructions.pdf
+__pycache__/
+*.pyc
