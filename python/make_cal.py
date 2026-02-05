@@ -88,7 +88,8 @@ for index, month in enumerate(solar_year.months):
 # The number of days between Jan 1st and the month of the islamic calendar with the month#1
 # Controls the exact rotation of the dates on the Islamic calendar
 # Exact value would be num_days * 360/365, but that's close enough to just num_days for this purpose
-islamic_date_rotation_offset = -15 # offset by an extra 15 days.
+# For Sha'ban 2026 starting ~Jan 20: offset is ~19 days
+islamic_date_rotation_offset = -19 # offset by the days from Jan 1 to start of current Islamic month
     
 islamicMonths = []
 for month in islamic_year.months:
@@ -183,11 +184,16 @@ days_elapsed = 0 - solarMonths[0].num_days/2
 # days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
 
 # For starting with Sha'ban 2022
-# days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2 
+# days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2
 
 # For starting with Jamadi ul-Awwal 2024
-days_elapsed_islamic = 6.5 # Will need to be tweaked every year to fine tune the calendar alignment
-num_months_to_skip = 10 # up till the current calendar month
+# days_elapsed_islamic = 6.5 # Will need to be tweaked every year to fine tune the calendar alignment
+# num_months_to_skip = 10 # up till the current calendar month
+
+# For starting with Sha'ban 2026
+# Sha'ban 1, 1447 AH ≈ January 20, 2026, so 19 days from Jan 1
+days_elapsed_islamic = 19.5 # Days from Jan 1 to approx start of Sha'ban
+num_months_to_skip = 0 # Sha'ban is already the first month in the list
 for i in range(num_months_to_skip):
   days_elapsed_islamic += islamicMonths[i].num_days
 
@@ -234,12 +240,24 @@ os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
 os.remove(svg_file)
 pdfs.insert(0, pdf_file)
 
+# Generate the instructions PDF with the cover image embedded
+import generate_instructions
+cover_pdf = f"out/calendar_page_{scale_factor}_{page_num}_cover.pdf"
 instructions_pdf = "v3 Instructions.pdf"
+generate_instructions.generate_instructions_pdf(cover_pdf, instructions_pdf)
+
+# Remove cover from pdfs list since it's now embedded in instructions
+pdfs.remove(cover_pdf)
+
 pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}_COMPLETE.pdf")
 print("Wrote the concatenated file!")
+
+# Clean up intermediate PDFs
 for pdf in pdfs:
-    print(f"removing {pdf}...") 
+    print(f"removing {pdf}...")
     os.remove(pdf)
+print(f"removing {cover_pdf}...")
+os.remove(cover_pdf)
 print("and removed old pdfs")
 
 print(scale_factor)
