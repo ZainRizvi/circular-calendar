@@ -19,6 +19,16 @@ Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 
 The script also generates `v3 Instructions.pdf` as an intermediate file.
 
+## What "Optimize for Current Date" Means
+
+When the calendar is "optimized for the current date":
+
+1. **The current Islamic month appears at the top of the circle**, aligned with the corresponding position on the solar calendar where that month actually falls
+2. **Day numbers within each Islamic month are oriented upright** when viewed on the wall - individual dates like "15" or "28" appear horizontal, not rotated
+3. **The remaining 11 Islamic months follow in sequence** around the circle, maintaining proper alignment with their corresponding solar dates
+
+This optimization is necessary because the Islamic lunar calendar (354 days) is ~11 days shorter than the solar calendar (365 days), causing Islamic months to shift earlier each year relative to the Gregorian calendar.
+
 ## Auto-Alignment to Current Date
 
 The Islamic calendar alignment is calculated automatically based on the current date. The script uses the `hijridate` library to:
