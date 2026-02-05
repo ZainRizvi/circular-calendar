@@ -14,14 +14,16 @@ def is_notebook() -> bool:
         else:
             return False  # Other type (?)
     except NameError:
-        return False      # Probably standard Python interpreter    
+        return False      # Probably standard Python interpreter
 
 if is_notebook():
     get_ipython().run_line_magic('load_ext', 'autoreload')
     get_ipython().run_line_magic('autoreload', '2')
 
+import argparse
 import math
 import os
+from datetime import date
 from IPython.display import SVG
 
 # custom libs
@@ -29,7 +31,63 @@ from primitives import *
 from arc_drawing import *
 from calendar_data import *
 from calendar_drawings import *
+import islamic_alignment
 import pdfizer
+
+
+def parse_args():
+    """Parse command-line arguments for date specification."""
+    parser = argparse.ArgumentParser(
+        description="Generate circular calendar with Islamic/Gregorian overlay"
+    )
+    parser.add_argument(
+        "--date",
+        type=str,
+        help="Gregorian date to align to (YYYY-MM-DD format). Defaults to today.",
+    )
+    parser.add_argument(
+        "--hijri",
+        type=str,
+        help="Hijri date to align to (YYYY-MM-DD format, e.g., 1447-08-17 for Sha'ban 17, 1447).",
+    )
+    return parser.parse_args() if not is_notebook() else argparse.Namespace(date=None, hijri=None)
+
+
+def get_alignment_from_args(args) -> islamic_alignment.AlignmentParams:
+    """Get alignment parameters based on CLI arguments."""
+    if args.hijri:
+        parts = args.hijri.split("-")
+        if len(parts) != 3:
+            raise ValueError("Hijri date must be in YYYY-MM-DD format")
+        hijri_year, hijri_month, hijri_day = int(parts[0]), int(parts[1]), int(parts[2])
+        return islamic_alignment.get_alignment_params(
+            hijri_year=hijri_year, hijri_month=hijri_month, hijri_day=hijri_day
+        )
+    elif args.date:
+        parts = args.date.split("-")
+        if len(parts) != 3:
+            raise ValueError("Date must be in YYYY-MM-DD format")
+        gregorian_date = date(int(parts[0]), int(parts[1]), int(parts[2]))
+        return islamic_alignment.get_alignment_params(gregorian_date=gregorian_date)
+    else:
+        return islamic_alignment.get_alignment_params()
+
+
+# Parse arguments and calculate alignment
+args = parse_args()
+alignment = get_alignment_from_args(args)
+islamic_alignment.print_alignment_info(alignment)
+
+# Rotate Islamic months to start with current month
+islamic_year = Year(
+    months=islamic_alignment.rotate_months(
+        islamic_year_canonical.months, alignment.current_month_index
+    )
+)
+
+# Derived alignment values
+islamic_date_rotation_offset = alignment.rotation_offset
+days_elapsed_islamic_base = alignment.days_elapsed
 
 
 # In[2]:
@@ -85,11 +143,7 @@ for index, month in enumerate(solar_year.months):
             )
         )
 
-# The number of days between Jan 1st and the month of the islamic calendar with the month#1
-# Controls the exact rotation of the dates on the Islamic calendar
-# Exact value would be num_days * 360/365, but that's close enough to just num_days for this purpose
-# For Sha'ban 2026 starting ~Jan 20: offset is ~19 days
-islamic_date_rotation_offset = -19 # offset by the days from Jan 1 to start of current Islamic month
+# islamic_date_rotation_offset is now calculated dynamically from alignment params above
     
 islamicMonths = []
 for month in islamic_year.months:
@@ -180,24 +234,9 @@ month_idx = 0
 page_num = 0
 days_elapsed = 0 - solarMonths[0].num_days/2
 
-# For starting with Rajab 2022
-# days_elapsed_islamic = 20.5 - islamicMonths[0].num_days/2
-
-# For starting with Sha'ban 2022
-# days_elapsed_islamic = 20.5 + islamicMonths[0].num_days - islamicMonths[1].num_days/2
-
-# For starting with Jamadi ul-Awwal 2024
-# days_elapsed_islamic = 6.5 # Will need to be tweaked every year to fine tune the calendar alignment
-# num_months_to_skip = 10 # up till the current calendar month
-
-# For starting with Sha'ban 2026
-# Sha'ban 1, 1447 AH ≈ January 20, 2026, so 19 days from Jan 1
-days_elapsed_islamic = 19.5 # Days from Jan 1 to approx start of Sha'ban
-num_months_to_skip = 0 # Sha'ban is already the first month in the list
-for i in range(num_months_to_skip):
-  days_elapsed_islamic += islamicMonths[i].num_days
-
-days_elapsed_islamic -= islamicMonths[num_months_to_skip].num_days/2 
+# days_elapsed_islamic is now calculated dynamically from alignment params
+# The base value comes from islamic_alignment module; we just adjust for centering
+days_elapsed_islamic = days_elapsed_islamic_base - islamicMonths[0].num_days/2 
 
 dwg = getVerticalPageCanvas() # getPageCanvas()
 origin_first = Point(width_center, outermost_radius + vertical_offset)

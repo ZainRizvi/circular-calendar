@@ -19,53 +19,69 @@ Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 
 The script also generates `v3 Instructions.pdf` as an intermediate file.
 
-## Islamic Calendar Rotation Logic
+## Auto-Alignment to Current Date
 
-The Islamic calendar shifts ~11 days earlier each Gregorian year. To keep the calendar aligned with the current date, three values must be updated:
+The Islamic calendar alignment is calculated automatically based on the current date. The script uses the `hijridate` library to:
+1. Determine the current Islamic month
+2. Calculate when that month started in the Gregorian calendar
+3. Derive all alignment parameters (rotation offset, days elapsed, month order)
 
-### 1. Month Order in `calendar_data.py`
+No manual updates are needed when regenerating the calendar.
 
-The `islamic_year.months` list must start with the **current Islamic month**. Reorder the 12 months so the current month is first, maintaining the sequence.
+### CLI Options for Testing
+
+```bash
+# Auto-align to today (default)
+python make_cal.py
+
+# Test with specific Gregorian date
+python make_cal.py --date 2026-02-05
+
+# Test with specific Islamic date (Sha'ban 17, 1447)
+python make_cal.py --hijri 1447-08-17
+```
+
+### Fallback Heuristic
+
+If `hijridate` is unavailable, a fallback heuristic uses a known reference date (Sha'ban 1, 1447 AH = January 20, 2026) and lunar month arithmetic. Accuracy is within ±5 days.
+
+## Islamic Calendar Rotation Logic (Reference)
+
+The `islamic_alignment.py` module handles these calculations automatically:
+
+### Month Order
+
+Months are stored in canonical order (Muharram first) in `calendar_data.py`. At runtime, they're rotated so the current Islamic month appears first.
 
 The `month.number` field (1-12) controls text orientation:
 - Months numbered 4-9 render **upside-down** (bottom half of circle)
-- Assign numbers so the first 3 months are 1-3, next 6 are 4-9, last 3 are 10-12
+- Numbers are reassigned during rotation
 
-### 2. `days_elapsed_islamic` in `make_cal.py`
+### Alignment Parameters
 
-This value is the number of days from January 1 to the **start of the current Islamic month**.
-
-Example: If Sha'ban 1 falls on January 20, set `days_elapsed_islamic = 19.5`
-
-### 3. `num_months_to_skip` in `make_cal.py`
-
-If the current Islamic month is already first in the `islamic_year.months` list, set this to `0`.
-
-If you don't want to reorder the months list, you can instead skip months: set this to the number of months before the current month in the list.
-
-### 4. `islamic_date_rotation_offset` in `make_cal.py`
-
-Controls rotation of **date numbers** within each Islamic month so they appear upright. Set this to approximately the negative of `days_elapsed_islamic` (e.g., if `days_elapsed_islamic = 19.5`, use `islamic_date_rotation_offset = -19`).
-
-## Example: Updating for a New Date
-
-For February 5, 2026 (Sha'ban 17, 1447 AH):
-
-1. Sha'ban 1 ≈ January 20, 2026 (19 days from Jan 1)
-2. Reorder `islamic_year.months` to start with Sha'baan
-3. Set `days_elapsed_islamic = 19.5`
-4. Set `num_months_to_skip = 0`
-5. Set `islamic_date_rotation_offset = -19`
+These values are calculated automatically:
+- `days_elapsed_islamic` - Days from January 1 to start of current Islamic month
+- `islamic_date_rotation_offset` - Approximately the negative of days_elapsed
 
 ## File Structure
 
-- `make_cal.py` - Main script, alignment parameters, orchestrates PDF generation
-- `calendar_data.py` - Month definitions, colors, month order
+- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation
+- `islamic_alignment.py` - Auto-alignment calculation using hijridate library
+- `calendar_data.py` - Month definitions, colors, canonical month order
 - `calendar_drawings.py` - SVG rendering for month arcs
 - `arc_drawing.py` - Geometric utilities for arcs/angles
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
+- `test_islamic_alignment.py` - Unit tests for alignment module
+
+## Running Tests
+
+```bash
+source .venv/bin/activate
+pip install pytest
+python -m pytest test_islamic_alignment.py -v
+```
 
 ## PDF Generation Pipeline
 
@@ -84,6 +100,7 @@ For February 5, 2026 (Sha'ban 17, 1447 AH):
 - `svgwrite` - SVG generation
 - `pypdf` - PDF reading/writing/concatenation
 - `weasyprint` - HTML→PDF conversion for instructions page
+- `hijridate` - Islamic calendar date conversion
 
 ## Scale Factor
 

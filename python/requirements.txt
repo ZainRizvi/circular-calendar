@@ -3,3 +3,4 @@ svgwrite==1.4.3
 pypdf
 weasyprint
 markdown
+hijridate>=2.5.0
