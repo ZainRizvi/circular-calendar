@@ -66,7 +66,7 @@ export async function runPipeline(
   // Set up builder and PDF generator
   const layout = computeLayout(config);
   const builder = createCalendarBuilder(config, layout);
-  const renderer = createResvgRenderer({ dpi: 150 });
+  const renderer = createResvgRenderer({ dpi: 600 });
   const pdfGenerator = createPdfGenerator({ renderer });
 
   // Create month instances
