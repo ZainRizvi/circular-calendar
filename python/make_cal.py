@@ -247,7 +247,8 @@ def main():
     # Remove cover from pdfs list since it's now embedded in instructions
     pdfs.remove(cover_pdf)
 
-    pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}_COMPLETE.pdf")
+    date_suffix = alignment.gregorian_date.strftime("%Y-%m-%d")
+    pdfizer.concat_pdfs([instructions_pdf] + pdfs, f"out/calendar_pages_{scale_factor}_COMPLETE_{date_suffix}.pdf")
     print("Wrote the concatenated file!")
 
     # Clean up intermediate PDFs
