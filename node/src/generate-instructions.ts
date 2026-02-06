@@ -209,15 +209,18 @@ export async function generateInstructionsPdf(
 
   y -= qrSize + 12;
 
+  // Calculate maximum height for cover image
+  // Use all available space from bottom margin up to just below the QR code
+  const maxImgHeight = y - MARGIN;
+
   // Embed cover image if PNG buffer provided, otherwise embed the PDF page as an image
   if (coverPngBuffer) {
     const coverImage = await pdfDoc.embedPng(coverPngBuffer);
     const coverAspect = coverImage.width / coverImage.height;
 
-    // Calculate image size to fit width while leaving space
+    // Calculate image size to fit width while respecting max height
     let imgWidth = contentWidth;
     let imgHeight = imgWidth / coverAspect;
-    const maxImgHeight = 252; // 3.5 inches
 
     if (imgHeight > maxImgHeight) {
       imgHeight = maxImgHeight;
@@ -242,10 +245,9 @@ export async function generateInstructionsPdf(
 
     const coverAspect = embeddedPage.width / embeddedPage.height;
 
-    // Calculate image size to fit width while leaving space
+    // Calculate image size to fit width while respecting max height
     let imgWidth = contentWidth;
     let imgHeight = imgWidth / coverAspect;
-    const maxImgHeight = 252; // 3.5 inches
 
     if (imgHeight > maxImgHeight) {
       imgHeight = maxImgHeight;

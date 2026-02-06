@@ -193,6 +193,8 @@ ${svgContent}
 
   /**
    * Generate SVG for the circular cover page.
+   * Uses a tight square viewBox around the circle (not a full letter page) so
+   * that when embedded on the instructions page, the circle maximizes available space.
    */
   function generateCircleCoverSvg(
     solarMonths: MonthInstance[],
@@ -207,11 +209,25 @@ ${svgContent}
     );
     const svgElements: string[] = [];
 
-    // SVG header
-    const pageWidth = inchToMillimeter(8.5);
-    const pageHeight = inchToMillimeter(11);
+    // The circleFormFactor uses scale(0.3) and translate(75, 50)
+    // The circle has diameter = 2 * outermostRadius in original coords
+    // After scale(0.3), the diameter becomes outermostRadius * 0.6
+    // The center after transform is at approximately (75 + widthCenter*0.3, 50 + (outermostRadius + verticalOffsetScaled)*0.3)
+    const scaleFactor = 0.3;
+    const translateX = 75;
+    const translateY = 50;
+    const scaledRadius = outermostRadius * scaleFactor;
+    const centerX = translateX + widthCenter * scaleFactor;
+    const centerY = translateY + (outermostRadius + verticalOffsetScaled) * scaleFactor;
+
+    // Create a square viewBox that tightly fits the circle with small padding
+    const padding = 2;
+    const squareSize = scaledRadius * 2 + padding * 2;
+    const viewBoxX = centerX - scaledRadius - padding;
+    const viewBoxY = centerY - scaledRadius - padding;
+
     svgElements.push(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${pageWidth}mm" height="${pageHeight}mm" viewBox="0 0 ${pageWidth} ${pageHeight}">`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${squareSize}mm" height="${squareSize}mm" viewBox="${viewBoxX} ${viewBoxY} ${squareSize} ${squareSize}">`
     );
 
     let daysElapsed = -solarMonths[0].numDays / 2;
