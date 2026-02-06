@@ -52,15 +52,87 @@ If you want to produce multiple copies or iterate quickly, a home cutting machin
 - **Cricut Explore Air 3 / Maker** – Best for Print Then Cut
 - **Silhouette Cameo 4** – More reliable print-then-cut alignment
 
-### Limitations
-- **Max print-then-cut size: 6.75" × 9.25"** (Cricut) — your arcs may exceed this
-- Would need to split arcs to fit within the cutting area
-- Requires buying the machine ($200–$400) + printable vinyl sheets (~$1/sheet)
+### Cricut Print Then Cut Limits
+- **Max printable area: 6.75" × 9.25"** per sheet
+- Mat size: 12" × 12" (or 12" × 24")
+- Registration marks consume ~0.75" on each side
 
 ### Materials
 - Printable vinyl sticker paper (waterproof options: Royal Elements, Orajet, Starcraft)
 - Transfer tape for application
 - Laminate sheets for durability (optional)
+
+---
+
+## Computed Arc Dimensions & Cricut Layouts
+
+Run `python cricut_layout.py` for full details. Summary below.
+
+### Arc Dimensions by Scale Factor
+
+Each arc is a curved annular segment (banana-shaped). The **bounding box** is wider than the arc itself due to curvature.
+
+#### Scale 0.7 (default) — 21.4" / 1.8 ft circle
+
+| Arc Type | Days | Bounding Box | Radial Thickness | Fits Cricut PTC? |
+|----------|------|-------------|------------------|-----------------|
+| Solar 31-day (Jan,Mar,May,Jul,Aug,Oct,Dec) | 31 | **5.63" × 1.20"** | 0.86" | Yes |
+| Solar 30-day (Apr,Jun,Sep,Nov) | 30 | **5.45" × 1.18"** | 0.86" | Yes |
+| Solar 29-day (Feb) | 29 | **5.27" × 1.16"** | 0.86" | Yes |
+| Islamic 30-day (all) | 30 | **5.01" × 1.15"** | 0.86" | Yes |
+
+#### Scale 0.785 — 24" / 2.0 ft circle
+
+| Arc Type | Days | Bounding Box | Radial Thickness | Fits Cricut PTC? |
+|----------|------|-------------|------------------|-----------------|
+| Solar 31-day | 31 | **6.31" × 1.35"** | 0.96" | Yes (0.44" margin) |
+| Solar 30-day | 30 | **6.11" × 1.32"** | 0.96" | Yes |
+| Solar 29-day (Feb) | 29 | **5.91" × 1.30"** | 0.96" | Yes |
+| Islamic 30-day | 30 | **5.62" × 1.29"** | 0.96" | Yes |
+
+#### Scale 0.98 — 30" / 2.5 ft circle
+
+| Arc Type | Days | Bounding Box | Radial Thickness | Fits Cricut PTC? |
+|----------|------|-------------|------------------|-----------------|
+| Solar 31-day | 31 | **7.89" × 1.69"** | 1.20" | **NO** (1.14" too wide) |
+| Solar 30-day | 30 | **7.64" × 1.66"** | 1.20" | **NO** |
+| Islamic 30-day | 30 | **7.03" × 1.62"** | 1.20" | **NO** |
+
+**Maximum circle diameter for Cricut Print Then Cut: ~25.7" (2.1 ft)** at scale 0.84.
+
+For circles larger than 2.1 ft, you must either:
+1. Split each arc into 2 half-arcs
+2. Use the Cricut for cutting only (print on a separate wide-format printer)
+3. Use an online service instead
+
+### Optimal Cricut Sheet Layouts
+
+#### Default Scale 0.7 (21" circle) — Best option: **3 sheets** (nested layout)
+
+Alternating arc orientation lets curves nest together, saving ~25% vertical space:
+
+```
+Sheet 1 (8 arcs):  Jan, Feb↕, Mar, Apr↕, May, Jun↕, Jul, Aug↕
+Sheet 2 (8 arcs):  Sep, Oct↕, Nov, Dec↕, Muharram, Safar↕, Rabi I, Rabi II↕
+Sheet 3 (8 arcs):  Jumada I, Jumada II↕, Rajab, Sha'baan↕, Ramadan, Shawwal↕, Dhu al-Qa'dah, Dhu al-Hijja↕
+```
+(↕ = flipped orientation for nesting)
+
+Simple stacking (no nesting): **4 sheets** (7+7+7+3 arcs).
+
+#### 2 ft circle (scale 0.785) — **4 sheets** either way
+
+Arcs are larger so nesting saves less. Simple stacking: 6+6+6+6 = 4 sheets.
+
+### Cost per Set (Cricut DIY)
+
+| Item | Qty | Cost |
+|------|-----|------|
+| Printable vinyl sheets (letter size) | 3–4 | ~$4.50–$6.00 |
+| Transfer tape | 3–4 sheets | ~$1.50–$2.00 |
+| **Total per calendar** | | **~$6–$8** |
+
+(Machine cost: Cricut Maker ~$300, Cricut Explore Air 3 ~$200, amortized over many prints)
 
 ---
 
