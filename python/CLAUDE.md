@@ -10,10 +10,13 @@ This script generates a circular calendar that overlays the Islamic (Hijri) luna
 python -m venv .venv
 source .venv/bin/activate
 pip install --no-deps -r requirements.txt
+pip install cffi   # required by pypdf but not in requirements.txt
 python make_cal.py
 ```
 
-Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt.
+Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt. The `cffi` package is needed at runtime by `pypdf` but isn't listed as a direct dependency.
+
+To visually inspect the generated PDF, install `poppler-utils` (`apt-get install poppler-utils`) and use `pdftoppm`.
 
 Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 1. Instructions page with embedded circular calendar preview image
@@ -110,6 +113,8 @@ source .venv/bin/activate
 pip install pytest
 python -m pytest -v
 ```
+
+Tests run in ~0.3s with no file I/O. After making changes, always generate a calendar (`python make_cal.py`) and visually verify the output PDF to catch rendering issues that unit tests can't detect.
 
 ## PDF Generation Pipeline
 
