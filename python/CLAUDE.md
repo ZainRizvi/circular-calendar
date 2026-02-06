@@ -75,9 +75,20 @@ These values are calculated automatically:
 - `days_elapsed_islamic` - Days from January 1 to start of current Islamic month
 - `islamic_date_rotation_offset` - Approximately the negative of days_elapsed
 
+## Architecture
+
+Pure computation is separated from I/O so modules can be imported and tested independently:
+
+- **`make_cal.py`** wraps all orchestration (CLI parsing, file I/O, PDF generation) in a `main()` function. Importing it does **not** trigger calendar generation — `main()` only runs via `__main__` or when in a Jupyter notebook.
+- **`layout.py`** contains the pure layout computation extracted from `make_cal.py`: layout dimensions from scale factor, pagination logic, and `MonthInstance` list building for both solar and Islamic calendars. All functions are side-effect-free.
+- **`islamic_alignment.py`** is also pure computation (date math), separate from rendering.
+- **`calendar_drawings.py`** and **`arc_drawing.py`** handle SVG element generation — they produce data structures, not files.
+
+Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.) rather than from `make_cal`, so they run fast (~0.3s) with no file I/O.
+
 ## File Structure
 
-- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation
+- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation (all in `main()`)
 - `layout.py` - Pure layout computation (dimensions, pagination, month instance building)
 - `islamic_alignment.py` - Auto-alignment calculation using hijridate library
 - `calendar_data.py` - Month definitions, colors, canonical month order
