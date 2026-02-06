@@ -100,11 +100,14 @@ Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.)
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
+- `svg_generator.py` - Deterministic SVG generation functions for testing
 - `test_cal.py` - Unit tests for primitives and arc drawing
 - `test_layout.py` - Unit tests for layout calculations and month instance building
 - `test_arc_drawing.py` - Unit tests for geometric calculations
 - `test_calendar_drawings.py` - Unit tests for month SVG rendering
 - `test_islamic_alignment.py` - Unit tests for alignment module
+- `test_svg_snapshots.py` - Snapshot tests for SVG output stability
+- `test_snapshots/` - Reference SVG files for snapshot comparison
 
 ## Running Tests
 
@@ -114,7 +117,21 @@ pip install pytest
 python -m pytest -v
 ```
 
-Tests run in ~0.3s with no file I/O. After making changes, always generate a calendar (`python make_cal.py`) and visually verify the output PDF to catch rendering issues that unit tests can't detect.
+Tests run in ~0.2s with no file I/O.
+
+### SVG Snapshot Tests
+
+Snapshot tests in `test_svg_snapshots.py` ensure SVG output remains consistent. They compare generated SVGs against reference files in `test_snapshots/`.
+
+To update snapshots after intentional changes:
+```bash
+python test_svg_snapshots.py --update
+```
+
+Snapshots cover:
+- Individual month rendering (January, June upside-down, Ramadan)
+- Month strips (solar + Islamic combined)
+- Full circular calendar
 
 ## PDF Generation Pipeline
 
