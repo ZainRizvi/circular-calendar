@@ -5,7 +5,7 @@
 ```bash
 cd node
 npm install
-npx tsx src/make-cal.ts
+npm start
 ```
 
 **Output**: `out/calendar_pages_0.7_COMPLETE.pdf`
@@ -18,6 +18,16 @@ npm test
 
 Or use: `./test.sh` (runs typecheck + tests)
 
+## npm Scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `npm start` | `tsx src/make-cal.ts` | Generate calendar PDF |
+| `npm test` | `vitest run` | Run tests once |
+| `npm run test:watch` | `vitest` | Run tests in watch mode |
+| `npm run test:coverage` | `vitest run --coverage` | Run tests with coverage |
+| `npm run typecheck` | `tsc --noEmit` | TypeScript type checking |
+
 ### Snapshot Tests
 
 The `snapshot-comparison.test.ts` compares Node.js SVG output against Python snapshots in `test_snapshots/`. Tests verify:
@@ -28,9 +38,9 @@ The `snapshot-comparison.test.ts` compares Node.js SVG output against Python sna
 ## CLI Options
 
 ```bash
-npx tsx src/make-cal.ts                      # Auto-align to today
-npx tsx src/make-cal.ts --date 2026-02-05    # Specific Gregorian date
-npx tsx src/make-cal.ts --hijri 1447-08-17   # Specific Islamic date
+npm start                             # Auto-align to today
+npm start -- --date 2026-02-05        # Specific Gregorian date
+npm start -- --hijri 1447-08-17       # Specific Islamic date
 ```
 
 ## Technical Details
