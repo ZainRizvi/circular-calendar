@@ -28,23 +28,27 @@ Creates a circular calendar overlaying the Islamic (Hijri) lunar calendar on the
 - **Inner ring**: 12 Islamic months aligned with corresponding solar dates
 - **Gap**: The ~11-day difference between lunar (354 days) and solar (365 days) years creates a visible gap in the inner ring
 
-## Repository Structure
+## Directory Layout
 
 ```
-/python     - Production-ready Python CLI (generates PDF)
-/app        - Next.js web app (work in progress)
+circular-calendar/
+├── python/                     # Production-ready Python CLI
+│   ├── make_cal.py             # Entry point, CLI, orchestration
+│   ├── calendar_data.py        # Month definitions, colors
+│   ├── calendar_drawings.py    # SVG rendering for month arcs
+│   ├── arc_drawing.py          # Geometric utilities (arcs, angles)
+│   ├── primitives.py           # Data structures (Point, Arc)
+│   ├── islamic_alignment.py    # Auto-alignment via hijridate
+│   ├── pdfizer.py              # PDF concatenation
+│   ├── generate_instructions.py# Instructions PDF generation
+│   ├── test_*.py               # Tests
+│   └── out/                    # Generated PDFs
+├── app/                        # Next.js web app (planned, see PLAN.md)
+├── PLAN.md                     # Migration status and roadmap
+└── README.md                   # User-facing instructions
 ```
 
-See `PLAN.md` for migration status.
-
-### Python Version (`/python`)
-- **Key files**: `make_cal.py`, `calendar_data.py`, `calendar_drawings.py`, `arc_drawing.py`, `primitives.py`
-- **Auto-alignment**: Islamic calendar positioning is calculated automatically via `hijridate` library
-- See `python/CLAUDE.md` for running, testing, and technical details
-
-### Next.js Version (`/app`)
-- **Key files**: `src/lib/month.ts`, `src/lib/svg.ts`, `src/lib/primitives.ts`
-- **Status**: Core primitives and SVG generation ported; full calendar logic in progress
+**Python version**: See `python/CLAUDE.md` for running, testing, and technical details
 
 ## Key Technical Details
 

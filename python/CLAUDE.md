@@ -77,18 +77,24 @@ Months stored in canonical order (Muharram first) in `calendar_data.py`. At runt
 
 Both use same `MonthInstance` objects with different transforms.
 
-## File Structure
+## Directory Layout
 
-| File | Purpose |
-|------|---------|
-| `make_cal.py` | Main script, CLI, PDF orchestration |
-| `islamic_alignment.py` | Auto-alignment via hijridate |
-| `calendar_data.py` | Month definitions, colors |
-| `calendar_drawings.py` | SVG rendering for month arcs |
-| `arc_drawing.py` | Geometric utilities |
-| `primitives.py` | Data structures (Point, Arc) |
-| `pdfizer.py` | PDF concatenation |
-| `generate_instructions.py` | Instructions PDF with cover image |
+```
+python/
+├── make_cal.py              # Entry point: CLI, PDF orchestration
+├── calendar_data.py         # Month definitions, colors, constants
+├── calendar_drawings.py     # SVG rendering for month arcs
+├── arc_drawing.py           # Geometric utilities (arcs, angles)
+├── primitives.py            # Data structures (Point, Arc, SCALE_FACTOR)
+├── islamic_alignment.py     # Auto-alignment calculation via hijridate
+├── pdfizer.py               # PDF concatenation utility
+├── generate_instructions.py # Builds instructions PDF with cover image
+├── test_islamic_alignment.py# Unit tests for alignment
+├── test_svg_snapshots.py    # SVG snapshot tests
+├── test_snapshots/          # Reference SVGs for snapshot tests
+├── requirements.txt         # Python dependencies
+└── out/                     # Generated output (PDFs, SVGs)
+```
 
 ## PDF Pipeline
 
