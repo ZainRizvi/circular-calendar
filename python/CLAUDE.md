@@ -1,4 +1,6 @@
-# Circular Calendar - Python Generator
+# Circular Calendar - Python Generator (DEPRECATED)
+
+**This folder is deprecated. Use the Node.js version in `node/` instead.**
 
 ## Running
 
