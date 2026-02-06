@@ -10,10 +10,13 @@ This script generates a circular calendar that overlays the Islamic (Hijri) luna
 python -m venv .venv
 source .venv/bin/activate
 pip install --no-deps -r requirements.txt
+pip install cffi   # required by pypdf but not in requirements.txt
 python make_cal.py
 ```
 
-Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt.
+Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt. The `cffi` package is needed at runtime by `pypdf` but isn't listed as a direct dependency.
+
+To visually inspect the generated PDF, install `poppler-utils` (`apt-get install poppler-utils`) and use `pdftoppm`.
 
 Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 1. Instructions page with embedded circular calendar preview image
@@ -75,9 +78,21 @@ These values are calculated automatically:
 - `days_elapsed_islamic` - Days from January 1 to start of current Islamic month
 - `islamic_date_rotation_offset` - Approximately the negative of days_elapsed
 
+## Architecture
+
+Pure computation is separated from I/O so modules can be imported and tested independently:
+
+- **`make_cal.py`** wraps all orchestration (CLI parsing, file I/O, PDF generation) in a `main()` function. Importing it does **not** trigger calendar generation — `main()` only runs via `__main__` or when in a Jupyter notebook.
+- **`layout.py`** contains the pure layout computation extracted from `make_cal.py`: layout dimensions from scale factor, pagination logic, and `MonthInstance` list building for both solar and Islamic calendars. All functions are side-effect-free.
+- **`islamic_alignment.py`** is also pure computation (date math), separate from rendering.
+- **`calendar_drawings.py`** and **`arc_drawing.py`** handle SVG element generation — they produce data structures, not files.
+
+Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.) rather than from `make_cal`, so they run fast (~0.3s) with no file I/O.
+
 ## File Structure
 
-- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation
+- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation (all in `main()`)
+- `layout.py` - Pure layout computation (dimensions, pagination, month instance building)
 - `islamic_alignment.py` - Auto-alignment calculation using hijridate library
 - `calendar_data.py` - Month definitions, colors, canonical month order
 - `calendar_drawings.py` - SVG rendering for month arcs
@@ -85,6 +100,10 @@ These values are calculated automatically:
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
+- `test_cal.py` - Unit tests for primitives and arc drawing
+- `test_layout.py` - Unit tests for layout calculations and month instance building
+- `test_arc_drawing.py` - Unit tests for geometric calculations
+- `test_calendar_drawings.py` - Unit tests for month SVG rendering
 - `test_islamic_alignment.py` - Unit tests for alignment module
 
 ## Running Tests
@@ -92,8 +111,10 @@ These values are calculated automatically:
 ```bash
 source .venv/bin/activate
 pip install pytest
-python -m pytest test_islamic_alignment.py -v
+python -m pytest -v
 ```
+
+Tests run in ~0.3s with no file I/O. After making changes, always generate a calendar (`python make_cal.py`) and visually verify the output PDF to catch rendering issues that unit tests can't detect.
 
 ## PDF Generation Pipeline
 
