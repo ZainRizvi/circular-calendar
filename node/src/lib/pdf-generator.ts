@@ -7,7 +7,7 @@
  */
 
 import { PDFDocument } from 'pdf-lib';
-import type { SvgRenderer } from './types.js';
+import type { SvgRenderer } from './types.ts';
 
 /**
  * Options for creating a PDF generator.

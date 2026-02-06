@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getMonth, DATE_FILL_COLOR } from './month-renderer.js';
-import { Point, resetTextPathIdCounter } from './primitives.js';
-import type { MonthInstance } from './calendar-data.js';
+import { getMonth, DATE_FILL_COLOR } from './month-renderer.ts';
+import { Point, resetTextPathIdCounter } from './primitives.ts';
+import type { MonthInstance } from './calendar-data.ts';
 
 beforeEach(() => {
   resetTextPathIdCounter();

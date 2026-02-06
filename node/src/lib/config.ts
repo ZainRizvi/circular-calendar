@@ -6,7 +6,7 @@
  * different contexts (CLI, web app) to customize dimensions.
  */
 
-import { inchToMillimeter } from './geometry.js';
+import { inchToMillimeter } from './geometry.ts';
 
 /**
  * Injectable layout configuration.

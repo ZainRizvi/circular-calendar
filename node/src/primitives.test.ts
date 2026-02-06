@@ -9,7 +9,7 @@ import {
   Circle,
   SCALE_FACTOR,
   STROKE_WIDTH,
-} from './primitives.js';
+} from './primitives.ts';
 
 describe('Point', () => {
   it('should store x and y coordinates', () => {

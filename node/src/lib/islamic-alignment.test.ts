@@ -10,8 +10,8 @@ import {
   getMonthName,
   ISLAMIC_MONTHS,
   getAlignmentHeuristic,
-} from './islamic-alignment.js';
-import type { Month } from './calendar-data.js';
+} from './islamic-alignment.ts';
+import type { Month } from './calendar-data.ts';
 
 describe('Islamic Alignment', () => {
   it('Feb 5, 2026 should be in Sha\'ban (month index 7)', () => {

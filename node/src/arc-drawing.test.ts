@@ -9,8 +9,8 @@ import {
   getVerticalPageCanvas,
   drawMonthParts,
   groupWithMonthParts,
-} from './arc-drawing.js';
-import { Point, Arc, DimensionalArc, resetTextPathIdCounter } from './primitives.js';
+} from './arc-drawing.ts';
+import { Point, Arc, DimensionalArc, resetTextPathIdCounter } from './primitives.ts';
 
 beforeEach(() => {
   resetTextPathIdCounter();

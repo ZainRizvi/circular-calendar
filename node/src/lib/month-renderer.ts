@@ -3,15 +3,15 @@
  * Ported from Python calendar_drawings.py
  */
 
-import type { MonthInstance } from './calendar-data.js';
+import type { MonthInstance } from './calendar-data.ts';
 import {
   Point,
   CurvedText,
   TextCenteredAroundPoint,
   Circle,
   Drawable,
-} from './primitives.js';
-import { getDimensionalArc, getArc } from './geometry.js';
+} from './primitives.ts';
+import { getDimensionalArc, getArc } from './geometry.ts';
 
 export const DATE_FILL_COLOR = '#fbebb3';
 

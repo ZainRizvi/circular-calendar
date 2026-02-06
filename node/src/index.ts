@@ -8,7 +8,7 @@
  */
 
 // Core library exports
-export * from './lib/index.js';
+export * from './lib/index.ts';
 
 // Renderer exports
-export * from './renderers/index.js';
+export * from './renderers/index.ts';

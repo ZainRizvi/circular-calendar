@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { svgToPng, parseSizeToPoints, SvgDimensions } from './svg-to-png.js';
+import { svgToPng, parseSizeToPoints, SvgDimensions } from './svg-to-png.ts';
 
 describe('parseSizeToPoints', () => {
   it('should parse millimeters to points', () => {

@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseArgs, getAlignmentFromArgs, type ParsedArgs } from './args.js';
+import { parseArgs, getAlignmentFromArgs, type ParsedArgs } from './args.ts';
 
 describe('parseArgs', () => {
   it('should parse empty args', () => {

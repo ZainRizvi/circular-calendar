@@ -10,7 +10,7 @@ import {
   islamicYearCanonical,
   islamicColors,
   solarColors,
-} from './calendar-data.js';
+} from './calendar-data.ts';
 
 describe('Month type', () => {
   it('should create a month with all required fields', () => {

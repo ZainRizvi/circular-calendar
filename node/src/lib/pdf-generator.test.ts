@@ -8,8 +8,8 @@ import {
   pngBufferToPdf,
   concatPdfBytes,
   type PdfGeneratorOptions,
-} from './pdf-generator.js';
-import type { SvgRenderer, SvgRenderResult } from './types.js';
+} from './pdf-generator.ts';
+import type { SvgRenderer, SvgRenderResult } from './types.ts';
 import { PDFDocument } from 'pdf-lib';
 
 // Create a mock renderer for testing

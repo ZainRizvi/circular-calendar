@@ -6,28 +6,32 @@
  */
 
 // Types
-export * from './types.js';
+export * from './types.ts';
 
 // Configuration
-export * from './config.js';
+export * from './config.ts';
 
 // Core primitives
-export * from './primitives.js';
+export * from './primitives.ts';
 
 // Calendar data structures
-export * from './calendar-data.js';
+export * from './calendar-data.ts';
 
 // Geometric utilities
-export * from './geometry.js';
+export * from './geometry.ts';
 
 // Month rendering
-export * from './month-renderer.js';
+export * from './month-renderer.ts';
 
 // Islamic calendar alignment
-export * from './islamic-alignment.js';
+export * from './islamic-alignment.ts';
 
 // Calendar builder
-export * from './calendar-builder.js';
+export * from './calendar-builder.ts';
 
 // PDF generation
-export * from './pdf-generator.js';
+export * from './pdf-generator.ts';
+
+// Serverless-compatible modules
+export * from './instructions-generator.ts';
+export * from './serverless-pipeline.ts';

@@ -3,11 +3,11 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { generateQrCode, generateInstructionsPdf, GUMROAD_URL } from './generate-instructions.js';
+import { generateQrCode, generateInstructionsPdf, GUMROAD_URL } from './generate-instructions.ts';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument } from 'pdf-lib';
-import { createPdfFromPng } from './pdfizer.js';
+import { createPdfFromPng } from './pdfizer.ts';
 
 // Test output directory
 const TEST_OUT_DIR = path.join(process.cwd(), 'test_output_instructions');

@@ -7,10 +7,10 @@ import {
   createCalendarBuilder,
   dateRotation,
   type CalendarBuilder,
-} from './calendar-builder.js';
-import { DEFAULT_LAYOUT_CONFIG, computeLayout } from './config.js';
-import { resetTextPathIdCounter } from './primitives.js';
-import { getAlignmentParams } from './islamic-alignment.js';
+} from './calendar-builder.ts';
+import { DEFAULT_LAYOUT_CONFIG, computeLayout } from './config.ts';
+import { resetTextPathIdCounter } from './primitives.ts';
+import { getAlignmentParams } from './islamic-alignment.ts';
 
 beforeEach(() => {
   resetTextPathIdCounter();

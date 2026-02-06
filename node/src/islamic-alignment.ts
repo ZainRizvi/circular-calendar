@@ -8,7 +8,7 @@
  * Ported from Python islamic_alignment.py
  */
 
-import type { Month } from './calendar-data.js';
+import type { Month } from './calendar-data.ts';
 
 /**
  * Canonical Islamic month names (1-indexed, Muharram is month 1)

@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { createResvgRenderer, parseSizeToPoints } from './resvg-renderer.js';
+import { createResvgRenderer, parseSizeToPoints } from './resvg-renderer.ts';
 import type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
 
 describe('parseSizeToPoints', () => {

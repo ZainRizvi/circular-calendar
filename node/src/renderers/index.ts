@@ -6,7 +6,7 @@
  */
 
 // Node.js renderer using resvg-js
-export * from './resvg-renderer.js';
+export * from './resvg-renderer.ts';
 
 // Re-export types for convenience
 export type { SvgRenderer, SvgRenderResult } from '../lib/types.js';

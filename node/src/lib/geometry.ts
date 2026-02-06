@@ -8,7 +8,7 @@ import {
   Arc,
   DimensionalArc,
   Drawable,
-} from './primitives.js';
+} from './primitives.ts';
 
 /**
  * Convert inches to millimeters (using 25mm per inch approximation).

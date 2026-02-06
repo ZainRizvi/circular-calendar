@@ -10,7 +10,7 @@ import {
   SCALE_FACTOR,
   STROKE_WIDTH,
   DEFAULT_STROKE_WIDTH,
-} from './primitives.js';
+} from './primitives.ts';
 
 describe('Point', () => {
   it('should store x and y coordinates', () => {

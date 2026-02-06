@@ -14,8 +14,8 @@ import {
   DEFAULT_LAYOUT_CONFIG,
   getAlignmentParams,
   resetTextPathIdCounter,
-} from './lib/index.js';
-import { createResvgRenderer } from './renderers/index.js';
+} from './lib/index.ts';
+import { createResvgRenderer } from './renderers/index.ts';
 
 const SNAPSHOT_DATES = ['2024-10-06', '2026-02-06', '2027-06-06'];
 const SNAPSHOTS_DIR = path.join(process.cwd(), 'test_snapshots');

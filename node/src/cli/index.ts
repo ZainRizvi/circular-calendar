@@ -3,8 +3,8 @@
  * CLI entry point for circular calendar generation.
  */
 
-import { parseArgs, getAlignmentFromArgs } from './args.js';
-import { runPipeline, cleanupIntermediateFiles } from './pipeline.js';
+import { parseArgs, getAlignmentFromArgs } from './args.ts';
+import { runPipeline, cleanupIntermediateFiles } from './pipeline.ts';
 import { DEFAULT_LAYOUT_CONFIG } from '../lib/index.js';
 
 async function main(): Promise<void> {

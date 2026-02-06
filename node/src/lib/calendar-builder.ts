@@ -5,17 +5,17 @@
  * to create a reusable, configurable calendar builder.
  */
 
-import { Point, resetTextPathIdCounter } from './primitives.js';
-import { inchToMillimeter, drawMonthParts } from './geometry.js';
-import { getMonth } from './month-renderer.js';
+import { Point, resetTextPathIdCounter } from './primitives.ts';
+import { inchToMillimeter, drawMonthParts } from './geometry.ts';
+import { getMonth } from './month-renderer.ts';
 import {
   type MonthInstance,
   type Month,
   solarYear,
   islamicYearCanonical,
-} from './calendar-data.js';
-import { rotateMonths, type AlignmentParams } from './islamic-alignment.js';
-import { type LayoutConfig, type ComputedLayout } from './config.js';
+} from './calendar-data.ts';
+import { rotateMonths, type AlignmentParams } from './islamic-alignment.ts';
+import { type LayoutConfig, type ComputedLayout } from './config.ts';
 
 /**
  * Calculate date rotation offset for a month.

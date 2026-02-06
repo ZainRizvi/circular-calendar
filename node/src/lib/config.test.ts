@@ -8,7 +8,7 @@ import {
   type ComputedLayout,
   computeLayout,
   DEFAULT_LAYOUT_CONFIG,
-} from './config.js';
+} from './config.ts';
 
 describe('LayoutConfig', () => {
   describe('DEFAULT_LAYOUT_CONFIG', () => {

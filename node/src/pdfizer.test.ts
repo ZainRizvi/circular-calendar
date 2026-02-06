@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { concatPdfs, createPdfFromPng, pngBufferToPdf } from './pdfizer.js';
+import { concatPdfs, createPdfFromPng, pngBufferToPdf } from './pdfizer.ts';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument } from 'pdf-lib';
