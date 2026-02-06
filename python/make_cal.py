@@ -24,13 +24,7 @@ import argparse
 import math
 import os
 from datetime import date
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
-
-try:
-    from IPython.display import SVG
-except ImportError:
-    SVG = None
+from IPython.display import SVG
 
 # custom libs
 from primitives import *
@@ -42,9 +36,9 @@ import pdfizer
 
 
 def svg_to_pdf(svg_path: str, pdf_path: str):
-    """Convert SVG file to PDF using svglib and reportlab (pure Python)."""
-    drawing = svg2rlg(svg_path)
-    renderPDF.drawToFile(drawing, pdf_path)
+    """Convert SVG file to PDF using Inkscape."""
+    import subprocess
+    subprocess.run(["inkscape", svg_path, f"--export-filename={pdf_path}", "--export-type=pdf"], check=True)
 
 
 def parse_args():
