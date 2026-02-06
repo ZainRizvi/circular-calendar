@@ -7,6 +7,7 @@ cd python
 python -m venv .venv
 source .venv/bin/activate
 pip install --no-deps -r requirements.txt
+npm install
 python make_cal.py
 ```
 
@@ -31,6 +32,10 @@ Runs `make_cal.py` with a fixed date (2026-02-05) and compares SVG output agains
 ```bash
 python test_svg_snapshots.py --update
 ```
+
+### PDF Snapshot Tests
+
+Also compares rendered PDF pages (as PNG images) against `test_snapshots/pdf_pages/`. This catches issues with SVG-to-PDF conversion that SVG tests alone would miss.
 
 ## Auto-Alignment
 
@@ -82,6 +87,7 @@ Both use same `MonthInstance` objects with different transforms.
 ```
 python/
 ├── make_cal.py              # Entry point: CLI, PDF orchestration
+├── svg_to_png.js            # Node.js script for SVG→PNG via Puppeteer
 ├── calendar_data.py         # Month definitions, colors, constants
 ├── calendar_drawings.py     # SVG rendering for month arcs
 ├── arc_drawing.py           # Geometric utilities (arcs, angles)
@@ -90,26 +96,38 @@ python/
 ├── pdfizer.py               # PDF concatenation utility
 ├── generate_instructions.py # Builds instructions PDF with cover image
 ├── test_islamic_alignment.py# Unit tests for alignment
-├── test_svg_snapshots.py    # SVG snapshot tests
+├── test_svg_snapshots.py    # SVG and PDF snapshot tests
 ├── test_snapshots/          # Reference SVGs for snapshot tests
+│   └── pdf_pages/           # Reference PNGs for PDF snapshot tests
 ├── requirements.txt         # Python dependencies
+├── package.json             # Node.js dependencies (Puppeteer)
 └── out/                     # Generated output (PDFs, SVGs)
 ```
 
 ## PDF Pipeline
 
-1. `make_cal.py` generates SVG files
-2. `svglib` + `reportlab` convert SVG → PDF
-3. `generate_instructions.py` creates instructions page (converts cover PDF → PNG via `pypdfium2`)
-4. `pdfizer.py` concatenates into final PDF
-5. Intermediate files cleaned up
+1. `make_cal.py` generates SVG files for each calendar page
+2. `svg_to_png.js` (Puppeteer/headless Chrome) converts SVG → PNG at 150 DPI
+3. `reportlab` embeds PNG into PDF at original SVG dimensions
+4. `generate_instructions.py` creates instructions page (converts cover PDF → PNG via `pypdfium2`)
+5. `pdfizer.py` concatenates instructions + calendar pages into final PDF
+6. Intermediate files cleaned up
+
+### Why Puppeteer for SVG→PDF?
+
+Pure Python libraries like `svglib` don't handle complex SVG features (text on paths, nested transforms) correctly. Puppeteer uses headless Chrome which renders SVGs perfectly. The PNG intermediate preserves visual fidelity while remaining serverless-compatible.
 
 ## Dependencies
 
-All pure Python (serverless-compatible):
+**Python** (see `requirements.txt`):
 - `svgwrite` - SVG generation
-- `svglib` + `reportlab` - SVG to PDF
-- `pypdfium2` - PDF to PNG
+- `reportlab` - PDF creation from PNG
+- `pypdfium2` - PDF to PNG conversion
 - `pypdf` - PDF concatenation
 - `hijridate` - Islamic calendar conversion
 - `pillow` - Image handling
+
+**Node.js** (see `package.json`):
+- `puppeteer` - Headless Chrome for accurate SVG rendering
+
+For serverless deployment (AWS Lambda, Vercel), use `@sparticuz/chromium` instead of full Puppeteer.
