@@ -4,6 +4,10 @@
 
 This script generates a circular calendar that overlays the Islamic (Hijri) lunar calendar on the Gregorian solar calendar. The calendar is split into printable segments plus a circular cover page showing all 12 months arranged in a ring.
 
+## Development Requirements
+
+**Always work in a virtual environment.** All Python dependencies must be pip-installable with no system library requirements. This ensures compatibility with serverless environments (AWS Lambda, Vercel, etc.) and easy setup on any machine.
+
 ## Running
 
 ```bash
@@ -100,6 +104,7 @@ Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.)
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
+- `instructions.md` - Source content for the instructions page (edit this to update instruction text)
 - `svg_generator.py` - Deterministic SVG generation functions for testing
 - `test_cal.py` - Unit tests for primitives and arc drawing
 - `test_layout.py` - Unit tests for layout calculations and month instance building

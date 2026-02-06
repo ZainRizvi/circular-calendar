@@ -4,12 +4,33 @@
 import io
 import os
 import pypdfium2 as pdfium
+import qrcode
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import HexColor
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, ListFlowable, ListItem
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, ListFlowable, ListItem, Table, TableStyle
 from reportlab.lib.enums import TA_CENTER
+
+GUMROAD_URL = "https://zainrizvi.gumroad.com/l/circle-calendar"
+
+
+def generate_qr_code(url: str, size: int = 150) -> bytes:
+    """Generate a QR code image as PNG bytes."""
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=2,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+    return img_bytes.getvalue()
 
 
 def pdf_to_png_bytes(pdf_path: str, dpi: int = 150) -> bytes:
@@ -49,9 +70,9 @@ def generate_instructions_pdf(cover_pdf_path: str, output_path: str):
     title_style = ParagraphStyle(
         'Title',
         parent=styles['Heading1'],
-        fontSize=26,
+        fontSize=24,
         alignment=TA_CENTER,
-        spaceAfter=6,
+        spaceAfter=2,
         fontName='Helvetica'
     )
 
@@ -60,16 +81,16 @@ def generate_instructions_pdf(cover_pdf_path: str, output_path: str):
         parent=styles['Normal'],
         fontSize=10,
         alignment=TA_CENTER,
-        spaceAfter=18,
+        spaceAfter=10,
         textColor=HexColor('#333333')
     )
 
     heading_style = ParagraphStyle(
         'Heading',
         parent=styles['Heading2'],
-        fontSize=13,
-        spaceBefore=12,
-        spaceAfter=6,
+        fontSize=12,
+        spaceBefore=8,
+        spaceAfter=4,
         textColor=HexColor('#1a73e8'),
         fontName='Helvetica'
     )
@@ -77,16 +98,16 @@ def generate_instructions_pdf(cover_pdf_path: str, output_path: str):
     body_style = ParagraphStyle(
         'Body',
         parent=styles['Normal'],
-        fontSize=11,
-        leading=15,
+        fontSize=10,
+        leading=13,
         textColor=HexColor('#333333')
     )
 
     link_style = ParagraphStyle(
         'Link',
         parent=body_style,
-        spaceBefore=12,
-        spaceAfter=6
+        spaceBefore=6,
+        spaceAfter=4
     )
 
     # Build content
@@ -130,8 +151,37 @@ def generate_instructions_pdf(cover_pdf_path: str, output_path: str):
         link_style
     ))
 
+    # Review request section
+    story.append(Spacer(1, 6))
+    story.append(Paragraph("Enjoying the Calendar?", heading_style))
+
+    # Generate QR code
+    qr_bytes = generate_qr_code(GUMROAD_URL)
+    qr_img = Image(io.BytesIO(qr_bytes))
+    qr_img.drawWidth = 0.75 * inch
+    qr_img.drawHeight = 0.75 * inch
+
+    review_text = Paragraph(
+        'If you found this calendar helpful, please leave a <b>5-star review</b> on Gumroad! '
+        'Your feedback helps others discover this resource. Scan the QR code or visit '
+        f'<link href="{GUMROAD_URL}"><u>the product page</u></link>.',
+        body_style
+    )
+
+    # Create a table to put QR code and text side by side
+    review_table = Table(
+        [[qr_img, review_text]],
+        colWidths=[0.9 * inch, 5.6 * inch]
+    )
+    review_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (0, 0), 0),
+        ('RIGHTPADDING', (0, 0), (0, 0), 8),
+    ]))
+    story.append(review_table)
+
     # Add some space before image
-    story.append(Spacer(1, 12))
+    story.append(Spacer(1, 8))
 
     # Add cover image
     img = Image(io.BytesIO(cover_png_bytes))

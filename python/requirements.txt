@@ -10,6 +10,7 @@ pypdf
 pypdfium2
 hijridate>=2.5.0
 pillow
+qrcode
 
 # svglib and its actual runtime dependencies (pycairo is optional and not needed)
 svglib

@@ -17,3 +17,9 @@ An annual calendar that's easy for little kids (and adults) to understand.
 - Cut out arrow shaped tags to mark key events like important Islamic days, birthdays, etc
 
 Latest version of this calendar is available at http://zainrizvi.io/calendar
+
+## Enjoying the Calendar?
+
+If you found this calendar helpful, please leave a 5-star review on Gumroad! Your feedback helps others discover this resource.
+
+[QR Code to Gumroad page]
