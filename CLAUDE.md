@@ -65,6 +65,13 @@ circular-calendar/
 2. Verify `days_elapsed` calculations
 3. Each day ≈ 360/365 ≈ 0.986 degrees
 
+## Development Guidelines
+
+**Test-Driven Development (TDD):**
+- Write tests before implementing new functionality
+- Co-locate test files with source code (e.g., `foo.ts` + `foo.test.ts`)
+- Run tests after each change to verify correctness
+
 ## Documentation Guidelines
 
 - **Root `CLAUDE.md`**: Cross-cutting technical concepts, AI constraints

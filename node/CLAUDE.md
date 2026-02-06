@@ -22,7 +22,8 @@ Or use: `./test.sh` (runs typecheck + tests)
 
 | Script | Command | Description |
 |--------|---------|-------------|
-| `npm start` | `tsx src/make-cal.ts` | Generate calendar PDF |
+| `npm start` | `tsx src/cli/index.ts` | Generate calendar PDF |
+| `npm run start:legacy` | `tsx src/make-cal.ts` | Generate PDF (legacy entry) |
 | `npm test` | `vitest run` | Run tests once |
 | `npm run test:watch` | `vitest` | Run tests in watch mode |
 | `npm run test:coverage` | `vitest run --coverage` | Run tests with coverage |
@@ -43,6 +44,70 @@ npm start -- --date 2026-02-05        # Specific Gregorian date
 npm start -- --hijri 1447-08-17       # Specific Islamic date
 ```
 
+## Architecture
+
+The codebase follows a modular library architecture with dependency injection for rendering.
+
+### Directory Layout
+
+```
+node/src/
+├── lib/                           # Core library (browser-compatible)
+│   ├── index.ts                   # Barrel export
+│   ├── types.ts                   # SvgRenderer, SvgRenderResult interfaces
+│   ├── config.ts                  # LayoutConfig + computeLayout()
+│   ├── primitives.ts              # Point, Arc, DimensionalArc
+│   ├── calendar-data.ts           # Month, Year interfaces + data
+│   ├── geometry.ts                # Geometric utilities
+│   ├── month-renderer.ts          # Month SVG rendering
+│   ├── islamic-alignment.ts       # Date alignment calculations
+│   ├── calendar-builder.ts        # SVG generation functions
+│   └── pdf-generator.ts           # PDF generation with injected renderer
+│
+├── renderers/                     # Swappable rendering strategies
+│   ├── index.ts                   # Barrel export
+│   └── resvg-renderer.ts          # Node.js: @resvg/resvg-js implementation
+│
+├── cli/                           # CLI entry point (Node.js only)
+│   ├── index.ts                   # Main entry
+│   ├── args.ts                    # CLI argument parsing
+│   └── pipeline.ts                # Orchestrates PDF generation + file I/O
+│
+├── index.ts                       # Root barrel: re-exports lib/ and renderers/
+├── make-cal.ts                    # Legacy entry point (kept for compatibility)
+├── pdfizer.ts                     # PDF utilities with file I/O
+├── generate-instructions.ts       # Instructions PDF generation
+└── svg-to-png.ts                  # Legacy SVG renderer (kept for compatibility)
+```
+
+### Key Design: Dependency Injection
+
+The library uses dependency injection for rendering, allowing different backends:
+
+```typescript
+// Node.js usage
+import { createPdfGenerator } from '@/node/src/lib';
+import { createResvgRenderer } from '@/node/src/renderers';
+
+const renderer = createResvgRenderer({ dpi: 150 });
+const pdfGenerator = createPdfGenerator({ renderer });
+const pdfBytes = await pdfGenerator.svgToPdf(svgContent);
+```
+
+### SvgRenderer Interface
+
+```typescript
+interface SvgRenderResult {
+  pngBuffer: Uint8Array;
+  widthPts: number;
+  heightPts: number;
+}
+
+interface SvgRenderer {
+  render(svgContent: string): Promise<SvgRenderResult>;
+}
+```
+
 ## Technical Details
 
 ### Coordinate System
@@ -61,51 +126,17 @@ Months stored in canonical order (Muharram first) in `calendar-data.ts`. At runt
 
 ### Scale Factor
 
-`SCALE_FACTOR` in `primitives.ts` (default 0.7):
+`LayoutConfig.scaleFactor` (default 0.7):
 - Controls canvas dimensions and month arc sizing
 - 0.7 uses 4 rows × 1 column per page
 
-## Directory Layout
-
-```
-node/
-├── src/
-│   ├── make-cal.ts              # Entry point: CLI, PDF orchestration
-│   ├── make-cal.test.ts
-│   ├── svg-to-png.ts            # SVG→PNG conversion via resvg-js
-│   ├── svg-to-png.test.ts
-│   ├── calendar-data.ts         # Month definitions, colors, constants
-│   ├── calendar-data.test.ts
-│   ├── calendar-drawings.ts     # SVG rendering for month arcs
-│   ├── calendar-drawings.test.ts
-│   ├── arc-drawing.ts           # Geometric utilities (arcs, angles)
-│   ├── arc-drawing.test.ts
-│   ├── primitives.ts            # Data structures (Point, Arc, SCALE_FACTOR)
-│   ├── primitives.test.ts
-│   ├── islamic-alignment.ts     # Auto-alignment calculation (heuristic)
-│   ├── islamic-alignment.test.ts
-│   ├── pdfizer.ts               # PDF concatenation utility
-│   ├── pdfizer.test.ts
-│   ├── generate-instructions.ts # Builds instructions PDF with cover image
-│   ├── generate-instructions.test.ts
-│   └── snapshot-comparison.test.ts # Compares output with Python snapshots
-├── out/                         # Generated output (PDFs, SVGs)
-├── test_snapshots/              # Reference SVGs from Python (for comparison)
-├── package.json
-├── tsconfig.json
-├── vitest.config.ts
-├── test.sh
-└── CLAUDE.md
-```
-
 ## PDF Pipeline
 
-1. `make-cal.ts` generates SVG strings for each calendar page
-2. `svg-to-png.ts` (resvg-js, Rust-based WASM) converts SVG → PNG at 150 DPI
-3. `pdf-lib` embeds PNG into PDF at original SVG dimensions
-4. `generate-instructions.ts` creates instructions page with embedded cover PDF
-5. `pdfizer.ts` concatenates instructions + calendar pages into final PDF
-6. Intermediate files cleaned up
+1. `calendar-builder.ts` generates SVG strings for each calendar page
+2. `renderers/resvg-renderer.ts` converts SVG → PNG at 150 DPI
+3. `lib/pdf-generator.ts` uses pdf-lib to embed PNG into PDF
+4. `generate-instructions.ts` creates instructions page with cover image
+5. `cli/pipeline.ts` orchestrates everything and handles file I/O
 
 ### Why resvg-js for SVG→PNG?
 

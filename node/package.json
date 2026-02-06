@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Circular calendar with Islamic/Gregorian overlay",
   "type": "module",
-  "main": "src/make-cal.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "tsx src/make-cal.ts",
+    "start": "tsx src/cli/index.ts",
+    "start:legacy": "tsx src/make-cal.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
