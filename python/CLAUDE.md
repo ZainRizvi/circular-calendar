@@ -4,23 +4,16 @@
 
 This script generates a circular calendar that overlays the Islamic (Hijri) lunar calendar on the Gregorian solar calendar. The calendar is split into printable segments plus a circular cover page showing all 12 months arranged in a ring.
 
-## Development Requirements
-
-**Always work in a virtual environment.** All Python dependencies must be pip-installable with no system library requirements. This ensures compatibility with serverless environments (AWS Lambda, Vercel, etc.) and easy setup on any machine.
-
 ## Running
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install --no-deps -r requirements.txt
-pip install cffi   # required by pypdf but not in requirements.txt
 python make_cal.py
 ```
 
-Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt. The `cffi` package is needed at runtime by `pypdf` but isn't listed as a direct dependency.
-
-To visually inspect the generated PDF, install `poppler-utils` (`apt-get install poppler-utils`) and use `pdftoppm`.
+Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt.
 
 Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 1. Instructions page with embedded circular calendar preview image
@@ -82,21 +75,9 @@ These values are calculated automatically:
 - `days_elapsed_islamic` - Days from January 1 to start of current Islamic month
 - `islamic_date_rotation_offset` - Approximately the negative of days_elapsed
 
-## Architecture
-
-Pure computation is separated from I/O so modules can be imported and tested independently:
-
-- **`make_cal.py`** wraps all orchestration (CLI parsing, file I/O, PDF generation) in a `main()` function. Importing it does **not** trigger calendar generation — `main()` only runs via `__main__` or when in a Jupyter notebook.
-- **`layout.py`** contains the pure layout computation extracted from `make_cal.py`: layout dimensions from scale factor, pagination logic, and `MonthInstance` list building for both solar and Islamic calendars. All functions are side-effect-free.
-- **`islamic_alignment.py`** is also pure computation (date math), separate from rendering.
-- **`calendar_drawings.py`** and **`arc_drawing.py`** handle SVG element generation — they produce data structures, not files.
-
-Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.) rather than from `make_cal`, so they run fast (~0.3s) with no file I/O.
-
 ## File Structure
 
-- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation (all in `main()`)
-- `layout.py` - Pure layout computation (dimensions, pagination, month instance building)
+- `make_cal.py` - Main script, CLI interface, orchestrates PDF generation
 - `islamic_alignment.py` - Auto-alignment calculation using hijridate library
 - `calendar_data.py` - Month definitions, colors, canonical month order
 - `calendar_drawings.py` - SVG rendering for month arcs
@@ -104,39 +85,15 @@ Tests import from specific modules (`primitives`, `arc_drawing`, `layout`, etc.)
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
-- `instructions.md` - Source content for the instructions page (edit this to update instruction text)
-- `svg_generator.py` - Deterministic SVG generation functions for testing
-- `test_cal.py` - Unit tests for primitives and arc drawing
-- `test_layout.py` - Unit tests for layout calculations and month instance building
-- `test_arc_drawing.py` - Unit tests for geometric calculations
-- `test_calendar_drawings.py` - Unit tests for month SVG rendering
 - `test_islamic_alignment.py` - Unit tests for alignment module
-- `test_svg_snapshots.py` - Snapshot tests for SVG output stability
-- `test_snapshots/` - Reference SVG files for snapshot comparison
 
 ## Running Tests
 
 ```bash
 source .venv/bin/activate
 pip install pytest
-python -m pytest -v
+python -m pytest test_islamic_alignment.py -v
 ```
-
-Tests run in ~0.2s with no file I/O.
-
-### SVG Snapshot Tests
-
-Snapshot tests in `test_svg_snapshots.py` ensure SVG output remains consistent. They compare generated SVGs against reference files in `test_snapshots/`.
-
-To update snapshots after intentional changes:
-```bash
-python test_svg_snapshots.py --update
-```
-
-Snapshots cover:
-- Individual month rendering (January, June upside-down, Ramadan)
-- Month strips (solar + Islamic combined)
-- Full circular calendar
 
 ## PDF Generation Pipeline
 

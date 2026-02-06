@@ -1,7 +1,5 @@
 import unittest
-from primitives import Point, Arc, ArcDrawMode
-from arc_drawing import getDimensionalArc, getArc
-
+from make_cal import *        
 
 class Test_DimensionalArc(unittest.TestCase):
     def test_path(self):
@@ -39,6 +37,8 @@ class Test_Point(unittest.TestCase):
     def test_path(self):
         p = Point(5,2.2)
         self.assertEqual(p.pathText(), "5,2.2")
+
+print("I'm gonna kick some tests")
 
 if __name__ == '__main__':
     unittest.main()
