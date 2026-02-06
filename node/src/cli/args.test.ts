@@ -76,4 +76,23 @@ describe('getAlignmentFromArgs', () => {
     const args: ParsedArgs = { hijri: '1447-08' };
     expect(() => getAlignmentFromArgs(args)).toThrow('YYYY-MM-DD');
   });
+
+  it('should accept 2-digit year for Gregorian date (YY-MM-DD)', () => {
+    const args: ParsedArgs = { date: '26-04-19' };
+    const alignment = getAlignmentFromArgs(args);
+
+    // 26 should be interpreted as 2026
+    expect(alignment.gregorianDate.getFullYear()).toBe(2026);
+    expect(alignment.gregorianDate.getMonth()).toBe(3); // April is month 3 (0-indexed)
+    expect(alignment.gregorianDate.getDate()).toBe(19);
+  });
+
+  it('should accept 2-digit year for Hijri date (YY-MM-DD)', () => {
+    const args: ParsedArgs = { hijri: '47-08-17' };
+    const alignment = getAlignmentFromArgs(args);
+
+    // 47 should be interpreted as 1447
+    expect(alignment.hijriYear).toBe(1447);
+    expect(alignment.hijriMonth).toBe(8);
+  });
 });
