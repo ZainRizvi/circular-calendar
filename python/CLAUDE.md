@@ -78,6 +78,7 @@ These values are calculated automatically:
 ## File Structure
 
 - `make_cal.py` - Main script, CLI interface, orchestrates PDF generation
+- `layout.py` - Pure layout computation (dimensions, pagination, month instance building)
 - `islamic_alignment.py` - Auto-alignment calculation using hijridate library
 - `calendar_data.py` - Month definitions, colors, canonical month order
 - `calendar_drawings.py` - SVG rendering for month arcs
@@ -85,6 +86,10 @@ These values are calculated automatically:
 - `primitives.py` - Data structures (Point, Arc, etc.)
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
+- `test_cal.py` - Unit tests for primitives and arc drawing
+- `test_layout.py` - Unit tests for layout calculations and month instance building
+- `test_arc_drawing.py` - Unit tests for geometric calculations
+- `test_calendar_drawings.py` - Unit tests for month SVG rendering
 - `test_islamic_alignment.py` - Unit tests for alignment module
 
 ## Running Tests
@@ -92,7 +97,7 @@ These values are calculated automatically:
 ```bash
 source .venv/bin/activate
 pip install pytest
-python -m pytest test_islamic_alignment.py -v
+python -m pytest -v
 ```
 
 ## PDF Generation Pipeline
