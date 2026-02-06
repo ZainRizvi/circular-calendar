@@ -23,18 +23,17 @@ Or use: `./test.sh` (runs typecheck + tests)
 | Script | Command | Description |
 |--------|---------|-------------|
 | `npm start` | `tsx src/cli/index.ts` | Generate calendar PDF |
-| `npm run start:legacy` | `tsx src/make-cal.ts` | Generate PDF (legacy entry) |
 | `npm test` | `vitest run` | Run tests once |
 | `npm run test:watch` | `vitest` | Run tests in watch mode |
 | `npm run test:coverage` | `vitest run --coverage` | Run tests with coverage |
 | `npm run typecheck` | `tsc --noEmit` | TypeScript type checking |
+| `npm run snapshots:generate` | `tsx scripts/generate-snapshots.ts` | Regenerate test snapshots |
 
 ### Snapshot Tests
 
-The `snapshot-comparison.test.ts` compares Node.js SVG output against Python snapshots in `test_snapshots/`. Tests verify:
-- Same month names and structure
-- Matching coordinate values
-- Correct Islamic calendar alignment
+The `snapshot.test.ts` verifies SVG and PNG output matches stored snapshots for three fixed dates (2024-10-06, 2026-02-06, 2027-06-06).
+
+**Regenerating snapshots:** Only run `npm run snapshots:generate` when you intentionally change the visual output for one or more of these dates. Do not regenerate snapshots to make failing tests pass without understanding why they failed.
 
 ## CLI Options
 

@@ -6,11 +6,11 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "tsx src/cli/index.ts",
-    "start:legacy": "tsx src/make-cal.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "snapshots:generate": "tsx scripts/generate-snapshots.ts"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.0",
