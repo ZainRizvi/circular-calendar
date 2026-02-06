@@ -24,7 +24,13 @@ import argparse
 import math
 import os
 from datetime import date
-from IPython.display import SVG
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF
+
+try:
+    from IPython.display import SVG
+except ImportError:
+    SVG = None
 
 # custom libs
 from primitives import *
@@ -33,6 +39,12 @@ from calendar_data import *
 from calendar_drawings import *
 import islamic_alignment
 import pdfizer
+
+
+def svg_to_pdf(svg_path: str, pdf_path: str):
+    """Convert SVG file to PDF using svglib and reportlab (pure Python)."""
+    drawing = svg2rlg(svg_path)
+    renderPDF.drawToFile(drawing, pdf_path)
 
 
 def parse_args():
@@ -213,8 +225,7 @@ while month_idx < len(solarMonths) - 1:
     pdf_file = f"out/calendar_page_{scale_factor}_{page_num}.pdf"
 
     dwg.saveas(svg_file, pretty=True)
-    # os.system(f"convert {svg_file} {pdf_file}")
-    os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
+    svg_to_pdf(svg_file, pdf_file)
     os.remove(svg_file)
     pdfs.append(pdf_file)
     
@@ -274,8 +285,7 @@ svg_file = f"out/svg_{scale_factor}_{page_num}_cover.svg"
 pdf_file = f"out/calendar_page_{scale_factor}_{page_num}_cover.pdf"
 
 dwg.saveas(svg_file, pretty=True)
-# os.system(f"convert {svg_file} {pdf_file}")
-os.system(f"inkscape {svg_file} --export-filename={pdf_file} --export-type=pdf")
+svg_to_pdf(svg_file, pdf_file)
 os.remove(svg_file)
 pdfs.insert(0, pdf_file)
 
@@ -300,10 +310,8 @@ os.remove(cover_pdf)
 print("and removed old pdfs")
 
 print(scale_factor)
-SVG(dwg.tostring())
-
-
-# In[ ]:
+if SVG:
+    SVG(dwg.tostring())
 
 
 

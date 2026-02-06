@@ -1,6 +1,19 @@
-ipython==8.9.0
+# Pure Python dependencies - no system libraries required
+# Works on AWS Lambda, Vercel, and any serverless environment
+#
+# Install with: pip install --no-deps -r requirements.txt
+# (--no-deps prevents svglib from pulling in pycairo which requires system libs)
+
 svgwrite==1.4.3
+reportlab
 pypdf
-weasyprint
-markdown
+pypdfium2
 hijridate>=2.5.0
+pillow
+
+# svglib and its actual runtime dependencies (pycairo is optional and not needed)
+svglib
+lxml
+cssselect2
+tinycss2
+webencodings

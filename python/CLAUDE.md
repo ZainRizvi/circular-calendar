@@ -9,9 +9,11 @@ This script generates a circular calendar that overlays the Islamic (Hijri) luna
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install --no-deps -r requirements.txt
 python make_cal.py
 ```
+
+Note: The `--no-deps` flag is required to prevent svglib from pulling in pycairo, which requires system libraries. All actual runtime dependencies are explicitly listed in requirements.txt.
 
 Output: `out/calendar_pages_0.7_COMPLETE.pdf` - a single PDF containing:
 1. Instructions page with embedded circular calendar preview image
@@ -96,21 +98,24 @@ python -m pytest test_islamic_alignment.py -v
 ## PDF Generation Pipeline
 
 1. `make_cal.py` generates SVG files for each calendar page
-2. Inkscape converts each SVG to PDF (`inkscape --export-type=pdf`)
+2. `svglib` + `reportlab` convert each SVG to PDF (pure Python)
 3. `generate_instructions.py` creates the instructions page:
-   - Converts the circular cover PDF to PNG via Inkscape
-   - Embeds the PNG in an HTML template with instructions text
-   - Uses WeasyPrint to render HTML to PDF
+   - Converts the circular cover PDF to PNG via `pypdfium2`
+   - Builds the PDF directly using `reportlab` (no HTML intermediate)
 4. `pdfizer.py` concatenates instructions + calendar pages into final PDF
 5. Intermediate files are cleaned up
 
 ## Dependencies
 
-- `inkscape` - Must be installed system-wide for SVG→PDF conversion
+All dependencies are pure Python packages with no system library requirements, making the script compatible with serverless environments (AWS Lambda, Vercel, etc.):
+
 - `svgwrite` - SVG generation
+- `svglib` + `reportlab` - SVG to PDF conversion
+- `pypdfium2` - PDF to PNG conversion
 - `pypdf` - PDF reading/writing/concatenation
-- `weasyprint` - HTML→PDF conversion for instructions page
 - `hijridate` - Islamic calendar date conversion
+- `pillow` - Image handling
+- `lxml`, `cssselect2`, `tinycss2`, `webencodings` - XML/CSS parsing for svglib
 
 ## Scale Factor
 
