@@ -125,6 +125,12 @@ Once you generate a PDF:
 
 ## Development Considerations
 
+### Updating Documentation
+
+When making changes to development processes, testing, or workflows, update the appropriate `CLAUDE.md` file:
+- **Root `CLAUDE.md`**: Project overview, architecture, cross-cutting concerns
+- **`python/CLAUDE.md`**: Python-specific processes, testing, dependencies
+
 ### For AI Assistants Working on This Code
 
 1. **Coordinate Systems**: The code uses polar coordinates (radius, angle) extensively

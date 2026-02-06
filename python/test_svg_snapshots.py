@@ -1,44 +1,89 @@
 """
-Snapshot tests for SVG generation.
+SVG snapshot tests for the circular calendar.
 
-These tests ensure that SVG output remains consistent across code changes.
-If SVG output intentionally changes, regenerate snapshots with:
+These tests run make_cal.py with a fixed date and verify the SVG output
+matches the expected snapshots. This ensures refactoring doesn't change
+the visual output.
+
+To update snapshots when output intentionally changes:
     python test_svg_snapshots.py --update
 
-Reference files are stored in test_snapshots/ directory.
+To run tests:
+    pytest test_svg_snapshots.py -v
 """
 
 import os
 import sys
-from datetime import date
+import subprocess
+import shutil
 from pathlib import Path
 
 import pytest
 
-from svg_generator import (
-    generate_month_strip_svg,
-    generate_circular_calendar_svg,
-    generate_single_month_svg,
-)
-from layout import calculate_layout_params
-
 
 SNAPSHOT_DIR = Path(__file__).parent / "test_snapshots"
+PYTHON_DIR = Path(__file__).parent
 
 # Fixed date for reproducible tests
-REFERENCE_DATE = date(2026, 2, 5)
+REFERENCE_DATE = "2026-02-05"
 
 
 def normalize_svg(svg: str) -> str:
     """Normalize SVG for comparison (handle minor whitespace differences)."""
-    # Remove trailing whitespace from lines and normalize line endings
     lines = [line.rstrip() for line in svg.strip().split('\n')]
     return '\n'.join(lines)
 
 
+def run_make_cal_and_capture_svgs(date: str, keep_svgs: bool = True) -> dict[str, str]:
+    """
+    Run make_cal.py with the given date and capture SVG content before deletion.
+
+    Returns dict mapping filename to SVG content.
+    """
+    # Patch make_cal.py temporarily to not delete SVGs
+    make_cal_path = PYTHON_DIR / "make_cal.py"
+    original_content = make_cal_path.read_text()
+
+    # Comment out the os.remove(svg_file) lines
+    patched_content = original_content.replace(
+        "os.remove(svg_file)",
+        "pass  # os.remove(svg_file) - disabled for testing"
+    )
+
+    try:
+        make_cal_path.write_text(patched_content)
+
+        # Run make_cal.py with the fixed date
+        result = subprocess.run(
+            [sys.executable, "make_cal.py", "--date", date],
+            cwd=PYTHON_DIR,
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode != 0:
+            print(f"STDOUT: {result.stdout}")
+            print(f"STDERR: {result.stderr}")
+            raise RuntimeError(f"make_cal.py failed with code {result.returncode}")
+
+        # Collect SVG files from out/
+        out_dir = PYTHON_DIR / "out"
+        svgs = {}
+        for svg_file in sorted(out_dir.glob("*.svg")):
+            svgs[svg_file.name] = svg_file.read_text()
+            if not keep_svgs:
+                svg_file.unlink()
+
+        return svgs
+
+    finally:
+        # Restore original make_cal.py
+        make_cal_path.write_text(original_content)
+
+
 def load_snapshot(name: str) -> str:
     """Load a reference snapshot file."""
-    path = SNAPSHOT_DIR / f"{name}.svg"
+    path = SNAPSHOT_DIR / name
     if not path.exists():
         raise FileNotFoundError(
             f"Snapshot {path} not found. Run with --update to create it."
@@ -49,152 +94,78 @@ def load_snapshot(name: str) -> str:
 def save_snapshot(name: str, content: str):
     """Save a reference snapshot file."""
     SNAPSHOT_DIR.mkdir(exist_ok=True)
-    path = SNAPSHOT_DIR / f"{name}.svg"
+    path = SNAPSHOT_DIR / name
     path.write_text(content)
     print(f"Saved snapshot: {path}")
 
 
-class TestSingleMonthSnapshots:
-    """Test individual month SVG generation."""
+class TestSVGSnapshots:
+    """Test that generated SVGs match snapshots."""
 
-    def test_january_31_days(self):
-        """January with 31 days should match snapshot."""
-        layout = calculate_layout_params()
-        svg = generate_single_month_svg(
-            month_name="January",
-            num_days=31,
-            color="#aebbff",
-            inner_radius=layout.inner_radius,
-            outer_radius=layout.outermost_radius,
-            date_box_height=layout.date_box_height,
-            name_upside_down=False,
-            date_on_top=False,
-            date_angle_offset=0,
-        )
-        assert normalize_svg(svg) == load_snapshot("month_january_31")
+    @pytest.fixture(scope="class")
+    def generated_svgs(self):
+        """Generate SVGs once for all tests in this class."""
+        return run_make_cal_and_capture_svgs(REFERENCE_DATE, keep_svgs=False)
 
-    def test_june_upside_down(self):
-        """June (upside down month) should match snapshot."""
-        layout = calculate_layout_params()
-        svg = generate_single_month_svg(
-            month_name="June",
-            num_days=30,
-            color="#aebbff",
-            inner_radius=layout.inner_radius,
-            outer_radius=layout.outermost_radius,
-            date_box_height=layout.date_box_height,
-            name_upside_down=True,
-            date_on_top=False,
-            date_angle_offset=-150,
-        )
-        assert normalize_svg(svg) == load_snapshot("month_june_upside_down")
+    def test_cover_page_svg(self, generated_svgs):
+        """Cover page SVG should match snapshot."""
+        # Find the cover SVG (ends with _cover.svg)
+        cover_files = [f for f in generated_svgs.keys() if f.endswith("_cover.svg")]
+        assert len(cover_files) == 1, f"Expected 1 cover file, found: {cover_files}"
 
-    def test_islamic_month_date_on_top(self):
-        """Islamic month with date_on_top=True should match snapshot."""
-        layout = calculate_layout_params()
-        svg = generate_single_month_svg(
-            month_name="Ramadan",
-            num_days=30,
-            color="#9ce3ff",
-            inner_radius=layout.inner_radius - layout.month_thickness,
-            outer_radius=layout.outermost_radius - layout.month_thickness,
-            date_box_height=layout.date_box_height,
-            name_upside_down=False,
-            date_on_top=True,
-            date_angle_offset=-30,
-        )
-        assert normalize_svg(svg) == load_snapshot("month_ramadan_date_on_top")
+        cover_name = cover_files[0]
+        assert normalize_svg(generated_svgs[cover_name]) == load_snapshot(cover_name)
 
+    def test_page_0_svg(self, generated_svgs):
+        """First calendar page SVG should match snapshot."""
+        page_files = [f for f in generated_svgs.keys() if "_0.svg" in f and "cover" not in f]
+        assert len(page_files) == 1, f"Expected 1 page 0 file, found: {page_files}"
 
-class TestMonthStripSnapshots:
-    """Test month strip (combined solar + Islamic) SVG generation."""
+        page_name = page_files[0]
+        assert normalize_svg(generated_svgs[page_name]) == load_snapshot(page_name)
 
-    def test_first_month_strip(self):
-        """First month strip (Jan + current Islamic) should match snapshot."""
-        svg = generate_month_strip_svg(
-            month_index=0,
-            gregorian_date=REFERENCE_DATE,
-        )
-        assert normalize_svg(svg) == load_snapshot("strip_month_0")
+    def test_page_1_svg(self, generated_svgs):
+        """Second calendar page SVG should match snapshot."""
+        page_files = [f for f in generated_svgs.keys() if "_1.svg" in f and "cover" not in f]
+        assert len(page_files) == 1, f"Expected 1 page 1 file, found: {page_files}"
 
-    def test_sixth_month_strip(self):
-        """Sixth month strip should match snapshot."""
-        svg = generate_month_strip_svg(
-            month_index=5,
-            gregorian_date=REFERENCE_DATE,
-        )
-        assert normalize_svg(svg) == load_snapshot("strip_month_5")
+        page_name = page_files[0]
+        assert normalize_svg(generated_svgs[page_name]) == load_snapshot(page_name)
 
+    def test_page_2_svg(self, generated_svgs):
+        """Third calendar page SVG should match snapshot."""
+        page_files = [f for f in generated_svgs.keys() if "_2.svg" in f and "cover" not in f]
+        assert len(page_files) == 1, f"Expected 1 page 2 file, found: {page_files}"
 
-class TestCircularCalendarSnapshots:
-    """Test full circular calendar SVG generation."""
+        page_name = page_files[0]
+        assert normalize_svg(generated_svgs[page_name]) == load_snapshot(page_name)
 
-    def test_full_circular_calendar(self):
-        """Full circular calendar should match snapshot."""
-        svg = generate_circular_calendar_svg(
-            gregorian_date=REFERENCE_DATE,
-        )
-        assert normalize_svg(svg) == load_snapshot("circular_calendar_full")
+    def test_all_svgs_have_snapshots(self, generated_svgs):
+        """All generated SVGs should have corresponding snapshots."""
+        missing = []
+        for svg_name in generated_svgs.keys():
+            snapshot_path = SNAPSHOT_DIR / svg_name
+            if not snapshot_path.exists():
+                missing.append(svg_name)
+
+        if missing:
+            pytest.fail(
+                f"Missing snapshots for: {missing}\n"
+                f"Run 'python test_svg_snapshots.py --update' to create them."
+            )
 
 
 def update_all_snapshots():
     """Regenerate all snapshot reference files."""
-    layout = calculate_layout_params()
+    print(f"Generating SVGs with date {REFERENCE_DATE}...")
+    svgs = run_make_cal_and_capture_svgs(REFERENCE_DATE, keep_svgs=False)
 
-    # Single month snapshots
-    save_snapshot("month_january_31", generate_single_month_svg(
-        month_name="January",
-        num_days=31,
-        color="#aebbff",
-        inner_radius=layout.inner_radius,
-        outer_radius=layout.outermost_radius,
-        date_box_height=layout.date_box_height,
-        name_upside_down=False,
-        date_on_top=False,
-        date_angle_offset=0,
-    ))
+    SNAPSHOT_DIR.mkdir(exist_ok=True)
 
-    save_snapshot("month_june_upside_down", generate_single_month_svg(
-        month_name="June",
-        num_days=30,
-        color="#aebbff",
-        inner_radius=layout.inner_radius,
-        outer_radius=layout.outermost_radius,
-        date_box_height=layout.date_box_height,
-        name_upside_down=True,
-        date_on_top=False,
-        date_angle_offset=-150,
-    ))
+    for name, content in svgs.items():
+        save_snapshot(name, content)
 
-    save_snapshot("month_ramadan_date_on_top", generate_single_month_svg(
-        month_name="Ramadan",
-        num_days=30,
-        color="#9ce3ff",
-        inner_radius=layout.inner_radius - layout.month_thickness,
-        outer_radius=layout.outermost_radius - layout.month_thickness,
-        date_box_height=layout.date_box_height,
-        name_upside_down=False,
-        date_on_top=True,
-        date_angle_offset=-30,
-    ))
-
-    # Month strip snapshots
-    save_snapshot("strip_month_0", generate_month_strip_svg(
-        month_index=0,
-        gregorian_date=REFERENCE_DATE,
-    ))
-
-    save_snapshot("strip_month_5", generate_month_strip_svg(
-        month_index=5,
-        gregorian_date=REFERENCE_DATE,
-    ))
-
-    # Full circular calendar
-    save_snapshot("circular_calendar_full", generate_circular_calendar_svg(
-        gregorian_date=REFERENCE_DATE,
-    ))
-
-    print(f"\nAll snapshots updated in {SNAPSHOT_DIR}")
+    print(f"\nUpdated {len(svgs)} snapshots in {SNAPSHOT_DIR}")
 
 
 if __name__ == "__main__":

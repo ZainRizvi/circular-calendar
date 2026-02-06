@@ -86,13 +86,28 @@ These values are calculated automatically:
 - `pdfizer.py` - PDF concatenation utility
 - `generate_instructions.py` - Generates instructions PDF with embedded cover image
 - `test_islamic_alignment.py` - Unit tests for alignment module
+- `test_svg_snapshots.py` - SVG snapshot tests to verify visual output stability
 
 ## Running Tests
 
 ```bash
 source .venv/bin/activate
 pip install pytest
-python -m pytest test_islamic_alignment.py -v
+python -m pytest test_svg_snapshots.py test_islamic_alignment.py -v
+```
+
+Or use the test script:
+```bash
+./test.sh
+```
+
+### SVG Snapshot Tests
+
+The snapshot tests run `make_cal.py` with a fixed date (2026-02-05) and compare the generated SVG files against reference snapshots in `test_snapshots/`. This ensures refactoring doesn't change the visual output.
+
+To update snapshots after intentional visual changes:
+```bash
+python test_svg_snapshots.py --update
 ```
 
 ## PDF Generation Pipeline
