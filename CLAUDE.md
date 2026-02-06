@@ -32,23 +32,11 @@ Creates a circular calendar overlaying the Islamic (Hijri) lunar calendar on the
 
 ```
 circular-calendar/
-├── python/                     # Production-ready Python CLI
-│   ├── make_cal.py             # Entry point, CLI, orchestration
-│   ├── calendar_data.py        # Month definitions, colors
-│   ├── calendar_drawings.py    # SVG rendering for month arcs
-│   ├── arc_drawing.py          # Geometric utilities (arcs, angles)
-│   ├── primitives.py           # Data structures (Point, Arc)
-│   ├── islamic_alignment.py    # Auto-alignment via hijridate
-│   ├── pdfizer.py              # PDF concatenation
-│   ├── generate_instructions.py# Instructions PDF generation
-│   ├── test_*.py               # Tests
-│   └── out/                    # Generated PDFs
-├── app/                        # Next.js web app (planned, see PLAN.md)
-├── PLAN.md                     # Migration status and roadmap
-└── README.md                   # User-facing instructions
+├── python/          # Production-ready Python CLI (see python/CLAUDE.md)
+├── app/             # Next.js web app (planned, see PLAN.md)
+├── PLAN.md          # Migration status and roadmap
+└── README.md        # User-facing instructions
 ```
-
-**Python version**: See `python/CLAUDE.md` for running, testing, and technical details
 
 ## Key Technical Details
 
