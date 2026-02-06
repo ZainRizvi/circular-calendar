@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intuitive Islamic Circle Calendar | Teach Your Children Both Calendars</title>
+    <meta name="description" content="A beautiful circular calendar that helps Muslim children understand how the Gregorian and Islamic Hijri calendars work together. Perfect for homeschooling families.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:title" content="Intuitive Islamic Circle Calendar">
+    <meta property="og:description" content="A beautiful circular calendar that helps Muslim children understand how the Gregorian and Islamic Hijri calendars work together.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Decorative background elements -->
+    <div class="bg-pattern"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-circle"></span>
+                Circle Calendar
+            </a>
+            <a href="#buy" class="nav-cta">Get the Calendar</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">For Muslim Families & Homeschoolers</div>
+            <h1 class="hero-title">
+                Teach Your Children
+                <span class="hero-title-accent">Both Calendars</span>
+                Through One Beautiful Circle
+            </h1>
+            <p class="hero-subtitle">
+                A hands-on educational calendar that shows exactly how the Islamic lunar months
+                align with the Gregorian solar year—and why Ramadan moves through the seasons.
+            </p>
+            <div class="hero-cta-group">
+                <a href="#buy" class="btn btn-primary">
+                    <span>Get Your Calendar</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="calendar-preview">
+                <div class="calendar-ring calendar-ring-outer">
+                    <div class="month-segment" style="--rotation: 0deg; --color: #aebbff;" data-month="Jan"></div>
+                    <div class="month-segment" style="--rotation: 30deg; --color: #9ce3ff;" data-month="Feb"></div>
+                    <div class="month-segment" style="--rotation: 60deg; --color: #a1fec5;" data-month="Mar"></div>
+                    <div class="month-segment" style="--rotation: 90deg; --color: #caff8b;" data-month="Apr"></div>
+                    <div class="month-segment" style="--rotation: 120deg; --color: #fdff92;" data-month="May"></div>
+                    <div class="month-segment" style="--rotation: 150deg; --color: #fef087;" data-month="Jun"></div>
+                    <div class="month-segment" style="--rotation: 180deg; --color: #ffdb8d;" data-month="Jul"></div>
+                    <div class="month-segment" style="--rotation: 210deg; --color: #ffc08d;" data-month="Aug"></div>
+                    <div class="month-segment" style="--rotation: 240deg; --color: #ffa290;" data-month="Sep"></div>
+                    <div class="month-segment" style="--rotation: 270deg; --color: #ff90c0;" data-month="Oct"></div>
+                    <div class="month-segment" style="--rotation: 300deg; --color: #feabf1;" data-month="Nov"></div>
+                    <div class="month-segment" style="--rotation: 330deg; --color: #caa8fe;" data-month="Dec"></div>
+                </div>
+                <div class="calendar-ring calendar-ring-inner">
+                    <div class="islamic-segment" style="--rotation: -15deg; --color: #FF9CB1;"></div>
+                    <div class="islamic-segment" style="--rotation: 15deg; --color: #FFB99C;"></div>
+                    <div class="islamic-segment" style="--rotation: 45deg; --color: #FFEA9C;"></div>
+                    <div class="islamic-segment" style="--rotation: 75deg; --color: #E3FF9C;"></div>
+                    <div class="islamic-segment" style="--rotation: 105deg; --color: #B1FF9C;"></div>
+                    <div class="islamic-segment" style="--rotation: 135deg; --color: #9CFFB8;"></div>
+                    <div class="islamic-segment" style="--rotation: 165deg; --color: #9CFFEA;"></div>
+                    <div class="islamic-segment" style="--rotation: 195deg; --color: #9CE3FF;"></div>
+                    <div class="islamic-segment" style="--rotation: 225deg; --color: #9CB2FF;"></div>
+                    <div class="islamic-segment" style="--rotation: 255deg; --color: #B89CFF;"></div>
+                    <div class="islamic-segment" style="--rotation: 285deg; --color: #EA9CFF;"></div>
+                    <!-- Gap representing shorter Islamic year -->
+                    <div class="calendar-gap"></div>
+                </div>
+                <div class="calendar-center">
+                    <span class="calendar-center-text">Today</span>
+                </div>
+                <div class="calendar-arrow"></div>
+            </div>
+            <div class="hero-visual-caption">
+                <span class="caption-dot caption-dot-solar"></span> Solar Calendar
+                <span class="caption-dot caption-dot-islamic"></span> Islamic Calendar
+                <span class="caption-dot caption-dot-gap"></span> The Gap
+            </div>
+        </div>
+    </header>
+
+    <!-- The Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <div class="problem-grid">
+                <div class="problem-content">
+                    <span class="section-label">The Challenge</span>
+                    <h2 class="section-title">"When is Ramadan this year?"</h2>
+                    <p class="problem-text">
+                        Every year, Muslim children ask this question. And every year, explaining why Islamic
+                        months "move" through the seasons becomes a mini-lesson in astronomy and calendar systems.
+                    </p>
+                    <p class="problem-text">
+                        Traditional calendars show one system or the other—never both together in a way that
+                        makes the relationship <em>visible</em> and <em>intuitive</em>.
+                    </p>
+                </div>
+                <div class="problem-visual">
+                    <div class="quote-card">
+                        <blockquote>
+                            "Why is Ramadan starting sooner this year?"
+                        </blockquote>
+                        <cite>— Every Muslim child, eventually</cite>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">The Solution</span>
+                <h2 class="section-title">Two Calendars, One Circle, Instant Understanding</h2>
+                <p class="section-subtitle">
+                    When you see both calendars together, everything clicks.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card feature-card-large">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <circle cx="40" cy="40" r="35" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                            <circle cx="40" cy="40" r="25" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="40" cy="40" r="4" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3>Dual Ring Design</h3>
+                    <p>
+                        The <strong>outer ring</strong> shows all 12 Gregorian months arranged in a circle,
+                        with January at the top. The <strong>inner ring</strong> shows the 12 Islamic months,
+                        perfectly aligned day-by-day with their Gregorian counterparts.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-gap">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <path d="M40 5 A35 35 0 1 1 25 70" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M25 70 L40 5" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+                        </svg>
+                    </div>
+                    <h3>The Visible Gap</h3>
+                    <p>
+                        Because the Islamic year is ~11 days shorter, there's always a <strong>gap</strong> in
+                        the inner circle. This gap is the entire lesson—it shows <em>why</em> Islamic months
+                        shift earlier each solar year.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-align">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <rect x="10" y="20" width="25" height="40" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <rect x="45" y="25" width="25" height="35" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <line x1="35" y1="40" x2="45" y2="40" stroke="currentColor" stroke-width="2" stroke-dasharray="2 2"/>
+                        </svg>
+                    </div>
+                    <h3>Day-by-Day Alignment</h3>
+                    <p>
+                        Every day on the Islamic calendar lines up with its exact Gregorian date.
+                        Point to Ramadan 15 and immediately see what solar date it falls on.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-hands">
+                        <svg viewBox="0 0 80 80" fill="none">
+                            <path d="M20 50 Q20 30 35 25 Q50 20 55 35 L58 45 Q62 55 55 60 L35 65 Q20 68 20 50Z" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="40" cy="20" r="8" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Hands-On Learning</h3>
+                    <p>
+                        Print, cut, and assemble on your wall. Add an arrow for today's date.
+                        Mark birthdays and Islamic holidays. Move the pieces as months pass.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Why Families Love It</span>
+                <h2 class="section-title">More Than Just a Calendar</h2>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">01</div>
+                    <div class="benefit-content">
+                        <h3>Answers the "Why" Questions</h3>
+                        <p>Children don't just memorize dates—they <em>see</em> why Islamic months cycle through the seasons over ~33 years.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">02</div>
+                    <div class="benefit-content">
+                        <h3>Builds Calendar Literacy</h3>
+                        <p>Understanding lunar vs solar calendars is foundational knowledge for Islamic studies and world history.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">03</div>
+                    <div class="benefit-content">
+                        <h3>Daily Engagement</h3>
+                        <p>Moving the "today" arrow becomes a daily ritual. Children naturally learn both date systems through repetition.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">04</div>
+                    <div class="benefit-content">
+                        <h3>Beautiful Wall Display</h3>
+                        <p>The colorful circular design is eye-catching and sparks curiosity. Visitors always ask about it.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">05</div>
+                    <div class="benefit-content">
+                        <h3>Perfect for Homeschool</h3>
+                        <p>Integrates Islamic studies with math (degrees, fractions) and science (astronomy, lunar cycles).</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">06</div>
+                    <div class="benefit-content">
+                        <h3>Family Activity</h3>
+                        <p>Assembling the calendar together creates a memorable learning experience and a sense of ownership.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">From Our Community</span>
+                <h2 class="section-title">What Parents Are Saying</h2>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    </div>
+                    <blockquote>
+                        "My 7-year-old finally understands why we fast at different times each year.
+                        She runs to the calendar every morning to move the arrow."
+                    </blockquote>
+                    <cite>
+                        <strong>Fatima H.</strong>
+                        <span>Homeschooling mom of 3</span>
+                    </cite>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    </div>
+                    <blockquote>
+                        "We use this in our Islamic studies co-op. The visual 'gap' concept is
+                        something no textbook explanation could match."
+                    </blockquote>
+                    <cite>
+                        <strong>Amina K.</strong>
+                        <span>Islamic studies teacher</span>
+                    </cite>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    </div>
+                    <blockquote>
+                        "Honestly, I learned something too. I never fully grasped why the calendars
+                        worked differently until I assembled this with my kids."
+                    </blockquote>
+                    <cite>
+                        <strong>Yusuf M.</strong>
+                        <span>Father of 4</span>
+                    </cite>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Get Section -->
+    <section class="package-section">
+        <div class="container">
+            <div class="package-card">
+                <div class="package-header">
+                    <span class="section-label">What You'll Receive</span>
+                    <h2 class="section-title">Everything You Need</h2>
+                </div>
+
+                <div class="package-contents">
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Printable PDF</h4>
+                            <p>High-resolution calendar pages optimized for home printing on standard paper</p>
+                        </div>
+                    </div>
+
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>12 Solar Months</h4>
+                            <p>Complete Gregorian calendar with all days marked and color-coded</p>
+                        </div>
+                    </div>
+
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>12 Islamic Months</h4>
+                            <p>Hijri calendar months pre-aligned for the current year</p>
+                        </div>
+                    </div>
+
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 19V5M5 12l7-7 7 7"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Arrow Marker</h4>
+                            <p>Printable arrow to mark and move to today's date</p>
+                        </div>
+                    </div>
+
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Assembly Guide</h4>
+                            <p>Step-by-step instructions with tips for wall mounting</p>
+                        </div>
+                    </div>
+
+                    <div class="package-item">
+                        <div class="package-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Event Tags</h4>
+                            <p>Blank arrow tags to mark birthdays, Eids, and special occasions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Questions?</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>
+                        <span>What ages is this calendar suitable for?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>The calendar works well for children ages 5 and up, though even younger children enjoy moving the daily arrow. Older children and adults often discover they understand the calendar systems better after using it. It's truly a multi-generational learning tool.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>
+                        <span>How big is the assembled calendar?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>When fully assembled, the calendar forms a circle approximately 24 inches (60 cm) in diameter—perfect for a prominent wall display that's easy to read and interact with daily.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>
+                        <span>What printer and paper do I need?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>Any standard home color printer works. The PDF is designed for US Letter size paper (8.5" x 11"), but A4 works too. For best results, use cardstock or laminate the pages for durability—especially if little hands will be moving pieces frequently.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>
+                        <span>How do I attach it to the wall?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>We recommend removable mounting putty (like Blu-Tack) so you can easily reposition the Islamic months as they shift throughout the year. Push pins or tape also work, but putty gives you the most flexibility.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>
+                        <span>Do I need to buy a new calendar every year?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>The solar calendar months can be reused year after year (except for leap years affecting February). The Islamic months need to be repositioned annually as they shift relative to the solar calendar—that's part of the learning experience. We release an updated alignment guide each year.</p>
+                    </div>
+                </details>
+
+                <details class="faq-item">
+                    <summary>
+                        <span>What if I make a mistake during assembly?</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </summary>
+                    <div class="faq-answer">
+                        <p>No worries—you can print as many copies as you need. Many families print extras for grandparents or as gifts. The PDF is yours to keep and reprint whenever needed.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="buy" class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to Transform How Your Family Understands Time?</h2>
+                    <p class="cta-subtitle">
+                        Join hundreds of Muslim families using the Circle Calendar for daily learning.
+                    </p>
+
+                    <div class="cta-price">
+                        <span class="price-label">Pay what you want</span>
+                        <span class="price-amount">$0+</span>
+                        <span class="price-details">
+                            Suggested: $12<br>
+                            Instant PDF download
+                        </span>
+                    </div>
+
+                    <a href="https://zainrizvi.gumroad.com/l/intuitive_calendar" class="btn btn-primary btn-large" target="_blank" rel="noopener">
+                        <span>Get Your Calendar</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+
+                    <p class="cta-guarantee">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        Free for those who need it. Pay what it's worth to you.
+                    </p>
+                </div>
+
+                <div class="cta-visual">
+                    <div class="cta-calendar-preview">
+                        <div class="preview-ring preview-ring-1"></div>
+                        <div class="preview-ring preview-ring-2"></div>
+                        <div class="preview-center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-circle"></span>
+                    <span>Circle Calendar</span>
+                </div>
+                <p class="footer-text">
+                    Helping Muslim families understand the beauty of both calendar systems.
+                </p>
+                <p class="footer-copyright">
+                    &copy; 2026 Circle Calendar. Made with care for the ummah.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
