@@ -175,3 +175,6 @@ poetry.toml
 .ruff_cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+# Node.js (for Puppeteer SVG->PNG conversion)
+node_modules/

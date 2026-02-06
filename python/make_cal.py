@@ -36,9 +36,39 @@ import pdfizer
 
 
 def svg_to_pdf(svg_path: str, pdf_path: str):
-    """Convert SVG file to PDF using Inkscape."""
+    """Convert SVG file to PDF via PNG intermediate (using Puppeteer for accurate rendering)."""
     import subprocess
-    subprocess.run(["inkscape", svg_path, f"--export-filename={pdf_path}", "--export-type=pdf"], check=True)
+    import tempfile
+    import json
+    from reportlab.pdfgen import canvas
+
+    # Convert SVG to PNG using Puppeteer (Node.js)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    svg_to_png_script = os.path.join(script_dir, "svg_to_png.js")
+
+    with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp:
+        png_path = tmp.name
+
+    try:
+        result = subprocess.run(
+            ["node", svg_to_png_script, svg_path, png_path, "150"],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+
+        # Parse dimensions from Puppeteer output
+        dims = json.loads(result.stdout.strip())
+        pdf_width = dims['widthPts']
+        pdf_height = dims['heightPts']
+
+        # Create PDF with the PNG image at original SVG dimensions
+        c = canvas.Canvas(pdf_path, pagesize=(pdf_width, pdf_height))
+        c.drawImage(png_path, 0, 0, width=pdf_width, height=pdf_height)
+        c.save()
+    finally:
+        if os.path.exists(png_path):
+            os.remove(png_path)
 
 
 def parse_args():
