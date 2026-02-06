@@ -32,7 +32,8 @@ Creates a circular calendar overlaying the Islamic (Hijri) lunar calendar on the
 
 ```
 circular-calendar/
-├── python/          # Production-ready Python CLI (see python/CLAUDE.md)
+├── python/          # Python CLI using Playwright (see python/CLAUDE.md)
+├── node/            # Node.js/TypeScript CLI using resvg-js (see node/CLAUDE.md)
 ├── app/             # Next.js web app (planned, see PLAN.md)
 ├── PLAN.md          # Migration status and roadmap
 └── README.md        # User-facing instructions
@@ -46,7 +47,7 @@ circular-calendar/
 
 **Color Coding:**
 - 12-color palette (`colorWheelClassic`) distinguishes months
-- Defined in `calendar_data.py` (Python) or `month.ts` (Next.js)
+- Defined in `calendar_data.py` (Python) or `calendar-data.ts` (Node.js)
 
 **Date Boxes:**
 - Background arc filled with `DATE_FILL_COLOR = "#fbebb3"`
@@ -55,7 +56,7 @@ circular-calendar/
 ## Common Tasks
 
 ### Adding a New Color Scheme
-1. Edit `colorWheelClassic` array in `calendar_data.py` or `month.ts`
+1. Edit `colorWheelClassic` array in `calendar_data.py` (Python) or `calendar-data.ts` (Node.js)
 2. Ensure 12 colors defined (one per month)
 3. Use hex color codes
 
@@ -68,4 +69,5 @@ circular-calendar/
 
 - **Root `CLAUDE.md`**: Cross-cutting technical concepts, AI constraints
 - **`python/CLAUDE.md`**: Python-specific processes, testing, dependencies
+- **`node/CLAUDE.md`**: Node.js/TypeScript-specific processes, testing, dependencies
 - **`README.md`**: User-facing instructions (physical calendar assembly)
