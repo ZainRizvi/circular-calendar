@@ -3,6 +3,8 @@
 #
 # Install with: pip install --no-deps -r requirements.txt
 # (--no-deps prevents svglib from pulling in pycairo which requires system libs)
+#
+# After installing, run: playwright install chromium
 
 svgwrite==1.4.3
 reportlab
@@ -11,6 +13,7 @@ pypdfium2
 hijridate>=2.5.0
 pillow
 qrcode
+playwright
 
 # svglib and its actual runtime dependencies (pycairo is optional and not needed)
 svglib

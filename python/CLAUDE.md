@@ -7,7 +7,7 @@ cd python
 python -m venv .venv
 source .venv/bin/activate
 pip install --no-deps -r requirements.txt
-npm install
+playwright install chromium
 python make_cal.py
 ```
 
@@ -87,7 +87,7 @@ Both use same `MonthInstance` objects with different transforms.
 ```
 python/
 ├── make_cal.py              # Entry point: CLI, PDF orchestration
-├── svg_to_png.js            # Node.js script for SVG→PNG via Puppeteer
+├── svg_to_png.py            # SVG→PNG conversion via Playwright/Chromium
 ├── calendar_data.py         # Month definitions, colors, constants
 ├── calendar_drawings.py     # SVG rendering for month arcs
 ├── arc_drawing.py           # Geometric utilities (arcs, angles)
@@ -100,22 +100,21 @@ python/
 ├── test_snapshots/          # Reference SVGs for snapshot tests
 │   └── pdf_pages/           # Reference PNGs for PDF snapshot tests
 ├── requirements.txt         # Python dependencies
-├── package.json             # Node.js dependencies (Puppeteer)
 └── out/                     # Generated output (PDFs, SVGs)
 ```
 
 ## PDF Pipeline
 
 1. `make_cal.py` generates SVG files for each calendar page
-2. `svg_to_png.js` (Puppeteer/headless Chrome) converts SVG → PNG at 150 DPI
+2. `svg_to_png.py` (Playwright/headless Chromium) converts SVG → PNG at 150 DPI
 3. `reportlab` embeds PNG into PDF at original SVG dimensions
 4. `generate_instructions.py` creates instructions page (converts cover PDF → PNG via `pypdfium2`)
 5. `pdfizer.py` concatenates instructions + calendar pages into final PDF
 6. Intermediate files cleaned up
 
-### Why Puppeteer for SVG→PDF?
+### Why Playwright for SVG→PDF?
 
-Pure Python libraries like `svglib` don't handle complex SVG features (text on paths, nested transforms) correctly. Puppeteer uses headless Chrome which renders SVGs perfectly. The PNG intermediate preserves visual fidelity while remaining serverless-compatible.
+Pure Python libraries like `svglib` don't handle complex SVG features (text on paths, nested transforms) correctly. Playwright uses headless Chromium which renders SVGs perfectly. The PNG intermediate preserves visual fidelity while remaining serverless-compatible.
 
 ## Dependencies
 
@@ -126,8 +125,6 @@ Pure Python libraries like `svglib` don't handle complex SVG features (text on p
 - `pypdf` - PDF concatenation
 - `hijridate` - Islamic calendar conversion
 - `pillow` - Image handling
+- `playwright` - Headless Chromium for accurate SVG rendering
 
-**Node.js** (see `package.json`):
-- `puppeteer` - Headless Chrome for accurate SVG rendering
-
-For serverless deployment (AWS Lambda, Vercel), use `@sparticuz/chromium` instead of full Puppeteer.
+For serverless deployment (AWS Lambda, Vercel), use playwright with a pre-installed Chromium layer.
