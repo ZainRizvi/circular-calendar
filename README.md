@@ -1,23 +1,64 @@
 # Intuitive Islamic Circle Calendar
 
-An annual calendar that's easy for little kids (and adults) to understand.
+An annual calendar that's easy for little kids (and adults) to understand. Visualizes how the Islamic (Hijri) lunar calendar and Gregorian solar calendar relate to each other.
 
-Currently this repo is split into two folders:
-- `python`: This is the original, fully functional version of the code that is a python console app that can generate a pdf with the circular calendar
-- `app`: A port of the python code to a NextJs based webapp.  This is still a work in progress
+**Download the latest calendar**: http://zainrizvi.io/calendar
 
-# Once you have a PDF
+## How It Works
 
-## Instructions
-1. Print out the pdf
-2. Cut out all the months
-3. Stick the months of the solar calendar on the wall in a circle (sticky putty works great here).  If it’s not a leap year, then cover up the 29th of Feb with May 1st.
-4. Place the Islamic months on the inner ring, aligning each day with it’s corresponding day on the solar calendar. Use an Islamic calendar or moonsighting.com to figure out if the month should have 29 or 30 days. If it should have 29 days, cover up the 30th day with the 1st of the next month.
-5. You’ll end up with a small gap in the Islamic calendar’s circle, since the Islamic year has fewer days. As each Islamic month ends, you can shift it counter clockwise to cover up the gap.
+The calendar is a circular design where:
+- **Outer ring**: 12 Gregorian months (January at top, proceeding clockwise)
+- **Inner ring**: 12 Islamic months aligned with their corresponding solar dates
 
-## Optional
-* Laminate the pages before cutting out the months to make the calendar more durable
-* Cut out an arrow to point to the current day
-* Cut out arrow shaped tags to mark key events like important Islamic days, birthdays, etc
+Since the Islamic year (~354 days) is shorter than the solar year (365 days), there's always a gap in the inner ring. This gap visually demonstrates why Islamic months "drift" through the seasons over the years.
 
-The latest version of this calendar can be downloaded from http://zainrizvi.io/calendar
+## Repository Structure
+
+- `python/` - Production-ready Python CLI that generates the calendar PDF
+- `app/` - Next.js web app (work in progress)
+
+See `PLAN.md` for migration status.
+
+## Generating the Calendar
+
+### Python Version
+
+```bash
+cd python
+python -m venv .venv
+source .venv/bin/activate
+pip install --no-deps -r requirements.txt
+python make_cal.py
+```
+
+Output: `out/calendar_pages_0.7_COMPLETE.pdf`
+
+---
+
+## Assembling the Physical Calendar
+
+### Materials Needed
+- Printed PDF pages
+- Scissors
+- Sticky putty or tape
+- Wall space
+
+### Instructions
+
+1. **Print** all pages from the PDF
+2. **Cut out** all the month segments
+3. **Arrange solar months** in a circle on your wall:
+   - Place January at the top (12 o'clock position)
+   - Proceed clockwise through December
+   - If it's not a leap year, cover Feb 29 with May 1
+4. **Place Islamic months** on the inner ring:
+   - Align each day with its corresponding solar calendar day
+   - Use an Islamic calendar or [moonsighting.com](https://moonsighting.com) to check if each month has 29 or 30 days
+   - For 29-day months, cover the 30th with the next month's 1st
+5. **Monthly maintenance**: As each Islamic month ends, shift it counter-clockwise to close the gap
+
+### Optional Enhancements
+
+- **Laminate** pages before cutting for durability
+- **Create an arrow** to point to the current day
+- **Add arrow-shaped tags** to mark important events (birthdays, Islamic holidays, etc.)
