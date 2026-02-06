@@ -16,8 +16,6 @@ npm start
 npm test
 ```
 
-Or use: `./test.sh` (runs typecheck + tests)
-
 ## npm Scripts
 
 | Script | Command | Description |
