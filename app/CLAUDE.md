@@ -26,6 +26,12 @@ npm start
 | `npm start` | `next start` | Start production server |
 | `npm run lint` | `next lint` | Run ESLint |
 | `npm run typecheck` | `tsc --noEmit` | TypeScript type checking |
+| `npm test` | `vitest run` | Run tests once |
+| `npm run test:watch` | `vitest` | Run tests in watch mode |
+
+## Testing
+
+Integration tests live in `src/__tests__/`. Unit tests are co-located with source files (`*.test.ts`).
 
 ## Architecture
 
@@ -55,11 +61,13 @@ app/
 │   │   ├── Footer.tsx
 │   │   ├── icons.tsx
 │   │   └── index.ts             # Barrel export
-│   └── hooks/
-│       └── useScrollAnimation.ts
+│   ├── hooks/
+│   │   └── useScrollAnimation.ts
+│   └── __tests__/               # Integration tests
 ├── public/
 │   └── favicon.svg
 ├── next.config.ts
+├── vitest.config.ts
 ├── tsconfig.json
 ├── package.json
 └── vercel.json
