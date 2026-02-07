@@ -7,7 +7,6 @@ import {
   Point,
   CurvedText,
   TextCenteredAroundPoint,
-  Circle,
   Drawable,
 } from './primitives.ts';
 import { getDimensionalArc, getArc } from './geometry.ts';

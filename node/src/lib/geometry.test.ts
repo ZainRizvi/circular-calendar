@@ -10,7 +10,7 @@ import {
   drawMonthParts,
   groupWithMonthParts,
 } from './geometry.ts';
-import { Point, Arc, DimensionalArc, resetTextPathIdCounter } from './primitives.ts';
+import { Point, resetTextPathIdCounter } from './primitives.ts';
 
 beforeEach(() => {
   resetTextPathIdCounter();

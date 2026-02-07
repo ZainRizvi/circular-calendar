@@ -64,8 +64,6 @@ describe('getMonth', () => {
     const elements = getMonth(month, daysInYear, origin);
 
     // Month width = 360 * numDays / daysInYear = 360 * 31 / 366 ≈ 30.49°
-    const expectedWidth = (360 * 31) / 366;
-
     // Background arc should span this width centered around -90°
     const background = elements[0];
     // We can't directly test angles, but we can check the arc exists

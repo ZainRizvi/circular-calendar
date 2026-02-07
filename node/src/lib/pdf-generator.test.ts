@@ -7,7 +7,6 @@ import {
   createPdfGenerator,
   pngBufferToPdf,
   concatPdfBytes,
-  type PdfGeneratorOptions,
 } from './pdf-generator.ts';
 import type { SvgRenderer, SvgRenderResult } from './types.ts';
 import { PDFDocument } from 'pdf-lib';

@@ -10,7 +10,6 @@ import { inchToMillimeter, drawMonthParts } from './geometry.ts';
 import { getMonth } from './month-renderer.ts';
 import {
   type MonthInstance,
-  type Month,
   solarYear,
   islamicYearCanonical,
 } from './calendar-data.ts';

@@ -24,7 +24,8 @@ npm start
 | `npm run dev` | `next dev` | Start development server |
 | `npm run build` | `next build` | Build for production |
 | `npm start` | `next start` | Start production server |
-| `npm run lint` | `next lint` | Run ESLint |
+| `npm run lint` | `eslint .` | Run ESLint |
+| `npm run lint:fix` | `eslint . --fix` | Run ESLint with auto-fix |
 | `npm run typecheck` | `tsc --noEmit` | TypeScript type checking |
 | `npm test` | `vitest run` | Run tests once |
 | `npm run test:watch` | `vitest` | Run tests in watch mode |
