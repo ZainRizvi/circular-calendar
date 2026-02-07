@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Hook that triggers scroll-based animations using Intersection Observer.
@@ -9,7 +9,7 @@ import { useEffect, useRef, useCallback } from 'react';
 export function useScrollAnimation() {
   const elementRef = useRef<HTMLDivElement>(null);
 
-  const setupObserver = useCallback(() => {
+  useEffect(() => {
     const element = elementRef.current;
     if (!element) return;
 
@@ -37,13 +37,12 @@ export function useScrollAnimation() {
     observer.observe(element);
 
     return () => {
-      observer.disconnect();
-    };
+    if (element) {
+      observer.unobserve(element);
+    }
+    observer.disconnect();
+  };
   }, []);
-
-  useEffect(() => {
-    return setupObserver();
-  }, [setupObserver]);
 
   return elementRef;
 }

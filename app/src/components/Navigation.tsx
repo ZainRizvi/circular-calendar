@@ -18,8 +18,8 @@ export function Navigation() {
   return (
     <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
-        <Link href="#" className="nav-logo">
-          <span className="logo-circle"></span>
+        <Link href="#" className="nav-logo" aria-label="Circle Calendar home">
+          <span className="logo-circle" aria-hidden="true"></span>
           Circle Calendar
         </Link>
         <Link href="#buy" className="nav-cta">

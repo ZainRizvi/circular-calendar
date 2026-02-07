@@ -1,5 +1,6 @@
 'use client';
 
+import { ComponentType } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import {
   DocumentIcon,
@@ -10,7 +11,13 @@ import {
   LayersIcon,
 } from './icons';
 
-const packageItems = [
+interface PackageItem {
+  icon: ComponentType;
+  title: string;
+  description: string;
+}
+
+const packageItems: PackageItem[] = [
   {
     icon: DocumentIcon,
     title: 'Printable PDF',
@@ -43,29 +50,37 @@ const packageItems = [
   },
 ];
 
-export function PackageSection() {
+function PackageItemCard({ item }: { item: PackageItem }) {
   const ref = useScrollAnimation();
+  const Icon = item.icon;
+  return (
+    <div className="package-item" ref={ref}>
+      <div className="package-item-icon">
+        <Icon />
+      </div>
+      <div>
+        <h4>{item.title}</h4>
+        <p>{item.description}</p>
+      </div>
+    </div>
+  );
+}
+
+export function PackageSection() {
+  const headerRef = useScrollAnimation();
 
   return (
     <section className="package-section">
       <div className="container">
         <div className="package-card">
-          <div className="package-header" ref={ref}>
+          <div className="package-header" ref={headerRef}>
             <span className="section-label">What You&apos;ll Receive</span>
             <h2 className="section-title">Everything You Need</h2>
           </div>
 
           <div className="package-contents">
             {packageItems.map((item, index) => (
-              <div key={index} className="package-item" ref={ref}>
-                <div className="package-item-icon">
-                  <item.icon />
-                </div>
-                <div>
-                  <h4>{item.title}</h4>
-                  <p>{item.description}</p>
-                </div>
-              </div>
+              <PackageItemCard key={index} item={item} />
             ))}
           </div>
         </div>

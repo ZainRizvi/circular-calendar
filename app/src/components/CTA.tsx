@@ -1,32 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowIcon, HeartIcon } from './icons';
 
 export function CTA() {
   const [loading, setLoading] = useState(false);
+  const isMountedRef = useRef(true);
+  const cleanupTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+      if (cleanupTimeoutRef.current !== null) {
+        clearTimeout(cleanupTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleDownload = async () => {
     setLoading(true);
+    let blobUrl: string | null = null;
+    let anchor: HTMLAnchorElement | null = null;
+
     try {
       const response = await fetch('/api/generate');
       if (!response.ok) {
-        throw new Error('Failed to generate PDF');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
+
       const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'circle-calendar.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      if (blob.size === 0) {
+        throw new Error('Generated PDF is empty');
+      }
+
+      blobUrl = URL.createObjectURL(blob);
+      anchor = document.createElement('a');
+      anchor.href = blobUrl;
+      anchor.download = 'circle-calendar.pdf';
+      anchor.style.display = 'none';
+      document.body.appendChild(anchor);
+      anchor.click();
+
+      // Revoke after a delay to ensure download starts
+      const urlToRevoke = blobUrl;
+      const anchorToRemove = anchor;
+      cleanupTimeoutRef.current = setTimeout(() => {
+        cleanupTimeoutRef.current = null;
+        URL.revokeObjectURL(urlToRevoke);
+        if (anchorToRemove.parentNode) {
+          document.body.removeChild(anchorToRemove);
+        }
+      }, 1000);
     } catch (error) {
       console.error('Download failed:', error);
-      alert('Failed to download the calendar. Please try again.');
+      // Clean up immediately on error
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      if (anchor && anchor.parentNode) {
+        document.body.removeChild(anchor);
+      }
+      alert(
+        error instanceof Error
+          ? `Failed to download: ${error.message}`
+          : 'Failed to download the calendar. Please try again.'
+      );
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -55,6 +96,7 @@ export function CTA() {
             <button
               onClick={handleDownload}
               disabled={loading}
+              aria-label={loading ? 'Generating calendar, please wait' : 'Get your calendar'}
               className="btn btn-primary btn-large"
             >
               <span>{loading ? 'Generating...' : 'Get Your Calendar'}</span>

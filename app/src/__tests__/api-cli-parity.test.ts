@@ -77,13 +77,29 @@ describe('API and CLI PDF parity', () => {
   }
 
   /**
-   * Stop the dev server.
+   * Stop the dev server and wait for it to exit.
    */
-  function stopServer(): void {
-    if (serverProcess) {
+  function stopServer(): Promise<void> {
+    return new Promise((resolve) => {
+      if (!serverProcess) {
+        resolve();
+        return;
+      }
+
+      const timeout = setTimeout(() => {
+        serverProcess?.kill('SIGKILL'); // Force kill if graceful shutdown fails
+        serverProcess = null;
+        resolve();
+      }, 5000);
+
+      serverProcess.once('exit', () => {
+        clearTimeout(timeout);
+        serverProcess = null;
+        resolve();
+      });
+
       serverProcess.kill('SIGTERM');
-      serverProcess = null;
-    }
+    });
   }
 
   /**
@@ -121,8 +137,8 @@ describe('API and CLI PDF parity', () => {
     await startServer();
   }, 90000); // 90s timeout for server startup
 
-  afterAll(() => {
-    stopServer();
+  afterAll(async () => {
+    await stopServer();
   });
 
   it('produces identical PDFs from API and CLI for a fixed date', async () => {

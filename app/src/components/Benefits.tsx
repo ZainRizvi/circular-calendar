@@ -1,8 +1,15 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
-const benefits = [
+interface Benefit {
+  number: string;
+  title: string;
+  description: ReactNode;
+}
+
+const benefits: Benefit[] = [
   {
     number: '01',
     title: 'Answers the "Why" Questions',
@@ -45,26 +52,33 @@ const benefits = [
   },
 ];
 
-export function Benefits() {
+function BenefitItem({ benefit }: { benefit: Benefit }) {
   const ref = useScrollAnimation();
+  return (
+    <div className="benefit-item" ref={ref}>
+      <div className="benefit-number">{benefit.number}</div>
+      <div className="benefit-content">
+        <h3>{benefit.title}</h3>
+        <p>{benefit.description}</p>
+      </div>
+    </div>
+  );
+}
+
+export function Benefits() {
+  const headerRef = useScrollAnimation();
 
   return (
     <section className="benefits-section">
       <div className="container">
-        <div className="section-header" ref={ref}>
+        <div className="section-header" ref={headerRef}>
           <span className="section-label">Why Families Love It</span>
           <h2 className="section-title">More Than Just a Calendar</h2>
         </div>
 
         <div className="benefits-grid">
           {benefits.map((benefit) => (
-            <div key={benefit.number} className="benefit-item" ref={ref}>
-              <div className="benefit-number">{benefit.number}</div>
-              <div className="benefit-content">
-                <h3>{benefit.title}</h3>
-                <p>{benefit.description}</p>
-              </div>
-            </div>
+            <BenefitItem key={benefit.number} benefit={benefit} />
           ))}
         </div>
       </div>

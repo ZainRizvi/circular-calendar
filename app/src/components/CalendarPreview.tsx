@@ -7,8 +7,11 @@ export function CalendarPreview() {
   const [isPaused, setIsPaused] = useState(false);
   const targetAngleRef = useRef(-90);
   const animatingRef = useRef(false);
+  const rafRef = useRef<number>();
 
   useEffect(() => {
+    if (isPaused) return; // Don't run interval when paused
+
     const interval = setInterval(() => {
       targetAngleRef.current += 0.5; // Move half a degree
       if (targetAngleRef.current >= 270) {
@@ -24,7 +27,7 @@ export function CalendarPreview() {
             const next = current + diff * 0.1;
 
             if (Math.abs(diff) > 0.1) {
-              requestAnimationFrame(animate);
+              rafRef.current = requestAnimationFrame(animate);
               return next;
             }
             animatingRef.current = false;
@@ -32,12 +35,15 @@ export function CalendarPreview() {
           });
         };
 
-        requestAnimationFrame(animate);
+        rafRef.current = requestAnimationFrame(animate);
       }
     }, 3000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearInterval(interval);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isPaused]);
 
   return (
     <div className="hero-visual">
@@ -45,6 +51,8 @@ export function CalendarPreview() {
         className={`calendar-preview ${isPaused ? 'paused' : ''}`}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        role="img"
+        aria-label="Interactive circular calendar showing both Gregorian and Islamic months"
       >
         <div className="calendar-ring calendar-ring-outer">
           <div

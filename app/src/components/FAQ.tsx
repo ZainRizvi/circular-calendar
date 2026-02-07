@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ChevronDownIcon } from './icons';
 
 const faqItems = [
@@ -37,71 +37,30 @@ const faqItems = [
 ];
 
 function AnimatedSection({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    element.style.opacity = '0';
-    element.style.transform = 'translateY(24px)';
-    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '0px 0px -80px 0px',
-        threshold: 0.1,
-      }
-    );
-
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, []);
-
+  const ref = useScrollAnimation();
   return <div ref={ref}>{children}</div>;
 }
 
 export function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const handleToggle = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+  const headerRef = useScrollAnimation();
 
   return (
     <section className="faq-section">
       <div className="container">
-        <AnimatedSection>
-          <div className="section-header">
-            <span className="section-label">Questions?</span>
-            <h2 className="section-title">Frequently Asked Questions</h2>
-          </div>
-        </AnimatedSection>
+        <div className="section-header" ref={headerRef}>
+          <span className="section-label">Questions?</span>
+          <h2 className="section-title">Frequently Asked Questions</h2>
+        </div>
 
         <div className="faq-list">
           {faqItems.map((item, index) => (
             <AnimatedSection key={index}>
-              <details
-                className="faq-item"
-                open={openIndex === index}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleToggle(index);
-                }}
-              >
+              <details className="faq-item">
                 <summary>
                   <span>{item.question}</span>
-                  <ChevronDownIcon />
+                  <span aria-hidden="true">
+                    <ChevronDownIcon />
+                  </span>
                 </summary>
                 <div className="faq-answer">
                   <p>{item.answer}</p>

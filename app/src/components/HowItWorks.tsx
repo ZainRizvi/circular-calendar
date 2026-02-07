@@ -1,15 +1,31 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { DualRingIcon, GapIcon, AlignIcon, HandsIcon } from './icons';
 
-export function HowItWorks() {
+function AnimatedFeatureCard({
+  children,
+  className = '',
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   const ref = useScrollAnimation();
+  return (
+    <div className={`feature-card ${className}`} ref={ref}>
+      {children}
+    </div>
+  );
+}
+
+export function HowItWorks() {
+  const headerRef = useScrollAnimation();
 
   return (
     <section id="how-it-works" className="how-section">
       <div className="container">
-        <div className="section-header" ref={ref}>
+        <div className="section-header" ref={headerRef}>
           <span className="section-label">The Solution</span>
           <h2 className="section-title">Two Calendars, One Circle, Instant Understanding</h2>
           <p className="section-subtitle">
@@ -18,7 +34,7 @@ export function HowItWorks() {
         </div>
 
         <div className="features-grid">
-          <div className="feature-card feature-card-large" ref={ref}>
+          <AnimatedFeatureCard className="feature-card-large">
             <div className="feature-icon">
               <DualRingIcon />
             </div>
@@ -31,9 +47,9 @@ export function HowItWorks() {
                 counterparts.
               </p>
             </div>
-          </div>
+          </AnimatedFeatureCard>
 
-          <div className="feature-card" ref={ref}>
+          <AnimatedFeatureCard>
             <div className="feature-icon feature-icon-gap">
               <GapIcon />
             </div>
@@ -43,9 +59,9 @@ export function HowItWorks() {
               <strong>gap</strong> in the inner circle. This gap is the entire lesson—it
               shows <em>why</em> Islamic months shift earlier each solar year.
             </p>
-          </div>
+          </AnimatedFeatureCard>
 
-          <div className="feature-card" ref={ref}>
+          <AnimatedFeatureCard>
             <div className="feature-icon feature-icon-align">
               <AlignIcon />
             </div>
@@ -54,9 +70,9 @@ export function HowItWorks() {
               Every day on the Islamic calendar lines up with its exact Gregorian date.
               Point to Ramadan 15 and immediately see what solar date it falls on.
             </p>
-          </div>
+          </AnimatedFeatureCard>
 
-          <div className="feature-card" ref={ref}>
+          <AnimatedFeatureCard>
             <div className="feature-icon feature-icon-hands">
               <HandsIcon />
             </div>
@@ -65,7 +81,7 @@ export function HowItWorks() {
               Print, cut, and assemble on your wall. Add an arrow for today&apos;s date.
               Mark birthdays and Islamic holidays. Move the pieces as months pass.
             </p>
-          </div>
+          </AnimatedFeatureCard>
         </div>
       </div>
     </section>
