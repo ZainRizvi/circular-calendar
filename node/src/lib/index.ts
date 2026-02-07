@@ -32,6 +32,5 @@ export * from './calendar-builder.ts';
 // PDF generation
 export * from './pdf-generator.ts';
 
-// Serverless-compatible modules
-export * from './instructions-generator.ts';
+// Serverless pipeline
 export * from './serverless-pipeline.ts';

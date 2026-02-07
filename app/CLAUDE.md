@@ -98,9 +98,23 @@ Generates a calendar PDF.
 
 ## Deployment
 
-Configured for Vercel deployment via `vercel.json`:
+Deployed to Vercel. Configuration in `vercel.json`:
 - API function has 1024MB memory and 60s timeout
 - Uses `experimental.externalDir` to import from parent node library
+
+Deploy from repo root (not app/):
+```bash
+vercel --prod
+```
+
+## Font Bundling
+
+Serverless environments (Vercel) don't have system fonts. The app bundles Arimo font (Arial-compatible):
+- Font file: `public/fonts/Arimo-Regular.ttf`
+- Also in: `../node/src/fonts/Arimo-Regular.ttf`
+- SVG font-family includes "Arimo" first: `font-family="Arimo, Arial, Helvetica, sans-serif"`
+
+**Note**: There's a resvg-js bug where `fontBuffers` ignores `fitTo` scaling. The workaround writes font data to a temp file and uses `fontFiles` instead (see `resvg-renderer.ts`).
 
 ## Dependencies
 

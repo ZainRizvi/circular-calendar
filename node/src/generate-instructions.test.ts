@@ -7,7 +7,6 @@ import { generateQrCode, generateInstructionsPdf, GUMROAD_URL } from './generate
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { PDFDocument } from 'pdf-lib';
-import { createPdfFromPng } from './pdfizer.ts';
 
 // Test output directory
 const TEST_OUT_DIR = path.join(process.cwd(), 'test_output_instructions');
@@ -35,7 +34,7 @@ describe('generate-instructions', () => {
     it('should generate a QR code PNG buffer', async () => {
       const qrBuffer = await generateQrCode('https://example.com');
 
-      expect(qrBuffer).toBeInstanceOf(Buffer);
+      expect(qrBuffer).toBeInstanceOf(Uint8Array);
       expect(qrBuffer.length).toBeGreaterThan(0);
 
       // Check PNG magic bytes
@@ -53,15 +52,13 @@ describe('generate-instructions', () => {
 
   describe('generateInstructionsPdf', () => {
     it('should generate a PDF file', async () => {
-      // Create a mock cover PDF
       const coverPdfPath = path.join(TEST_OUT_DIR, 'cover.pdf');
       const outputPath = path.join(TEST_OUT_DIR, 'instructions.pdf');
 
-      // Create a minimal cover PDF
+      // Create a minimal cover PNG
       const pngBuffer = createMinimalPng();
-      await createPdfFromPng(pngBuffer, coverPdfPath, 612, 792);
 
-      await generateInstructionsPdf(coverPdfPath, outputPath);
+      await generateInstructionsPdf(coverPdfPath, outputPath, pngBuffer);
 
       // Verify file exists and is a valid PDF
       const stat = await fs.stat(outputPath);
@@ -77,9 +74,8 @@ describe('generate-instructions', () => {
       const outputPath = path.join(TEST_OUT_DIR, 'instructions2.pdf');
 
       const pngBuffer = createMinimalPng();
-      await createPdfFromPng(pngBuffer, coverPdfPath, 612, 792);
 
-      await generateInstructionsPdf(coverPdfPath, outputPath);
+      await generateInstructionsPdf(coverPdfPath, outputPath, pngBuffer);
 
       const pdfBytes = await fs.readFile(outputPath);
       const pdf = await PDFDocument.load(pdfBytes);

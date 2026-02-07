@@ -17,28 +17,61 @@ const MARGIN = 72; // 1 inch
 /**
  * Generate a QR code image as PNG buffer.
  */
-export async function generateQrCode(url: string, size: number = 150): Promise<Buffer> {
+export async function generateQrCode(url: string, size: number = 150): Promise<Uint8Array> {
   const pngBuffer = await QRCode.toBuffer(url, {
     type: 'png',
     width: size,
     margin: 1,
     errorCorrectionLevel: 'L',
   });
-  return pngBuffer;
+  return new Uint8Array(pngBuffer);
+}
+
+/**
+ * Wrap text to fit within a given width.
+ */
+function wrapText(
+  text: string,
+  maxWidth: number,
+  font: Awaited<ReturnType<typeof PDFDocument.prototype.embedFont>>,
+  fontSize: number
+): string[] {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+
+    if (testWidth <= maxWidth) {
+      currentLine = testLine;
+    } else {
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  return lines;
 }
 
 /**
  * Generate instructions PDF with cover image embedded at bottom of same page.
  *
- * @param coverPdfPath - Path to cover PDF file
- * @param outputPath - Output path for instructions PDF
- * @param coverPngBuffer - Optional PNG buffer of cover image (if not provided, will embed PDF page)
+ * In-memory version that returns PDF bytes directly.
+ *
+ * @param coverPngBuffer - PNG image of the cover to embed
+ * @returns PDF document as Uint8Array
  */
-export async function generateInstructionsPdf(
-  coverPdfPath: string,
-  outputPath: string,
-  coverPngBuffer?: Buffer
-): Promise<void> {
+export async function generateInstructionsPdfBytes(
+  coverPngBuffer: Uint8Array
+): Promise<Uint8Array> {
   // Create PDF document
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([LETTER_WIDTH, LETTER_HEIGHT]);
@@ -213,96 +246,49 @@ export async function generateInstructionsPdf(
   // Use all available space from bottom margin up to just below the QR code
   const maxImgHeight = y - MARGIN;
 
-  // Embed cover image if PNG buffer provided, otherwise embed the PDF page as an image
-  if (coverPngBuffer) {
-    const coverImage = await pdfDoc.embedPng(coverPngBuffer);
-    const coverAspect = coverImage.width / coverImage.height;
+  // Embed cover image
+  const coverImage = await pdfDoc.embedPng(coverPngBuffer);
+  const coverAspect = coverImage.width / coverImage.height;
 
-    // Calculate image size to fit width while respecting max height
-    let imgWidth = contentWidth;
-    let imgHeight = imgWidth / coverAspect;
+  // Calculate image size to fit width while respecting max height
+  let imgWidth = contentWidth;
+  let imgHeight = imgWidth / coverAspect;
 
-    if (imgHeight > maxImgHeight) {
-      imgHeight = maxImgHeight;
-      imgWidth = imgHeight * coverAspect;
-    }
-
-    // Center image horizontally
-    const imgX = (LETTER_WIDTH - imgWidth) / 2;
-    const imgY = MARGIN; // Place at bottom margin
-
-    page.drawImage(coverImage, {
-      x: imgX,
-      y: imgY,
-      width: imgWidth,
-      height: imgHeight,
-    });
-  } else {
-    // Load cover PDF and embed its first page
-    const coverPdfBytes = await fs.readFile(coverPdfPath);
-    const coverPdf = await PDFDocument.load(coverPdfBytes);
-    const [embeddedPage] = await pdfDoc.embedPdf(coverPdf, [0]);
-
-    const coverAspect = embeddedPage.width / embeddedPage.height;
-
-    // Calculate image size to fit width while respecting max height
-    let imgWidth = contentWidth;
-    let imgHeight = imgWidth / coverAspect;
-
-    if (imgHeight > maxImgHeight) {
-      imgHeight = maxImgHeight;
-      imgWidth = imgHeight * coverAspect;
-    }
-
-    // Center image horizontally
-    const imgX = (LETTER_WIDTH - imgWidth) / 2;
-    const imgY = MARGIN; // Place at bottom margin
-
-    page.drawPage(embeddedPage, {
-      x: imgX,
-      y: imgY,
-      width: imgWidth,
-      height: imgHeight,
-    });
+  if (imgHeight > maxImgHeight) {
+    imgHeight = maxImgHeight;
+    imgWidth = imgHeight * coverAspect;
   }
 
-  // Save PDF
-  const pdfBytes = await pdfDoc.save();
-  await fs.writeFile(outputPath, pdfBytes);
+  // Center image horizontally
+  const imgX = (LETTER_WIDTH - imgWidth) / 2;
+  const imgY = MARGIN; // Place at bottom margin
 
-  console.log(`Generated: ${outputPath}`);
+  page.drawImage(coverImage, {
+    x: imgX,
+    y: imgY,
+    width: imgWidth,
+    height: imgHeight,
+  });
+
+  // Return PDF bytes
+  return pdfDoc.save();
 }
 
 /**
- * Wrap text to fit within a given width.
+ * Generate instructions PDF and write to file.
+ *
+ * File-based wrapper around generateInstructionsPdfBytes for CLI usage.
+ *
+ * @param coverPdfPath - Path to cover PDF file (unused, kept for API compatibility)
+ * @param outputPath - Output path for instructions PDF
+ * @param coverPngBuffer - PNG buffer of cover image
  */
-function wrapText(
-  text: string,
-  maxWidth: number,
-  font: Awaited<ReturnType<typeof PDFDocument.prototype.embedFont>>,
-  fontSize: number
-): string[] {
-  const words = text.split(' ');
-  const lines: string[] = [];
-  let currentLine = '';
-
-  for (const word of words) {
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-    const testWidth = font.widthOfTextAtSize(testLine, fontSize);
-
-    if (testWidth <= maxWidth) {
-      currentLine = testLine;
-    } else {
-      if (currentLine) {
-        lines.push(currentLine);
-      }
-      currentLine = word;
-    }
-  }
-
-  if (currentLine) {
-    lines.push(currentLine);
-  }
-
-  return lines;
+export async function generateInstructionsPdf(
+  coverPdfPath: string,
+  outputPath: string,
+  coverPngBuffer: Buffer
+): Promise<void> {
+  const pdfBytes = await generateInstructionsPdfBytes(new Uint8Array(coverPngBuffer));
+  await fs.writeFile(outputPath, pdfBytes);
+  console.log(`Generated: ${outputPath}`);
 }

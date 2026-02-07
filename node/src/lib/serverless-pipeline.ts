@@ -14,7 +14,7 @@ import {
   type AlignmentParams,
   type SvgRenderer,
 } from './index.ts';
-import { generateInstructionsPdfBytes } from './instructions-generator.ts';
+import { generateInstructionsPdfBytes } from '../generate-instructions.ts';
 
 /**
  * Options for serverless calendar generation.

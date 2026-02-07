@@ -32,12 +32,18 @@ Creates a circular calendar overlaying the Islamic (Hijri) lunar calendar on the
 
 ```
 circular-calendar/
-├── python/          # Python CLI using Playwright (see python/CLAUDE.md)
-├── node/            # Node.js/TypeScript CLI using resvg-js (see node/CLAUDE.md)
-├── app/             # Next.js web app (planned, see PLAN.md)
-├── PLAN.md          # Migration status and roadmap
+├── python/          # Python CLI using Playwright (deprecated, see python/CLAUDE.md)
+├── node/            # Node.js/TypeScript CLI and core library (see node/CLAUDE.md)
+├── app/             # Next.js web app deployed to Vercel (see app/CLAUDE.md)
 └── README.md        # User-facing instructions
 ```
+
+## Web App
+
+The Next.js web app (`app/`) provides a landing page with a PDF download button.
+
+**Live site**: Deployed to Vercel
+**API endpoint**: `POST /api/generate` - returns calendar PDF
 
 ## Key Technical Details
 
@@ -75,6 +81,7 @@ circular-calendar/
 ## Documentation Guidelines
 
 - **Root `CLAUDE.md`**: Cross-cutting technical concepts, AI constraints
-- **`python/CLAUDE.md`**: Python-specific processes, testing, dependencies
-- **`node/CLAUDE.md`**: Node.js/TypeScript-specific processes, testing, dependencies
+- **`node/CLAUDE.md`**: Node.js/TypeScript CLI and core library
+- **`app/CLAUDE.md`**: Next.js web app and Vercel deployment
+- **`python/CLAUDE.md`**: Python CLI (deprecated)
 - **`README.md`**: User-facing instructions (physical calendar assembly)
