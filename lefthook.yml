@@ -7,20 +7,20 @@ pre-commit:
     node-typecheck:
       root: node/
       run: npm run typecheck
-      glob: "node/**/*.{ts,tsx}"
+      glob: "node/{package.json,**/*.{ts,tsx}}"
     node-test:
       root: node/
       run: npm test
-      glob: "node/**/*.{ts,tsx}"
+      glob: "node/{package.json,**/*.{ts,tsx}}"
     app-typecheck:
       root: app/
       run: npm run typecheck
-      glob: "{node,app}/**/*.{ts,tsx}"
+      glob: "{node,app}/{package.json,**/*.{ts,tsx}}"
     app-lint:
       root: app/
       run: npm run lint
-      glob: "{node,app}/**/*.{ts,tsx}"
+      glob: "{node,app}/{package.json,**/*.{ts,tsx}}"
     app-test:
       root: app/
       run: npm test
-      glob: "{node,app}/**/*.{ts,tsx}"
+      glob: "{node,app}/{package.json,**/*.{ts,tsx}}"
