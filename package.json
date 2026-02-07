@@ -9,11 +9,13 @@
   "scripts": {
     "build": "npm run build --workspace=app",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "eslint": "^9.19.0",
+    "lefthook": "^2.1.0",
     "typescript-eslint": "^8.22.0"
   }
 }

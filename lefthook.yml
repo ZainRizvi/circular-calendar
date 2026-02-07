@@ -1,0 +1,26 @@
+# Lefthook git hooks configuration
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    node-typecheck:
+      root: node/
+      run: npm run typecheck
+      glob: "node/**/*.{ts,tsx}"
+    node-test:
+      root: node/
+      run: npm test
+      glob: "node/**/*.{ts,tsx}"
+    app-typecheck:
+      root: app/
+      run: npm run typecheck
+      glob: "{node,app}/**/*.{ts,tsx}"
+    app-lint:
+      root: app/
+      run: npm run lint
+      glob: "{node,app}/**/*.{ts,tsx}"
+    app-test:
+      root: app/
+      run: npm test
+      glob: "{node,app}/**/*.{ts,tsx}"

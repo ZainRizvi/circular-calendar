@@ -72,6 +72,10 @@ The Next.js web app (`app/`) provides a landing page with a PDF download button.
 
 ## Development Guidelines
 
+**Setup:**
+- Run `npm install` at repo root to install dependencies and git hooks
+- Git pre-commit hooks (via lefthook) run typecheck, lint, and tests automatically
+
 **Test-Driven Development (TDD):**
 - Write tests before implementing new functionality
 - Co-locate test files with source code (e.g., `foo.ts` + `foo.test.ts`)
