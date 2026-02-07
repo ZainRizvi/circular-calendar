@@ -41,6 +41,9 @@ export function parseArgs(args: string[]): ParsedArgs {
  */
 function parseYear(yearStr: string, century: number): number {
   const year = parseInt(yearStr);
+  if (isNaN(year) || year < 0) {
+    throw new Error(`Invalid year: ${yearStr}`);
+  }
   if (yearStr.length <= 2) {
     return century + year;
   }
@@ -59,10 +62,18 @@ export function getAlignmentFromArgs(args: ParsedArgs): AlignmentParams {
     if (parts.length !== 3) {
       throw new Error('Hijri date must be in YYYY-MM-DD or YY-MM-DD format');
     }
+    const hijriMonth = parseInt(parts[1]);
+    const hijriDay = parseInt(parts[2]);
+    if (isNaN(hijriMonth) || hijriMonth < 1 || hijriMonth > 12) {
+      throw new Error(`Invalid Hijri month: ${parts[1]}. Must be 1-12.`);
+    }
+    if (isNaN(hijriDay) || hijriDay < 1 || hijriDay > 30) {
+      throw new Error(`Invalid Hijri day: ${parts[2]}. Must be 1-30.`);
+    }
     return getAlignmentParams(undefined, {
       hijriYear: parseYear(parts[0], 1400),
-      hijriMonth: parseInt(parts[1]),
-      hijriDay: parseInt(parts[2]),
+      hijriMonth,
+      hijriDay,
     });
   } else if (args.date) {
     const parts = args.date.split('-');
@@ -70,9 +81,20 @@ export function getAlignmentFromArgs(args: ParsedArgs): AlignmentParams {
       throw new Error('Date must be in YYYY-MM-DD or YY-MM-DD format');
     }
     const year = parseYear(parts[0], 2000);
-    return getAlignmentParams(
-      new Date(year, parseInt(parts[1]) - 1, parseInt(parts[2]))
-    );
+    const month = parseInt(parts[1]);
+    const day = parseInt(parts[2]);
+    if (isNaN(month) || month < 1 || month > 12) {
+      throw new Error(`Invalid month: ${parts[1]}. Must be 1-12.`);
+    }
+    if (isNaN(day) || day < 1 || day > 31) {
+      throw new Error(`Invalid day: ${parts[2]}. Must be 1-31.`);
+    }
+    const date = new Date(year, month - 1, day);
+    // Verify the date is valid (catches Feb 30, etc.)
+    if (date.getMonth() !== month - 1 || date.getDate() !== day) {
+      throw new Error(`Invalid date: ${args.date}. Day ${day} is not valid for month ${month}.`);
+    }
+    return getAlignmentParams(date);
   }
   return getAlignmentParams();
 }

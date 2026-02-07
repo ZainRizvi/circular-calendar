@@ -70,7 +70,7 @@ export function computeLayout(config: LayoutConfig): ComputedLayout {
 
   const canvasWidth = canvasWidthInches * scaleFactor;
   const width = inchToMillimeter(8 * scaleFactor);
-  const outermostRadius = width / ((2 * 3.14) / 12);
+  const outermostRadius = (6 * width) / Math.PI;
   const innerRadius = (outermostRadius * 9.2) / 10;
   const monthThickness = outermostRadius - innerRadius;
   const dateBoxHeight = monthThickness * 0.2;

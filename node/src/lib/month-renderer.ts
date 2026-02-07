@@ -101,8 +101,7 @@ export function getMonth(
     // Date number position (centered in date box)
     const dateCenter = new Point(
       (dateBackground.innerArc.start.x + dateBackground.outerArc.start.x) / 2,
-      (dateBackground.innerArc.start.y + dateBackground.outerArc.start.y) / 2 +
-        (dateBackground.innerArc.start.y - dateBackground.outerArc.start.y) * 0.0
+      (dateBackground.innerArc.start.y + dateBackground.outerArc.start.y) / 2
     );
 
     const dateSize = (dateOuterRadius - dateInnerRadius) * 0.6;

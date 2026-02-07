@@ -24,6 +24,28 @@ export interface ResvgRendererOptions {
 // Cache for temp font file path
 let tempFontPath: string | null = null;
 
+// Cleanup temp font file on process exit
+function cleanupTempFont(): void {
+  if (tempFontPath) {
+    try {
+      fs.unlinkSync(tempFontPath);
+    } catch {
+      // Ignore cleanup errors
+    }
+    tempFontPath = null;
+  }
+}
+
+process.on('exit', cleanupTempFont);
+process.on('SIGINT', () => {
+  cleanupTempFont();
+  process.exit(130);
+});
+process.on('SIGTERM', () => {
+  cleanupTempFont();
+  process.exit(143);
+});
+
 /**
  * Parse SVG dimension string to points (1 point = 1/72 inch).
  */
@@ -90,7 +112,7 @@ export function createResvgRenderer(
         // (fontFiles works correctly with fitTo, fontBuffers does not)
         if (!tempFontPath) {
           tempFontPath = path.join(os.tmpdir(), `resvg-font-${Date.now()}.ttf`);
-          fs.writeFileSync(tempFontPath, fontData);
+          await fs.promises.writeFile(tempFontPath, fontData);
         }
         fontOptions = {
           loadSystemFonts: false,

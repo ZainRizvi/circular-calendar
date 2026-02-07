@@ -76,8 +76,18 @@ export function getAlignmentHeuristic(
   gregorianDate?: Date,
   hijriDate?: HijriDateInput
 ): AlignmentParams {
-  // Handle Hijri date input
+  // Validate Hijri date if provided
   if (hijriDate) {
+    if (hijriDate.hijriMonth < 1 || hijriDate.hijriMonth > 12) {
+      throw new RangeError(`Invalid Hijri month: ${hijriDate.hijriMonth}. Must be 1-12.`);
+    }
+    if (hijriDate.hijriDay < 1 || hijriDate.hijriDay > 30) {
+      throw new RangeError(`Invalid Hijri day: ${hijriDate.hijriDay}. Must be 1-30.`);
+    }
+    if (hijriDate.hijriYear < 1 || hijriDate.hijriYear > 2000) {
+      throw new RangeError(`Invalid Hijri year: ${hijriDate.hijriYear}. Must be 1-2000.`);
+    }
+
     // Convert Hijri date to approximate Gregorian date
     const referenceDate = new Date('2026-01-20');
     const referenceHijriYear = 1447;
@@ -113,15 +123,7 @@ export function getAlignmentHeuristic(
   const monthsElapsed = daysDiff / LUNAR_MONTH_DAYS;
 
   // Calculate month offset from Sha'ban
-  let monthOffset: number;
-  if (monthsElapsed >= 0) {
-    monthOffset = Math.floor(monthsElapsed);
-  } else {
-    monthOffset =
-      monthsElapsed === Math.floor(monthsElapsed)
-        ? Math.floor(monthsElapsed)
-        : Math.floor(monthsElapsed);
-  }
+  const monthOffset = Math.floor(monthsElapsed);
 
   // Calculate current Hijri month (1-12)
   const currentHijriMonth =
@@ -166,6 +168,9 @@ export function getAlignmentHeuristic(
  */
 export function rotateMonths(months: Month[], startMonthIndex: number): Month[] {
   const n = months.length;
+  if (startMonthIndex < 0 || startMonthIndex >= n) {
+    throw new RangeError(`startMonthIndex ${startMonthIndex} out of range [0, ${n - 1}]`);
+  }
   const rotated: Month[] = [];
 
   for (let i = 0; i < n; i++) {
@@ -188,8 +193,12 @@ export function rotateMonths(months: Month[], startMonthIndex: number): Month[] 
 
 /**
  * Get Islamic month name by 0-based index.
+ * @throws RangeError if index is out of bounds [0, 11]
  */
 export function getMonthName(index: number): string {
+  if (index < 0 || index >= ISLAMIC_MONTHS.length) {
+    throw new RangeError(`Month index ${index} out of range [0, 11]`);
+  }
   return ISLAMIC_MONTHS[index];
 }
 
