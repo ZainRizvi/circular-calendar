@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     externalDir: true,
   },
 
+  // Exclude native modules from server component bundling
+  serverExternalPackages: ['@resvg/resvg-js'],
+
   // Configure webpack for @resvg/resvg-js native module and .ts extension handling
   webpack: (config, { isServer }) => {
     if (isServer) {

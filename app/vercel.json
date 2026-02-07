@@ -1,10 +1,9 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": "app/.next",
+  "installCommand": "npm install && cd ../node && npm install",
   "functions": {
-    "app/src/app/api/generate/route.ts": {
+    "src/app/api/generate/route.ts": {
       "memory": 1024,
       "maxDuration": 60
     }
