@@ -6,7 +6,10 @@
  */
 
 import { Resvg } from '@resvg/resvg-js';
-import type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import type { SvgRenderer, SvgRenderResult } from '../lib/types.ts';
 
 /**
  * Options for creating a resvg renderer.
@@ -14,7 +17,12 @@ import type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
 export interface ResvgRendererOptions {
   /** Output DPI (default: 150) */
   dpi?: number;
+  /** Custom font data to load (for serverless environments without system fonts) */
+  fontData?: Uint8Array;
 }
+
+// Cache for temp font file path
+let tempFontPath: string | null = null;
 
 /**
  * Parse SVG dimension string to points (1 point = 1/72 inch).
@@ -57,7 +65,7 @@ export function parseSizeToPoints(sizeStr: string | null | undefined): number {
 export function createResvgRenderer(
   options: ResvgRendererOptions = {}
 ): SvgRenderer {
-  const dpi = options.dpi ?? 150;
+  const { dpi = 150, fontData } = options;
 
   return {
     async render(svgContent: string): Promise<SvgRenderResult> {
@@ -72,15 +80,35 @@ export function createResvgRenderer(
       const scale = dpi / 72;
       const widthPx = Math.round(widthPts * scale);
 
+      // Configure font options based on whether custom font data is provided
+      // Note: We use fontFiles instead of fontBuffers because of a resvg-js bug
+      // where fitTo scaling is ignored when using fontBuffers.
+      let fontOptions: { loadSystemFonts: boolean; fontFiles?: string[] };
+
+      if (fontData) {
+        // Write font to temp file if not already done
+        // (fontFiles works correctly with fitTo, fontBuffers does not)
+        if (!tempFontPath) {
+          tempFontPath = path.join(os.tmpdir(), `resvg-font-${Date.now()}.ttf`);
+          fs.writeFileSync(tempFontPath, fontData);
+        }
+        fontOptions = {
+          loadSystemFonts: false,
+          fontFiles: [tempFontPath],
+        };
+      } else {
+        fontOptions = {
+          loadSystemFonts: true,
+        };
+      }
+
       // Use resvg to render SVG to PNG
       const resvg = new Resvg(svgContent, {
         fitTo: {
           mode: 'width',
           value: widthPx,
         },
-        font: {
-          loadSystemFonts: true,
-        },
+        font: fontOptions,
       });
 
       const pngData = resvg.render();

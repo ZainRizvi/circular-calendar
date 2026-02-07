@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="16" cy="16" r="15"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer ring - Solar calendar colors -->
+  <g clip-path="url(#circle-clip)">
+    <circle cx="16" cy="16" r="15" fill="url(#solar-gradient)"/>
+    <circle cx="16" cy="16" r="10" fill="#faf7f2"/>
+
+    <!-- Inner ring - Islamic calendar colors -->
+    <circle cx="16" cy="16" r="9" fill="url(#islamic-gradient)"/>
+    <circle cx="16" cy="16" r="5" fill="#faf7f2"/>
+
+    <!-- Center dot -->
+    <circle cx="16" cy="16" r="2" fill="#3d2e24"/>
+  </g>
+
+  <!-- Border -->
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#3d2e24" stroke-width="0.5"/>
+
+  <defs>
+    <linearGradient id="solar-gradient" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#aebbff"/>
+      <stop offset="25%" stop-color="#a1fec5"/>
+      <stop offset="50%" stop-color="#fdff92"/>
+      <stop offset="75%" stop-color="#ffa290"/>
+      <stop offset="100%" stop-color="#caa8fe"/>
+    </linearGradient>
+    <linearGradient id="islamic-gradient" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9CFFB8"/>
+      <stop offset="50%" stop-color="#9CE3FF"/>
+      <stop offset="100%" stop-color="#B89CFF"/>
+    </linearGradient>
+  </defs>
+</svg>

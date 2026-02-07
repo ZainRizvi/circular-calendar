@@ -6,3 +6,5 @@ python/out/
 python/v3 Instructions.pdf
 __pycache__/
 *.pyc
+.vercel
+.env*.local

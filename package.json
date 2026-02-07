@@ -1,0 +1,11 @@
+{
+  "name": "circular-calendar-monorepo",
+  "private": true,
+  "workspaces": [
+    "node",
+    "app"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=app"
+  }
+}

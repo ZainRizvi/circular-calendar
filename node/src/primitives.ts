@@ -148,7 +148,7 @@ export class CurvedText {
 
     // Text element with textPath reference
     const textSvg =
-      `<text font-size="${this.fontSize}" font-family="Arial, Helvetica, sans-serif">` +
+      `<text font-size="${this.fontSize}" font-family="Arimo, Arial, Helvetica, sans-serif">` +
       `<textPath href="#${pathId}" startOffset="50%" method="align" text-anchor="middle" dominant-baseline="middle">` +
       `${this.text}` +
       `</textPath>` +

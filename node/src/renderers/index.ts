@@ -8,5 +8,8 @@
 // Node.js renderer using resvg-js
 export * from './resvg-renderer.ts';
 
+// Font loading utilities
+export * from './fonts.ts';
+
 // Re-export types for convenience
-export type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
+export type { SvgRenderer, SvgRenderResult } from '../lib/types.ts';
