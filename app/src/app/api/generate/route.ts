@@ -9,25 +9,49 @@ import { createResvgRenderer, loadBundledFont } from '@calendar-renderers/index'
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-interface RequestBody {
-  gregorianDate?: string;
-  hijriDate?: {
-    hijriYear: number;
-    hijriMonth: number;
-    hijriDay: number;
+/**
+ * Parse a YYYY-MM-DD string into { year, month, day }.
+ */
+function parseDateString(dateStr: string): { year: number; month: number; day: number } | null {
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  return {
+    year: parseInt(match[1], 10),
+    month: parseInt(match[2], 10),
+    day: parseInt(match[3], 10),
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const body: RequestBody = await request.json().catch(() => ({}));
+    const { searchParams } = new URL(request.url);
+    const gregorianDate = searchParams.get('gregorian');
+    const hijriDate = searchParams.get('hijri');
 
     // Parse date (optional)
     let alignment;
-    if (body.hijriDate) {
-      alignment = getAlignmentParams(undefined, body.hijriDate);
-    } else if (body.gregorianDate) {
-      alignment = getAlignmentParams(new Date(body.gregorianDate));
+    if (hijriDate) {
+      const parsed = parseDateString(hijriDate);
+      if (!parsed) {
+        return NextResponse.json(
+          { error: 'Invalid hijri date format. Use YYYY-MM-DD.' },
+          { status: 400 }
+        );
+      }
+      alignment = getAlignmentParams(undefined, {
+        hijriYear: parsed.year,
+        hijriMonth: parsed.month,
+        hijriDay: parsed.day,
+      });
+    } else if (gregorianDate) {
+      const parsed = parseDateString(gregorianDate);
+      if (!parsed) {
+        return NextResponse.json(
+          { error: 'Invalid gregorian date format. Use YYYY-MM-DD.' },
+          { status: 400 }
+        );
+      }
+      alignment = getAlignmentParams(new Date(gregorianDate));
     } else {
       alignment = getAlignmentParams(); // Default: today
     }

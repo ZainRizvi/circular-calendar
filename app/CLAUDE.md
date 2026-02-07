@@ -77,21 +77,21 @@ app/
 
 ## API Endpoint
 
-### POST /api/generate
+### GET /api/generate
 
 Generates a calendar PDF.
 
-**Request body** (optional):
-```json
-{
-  "gregorianDate": "2026-02-05",
-  // OR
-  "hijriDate": {
-    "hijriYear": 1447,
-    "hijriMonth": 8,
-    "hijriDay": 17
-  }
-}
+**Query parameters** (optional):
+- `gregorian` - Gregorian date in YYYY-MM-DD format (e.g., `2026-02-05`)
+- `hijri` - Hijri date in YYYY-MM-DD format (e.g., `1447-08-17`)
+
+If neither is provided, uses today's date.
+
+**Examples**:
+```
+/api/generate
+/api/generate?gregorian=2026-02-05
+/api/generate?hijri=1447-08-17
 ```
 
 **Response**: PDF file (`application/pdf`)

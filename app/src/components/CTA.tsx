@@ -9,7 +9,7 @@ export function CTA() {
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/generate', { method: 'POST' });
+      const response = await fetch('/api/generate');
       if (!response.ok) {
         throw new Error('Failed to generate PDF');
       }
