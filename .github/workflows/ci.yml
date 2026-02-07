@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install node dependencies
+        run: npm install
+        working-directory: node
+
+      - name: Install app dependencies
+        run: npm install
+        working-directory: app
+
+      - name: Type check node
+        run: npm run typecheck
+        working-directory: node
+
+      - name: Test node
+        run: npm test
+        working-directory: node
+
+      - name: Type check app
+        run: npm run typecheck
+        working-directory: app
+
+      - name: Test app
+        run: npm test
+        working-directory: app
+
+      - name: Build app
+        run: npm run build
+        working-directory: app
