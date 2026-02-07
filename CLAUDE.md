@@ -77,6 +77,11 @@ The Next.js web app (`app/`) provides a landing page with a PDF download button.
 - Co-locate test files with source code (e.g., `foo.ts` + `foo.test.ts`)
 - Run tests after each change to verify correctness
 
+**Linting:**
+- Run `npm run lint` from the root to lint the entire monorepo
+- Run `npm run lint:fix` to auto-fix issues
+- Prefix intentionally unused variables with `_` (e.g., `_unusedArg`)
+
 ## Documentation Guidelines
 
 - **Root `CLAUDE.md`**: Cross-cutting technical concepts, AI constraints

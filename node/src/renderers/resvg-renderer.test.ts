@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PNG } from 'pngjs';
 import { createResvgRenderer, parseSizeToPoints } from './resvg-renderer.ts';
-import type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
+import type { SvgRenderer } from '../lib/types.js';
 
 describe('parseSizeToPoints', () => {
   it('should parse mm values', () => {

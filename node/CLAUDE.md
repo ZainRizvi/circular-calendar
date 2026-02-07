@@ -24,6 +24,8 @@ npm test
 | `npm test` | `vitest run` | Run tests once |
 | `npm run test:watch` | `vitest` | Run tests in watch mode |
 | `npm run test:coverage` | `vitest run --coverage` | Run tests with coverage |
+| `npm run lint` | `eslint .` | Run ESLint |
+| `npm run lint:fix` | `eslint . --fix` | Run ESLint with auto-fix |
 | `npm run typecheck` | `tsc --noEmit` | TypeScript type checking |
 | `npm run snapshots:generate` | `tsx scripts/generate-snapshots.ts` | Regenerate test snapshots |
 

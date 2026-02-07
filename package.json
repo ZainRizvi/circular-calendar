@@ -1,11 +1,19 @@
 {
   "name": "circular-calendar-monorepo",
   "private": true,
+  "type": "module",
   "workspaces": [
     "node",
     "app"
   ],
   "scripts": {
-    "build": "npm run build --workspace=app"
+    "build": "npm run build --workspace=app",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "eslint": "^9.19.0",
+    "typescript-eslint": "^8.22.0"
   }
 }

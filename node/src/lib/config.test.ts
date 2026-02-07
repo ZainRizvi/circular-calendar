@@ -3,12 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import {
-  type LayoutConfig,
-  type ComputedLayout,
-  computeLayout,
-  DEFAULT_LAYOUT_CONFIG,
-} from './config.ts';
+import { computeLayout, DEFAULT_LAYOUT_CONFIG } from './config.ts';
 
 describe('LayoutConfig', () => {
   describe('DEFAULT_LAYOUT_CONFIG', () => {
