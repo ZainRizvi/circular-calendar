@@ -7,47 +7,40 @@ on:
     branches: [main, master]
 
 jobs:
-  node-checks:
-    name: Node Library
+  ci:
+    name: CI
     runs-on: ubuntu-latest
-    defaults:
-      run:
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install node dependencies
+        run: npm install
         working-directory: node
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - run: npm install
-
-      - name: Type check
-        run: npm run typecheck
-
-      - name: Run tests
-        run: npm test
-
-  app-checks:
-    name: Web App
-    runs-on: ubuntu-latest
-    defaults:
-      run:
+      - name: Install app dependencies
+        run: npm install
         working-directory: app
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - run: npm install
-
-      - name: Type check
+      - name: Type check node
         run: npm run typecheck
+        working-directory: node
 
-      - name: Run tests
+      - name: Test node
         run: npm test
+        working-directory: node
 
-      - name: Build
+      - name: Type check app
+        run: npm run typecheck
+        working-directory: app
+
+      - name: Test app
+        run: npm test
+        working-directory: app
+
+      - name: Build app
         run: npm run build
+        working-directory: app
