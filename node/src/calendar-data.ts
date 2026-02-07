@@ -1,6 +1,5 @@
 /**
  * Calendar data structures and constants.
- * Ported from Python calendar_data.py
  */
 
 /**

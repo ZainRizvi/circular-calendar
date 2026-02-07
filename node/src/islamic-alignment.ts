@@ -4,8 +4,6 @@
  * Calculates alignment parameters for overlaying the Islamic (Hijri) calendar
  * on the Gregorian calendar, automatically determining the current Islamic month
  * and its position relative to January 1.
- *
- * Ported from Python islamic_alignment.py
  */
 
 import type { Month } from './calendar-data.ts';

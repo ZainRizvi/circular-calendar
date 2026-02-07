@@ -32,7 +32,6 @@ Creates a circular calendar overlaying the Islamic (Hijri) lunar calendar on the
 
 ```
 circular-calendar/
-├── python/          # Python CLI using Playwright (deprecated, see python/CLAUDE.md)
 ├── node/            # Node.js/TypeScript CLI and core library (see node/CLAUDE.md)
 ├── app/             # Next.js web app deployed to Vercel (see app/CLAUDE.md)
 └── README.md        # User-facing instructions
@@ -53,7 +52,7 @@ The Next.js web app (`app/`) provides a landing page with a PDF download button.
 
 **Color Coding:**
 - 12-color palette (`colorWheelClassic`) distinguishes months
-- Defined in `calendar_data.py` (Python) or `calendar-data.ts` (Node.js)
+- Defined in `calendar-data.ts`
 
 **Date Boxes:**
 - Background arc filled with `DATE_FILL_COLOR = "#fbebb3"`
@@ -62,7 +61,7 @@ The Next.js web app (`app/`) provides a landing page with a PDF download button.
 ## Common Tasks
 
 ### Adding a New Color Scheme
-1. Edit `colorWheelClassic` array in `calendar_data.py` (Python) or `calendar-data.ts` (Node.js)
+1. Edit `colorWheelClassic` array in `calendar-data.ts`
 2. Ensure 12 colors defined (one per month)
 3. Use hex color codes
 
@@ -83,5 +82,4 @@ The Next.js web app (`app/`) provides a landing page with a PDF download button.
 - **Root `CLAUDE.md`**: Cross-cutting technical concepts, AI constraints
 - **`node/CLAUDE.md`**: Node.js/TypeScript CLI and core library
 - **`app/CLAUDE.md`**: Next.js web app and Vercel deployment
-- **`python/CLAUDE.md`**: Python CLI (deprecated)
 - **`README.md`**: User-facing instructions (physical calendar assembly)

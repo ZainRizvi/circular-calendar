@@ -1,6 +1,5 @@
 /**
  * Generate the instructions PDF with the circular calendar cover image.
- * Ported from Python generate_instructions.py
  */
 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';

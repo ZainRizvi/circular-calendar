@@ -1,6 +1,5 @@
 /**
  * Core primitives for SVG generation.
- * Ported from Python primitives.py
  */
 
 /**

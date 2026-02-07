@@ -1,6 +1,5 @@
 /**
  * Unit tests for islamic-alignment module.
- * Ported from Python test_islamic_alignment.py
  */
 
 import { describe, it, expect } from 'vitest';

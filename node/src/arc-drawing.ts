@@ -1,6 +1,5 @@
 /**
  * Geometric utilities for arc generation and SVG canvas.
- * Ported from Python arc_drawing.py
  */
 
 import {

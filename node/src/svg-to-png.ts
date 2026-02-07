@@ -1,6 +1,5 @@
 /**
  * Convert SVG to PNG using resvg-js (Rust-based WASM).
- * Ported from Python svg_to_png.py
  */
 
 import { Resvg } from '@resvg/resvg-js';

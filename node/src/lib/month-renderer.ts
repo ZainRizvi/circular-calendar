@@ -1,6 +1,5 @@
 /**
  * Calendar month rendering functions.
- * Ported from Python calendar_drawings.py
  */
 
 import type { MonthInstance } from './calendar-data.ts';

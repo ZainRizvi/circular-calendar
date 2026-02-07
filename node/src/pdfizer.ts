@@ -1,6 +1,5 @@
 /**
  * PDF creation and concatenation utilities.
- * Ported from Python pdfizer.py
  */
 
 import { PDFDocument } from 'pdf-lib';

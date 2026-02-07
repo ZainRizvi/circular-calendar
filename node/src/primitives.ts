@@ -1,6 +1,5 @@
 /**
  * Core primitives for SVG generation.
- * Ported from Python primitives.py
  */
 
 export const SCALE_FACTOR = 0.7;
