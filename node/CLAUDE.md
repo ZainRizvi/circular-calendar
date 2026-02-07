@@ -137,12 +137,12 @@ Months stored in canonical order (Muharram first) in `calendar-data.ts`. At runt
 
 ### Why resvg-js for SVG→PNG?
 
-Pure JavaScript/WASM solution (~50MB) that handles complex SVG features (text on paths, transforms) without requiring a browser. Serverless-compatible with Vercel.
+Rust-based library with native bindings that handles complex SVG features (text on paths, transforms) without requiring a browser. Serverless-compatible with Vercel.
 
 ## Dependencies
 
 **Runtime** (see `package.json`):
-- `@resvg/resvg-js` - SVG → PNG rendering (Rust/WASM)
+- `@resvg/resvg-js` - SVG → PNG rendering (Rust/napi)
 - `pdf-lib` - PDF creation and concatenation
 - `qrcode` - QR code generation
 - `commander` - CLI argument parsing

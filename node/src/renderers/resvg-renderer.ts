@@ -2,7 +2,18 @@
  * SVG to PNG renderer using @resvg/resvg-js.
  *
  * This module implements the SvgRenderer interface for Node.js environments
- * using the Rust-based resvg WASM library.
+ * using the Rust-based resvg native library.
+ *
+ * IMPORTANT: This renderer uses the native (napi) build of resvg-js, not WASM.
+ * The native build does NOT support the `fontBuffers` option - that's WASM-only.
+ * Attempting to pass `fontBuffers` directly to resvg-js native will cause silent
+ * option parsing failure due to serde's deny_unknown_fields, making ALL options
+ * (including fitTo scaling) fall back to defaults.
+ *
+ * This renderer works around this limitation by:
+ * 1. Accepting font data as Uint8Array via the `fontData` option
+ * 2. Writing the font data to a temporary file
+ * 3. Passing the file path to resvg-js via the `fontFiles` option
  */
 
 import { Resvg } from '@resvg/resvg-js';
@@ -102,14 +113,13 @@ export function createResvgRenderer(
       const scale = dpi / 72;
       const widthPx = Math.round(widthPts * scale);
 
-      // Configure font options based on whether custom font data is provided
-      // Note: We use fontFiles instead of fontBuffers because of a resvg-js bug
-      // where fitTo scaling is ignored when using fontBuffers.
+      // Configure font options based on whether custom font data is provided.
+      // We write font data to a temp file and use fontFiles because fontBuffers
+      // is only supported in the WASM build of resvg-js (see module docstring).
       let fontOptions: { loadSystemFonts: boolean; fontFiles?: string[] };
 
       if (fontData) {
         // Write font to temp file if not already done
-        // (fontFiles works correctly with fitTo, fontBuffers does not)
         if (!tempFontPath) {
           tempFontPath = path.join(os.tmpdir(), `resvg-font-${Date.now()}.ttf`);
           await fs.promises.writeFile(tempFontPath, fontData);
