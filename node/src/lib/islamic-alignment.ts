@@ -140,8 +140,8 @@ export function getAlignmentHeuristic(
     referenceDate.getTime() + daysSinceRefStart * 86400000
   );
 
-  // Days from Jan 1
-  const jan1 = new Date(gregorianDate.getFullYear(), 0, 1);
+  // Days from Jan 1 (use UTC to be timezone-independent)
+  const jan1 = new Date(Date.UTC(gregorianDate.getUTCFullYear(), 0, 1));
   const daysElapsed = Math.floor(
     (firstOfCurrentMonth.getTime() - jan1.getTime()) / 86400000
   );
