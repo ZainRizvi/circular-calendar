@@ -122,7 +122,7 @@ Serverless environments (Vercel) don't have system fonts. The app bundles Arimo 
 - Also in: `../node/src/fonts/Arimo-Regular.ttf`
 - SVG font-family includes "Arimo" first: `font-family="Arimo, Arial, Helvetica, sans-serif"`
 
-**Note**: There's a resvg-js bug where `fontBuffers` ignores `fitTo` scaling. The workaround writes font data to a temp file and uses `fontFiles` instead (see `resvg-renderer.ts`).
+**Note**: The resvg-renderer accepts font data as a `Uint8Array` via the `fontData` option. See `resvg-renderer.ts` for details on resvg-js native vs WASM build differences.
 
 ## Dependencies
 

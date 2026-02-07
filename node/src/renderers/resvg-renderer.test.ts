@@ -3,6 +3,9 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import * as fs from 'fs';
+import * as path from 'path';
+import { PNG } from 'pngjs';
 import { createResvgRenderer, parseSizeToPoints } from './resvg-renderer.ts';
 import type { SvgRenderer, SvgRenderResult } from '../lib/types.js';
 
@@ -92,5 +95,29 @@ describe('ResvgRenderer.render', () => {
     const result = await renderer.render(svg);
 
     expect(result.pngBuffer.length).toBeGreaterThan(0);
+  });
+
+  it('should scale correctly when using fontData option', async () => {
+    // This test verifies the workaround for resvg-js native builds:
+    // fontBuffers is WASM-only, so we use fontFiles via temp file.
+    // If the workaround breaks, fitTo scaling would fail.
+    const fontPath = path.join(__dirname, '../fonts/Arimo-Regular.ttf');
+    const fontData = new Uint8Array(fs.readFileSync(fontPath));
+
+    // Render at 2x DPI (144 instead of 72) with fontData
+    const renderer = createResvgRenderer({ dpi: 144, fontData });
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+      <rect x="0" y="0" width="100" height="100" fill="white"/>
+      <text x="50" y="60" font-family="Arimo, Arial" font-size="20" text-anchor="middle">Test</text>
+    </svg>`;
+
+    const result = await renderer.render(svg);
+
+    // Parse the PNG to verify actual pixel dimensions
+    const png = PNG.sync.read(Buffer.from(result.pngBuffer));
+
+    // At 144 DPI, a 100pt SVG should render to 200px (100 * 144/72 = 200)
+    expect(png.width).toBe(200);
+    expect(png.height).toBe(200);
   });
 });
